@@ -10,6 +10,10 @@ This project will be best for you if ur someone who are looking to learn more ab
 
 Who are trying to find simpler projects to begin their contribution journey
 
+***Install the apk from here 👇***
+[![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/InvestIq-AndroidApp/releases)
+
+
 ## Built With 🛠
 - Kotlin
 - Jetpack Compose

@@ -60,7 +60,7 @@ class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase)
 
             is QuoteEvent.Like -> {
 
-                Log.d("TAG","Before true-"+quoteEvent.quote.liked.toString())
+                Log.d("TAG","Before like-"+quoteEvent.quote.liked.toString())
                 Log.d("TAG","Before id-"+ quoteEvent.quote.id)
                 viewModelScope.launch {
 //                    quoteUseCase.likedQuote(quoteEvent.quote)

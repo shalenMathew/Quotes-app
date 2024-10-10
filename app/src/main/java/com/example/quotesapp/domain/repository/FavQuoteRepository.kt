@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavQuoteRepository {
 
-    fun getAllLikedQuotes(): Flow<Resource<List<Quote>>>
+    fun getAllLikedQuotes(): Flow<List<Quote>>
 
     suspend  fun saveLikedQuote(quote: Quote)
 }

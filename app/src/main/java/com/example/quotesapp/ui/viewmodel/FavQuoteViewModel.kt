@@ -32,26 +32,11 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
 
     private fun getFavQuote(){
 
+        _favQuoteState.value=_favQuoteState.value.copy(isLoading = true)
+
         viewModelScope.launch {
-
             favQuoteUseCase.getFavQuote().collect(){it->
-
-                when(it){
-                    is Resource.Success->{
-                        it.data?.let { data->
-                            _favQuoteState.value = _favQuoteState.value.copy(dataList = data, isLoading = false)
-                        } ?:{ _favQuoteState.value = _favQuoteState.value.copy(dataList = emptyList(), isLoading = false) }
-                    }
-
-                    is Resource.Error -> {
-                        _favQuoteState.value = _favQuoteState.value.copy(error = it.message ?: "Something went wrong", isLoading = false)
-                    }
-
-                    is Resource.Loading -> {
-                        _favQuoteState.value =_favQuoteState.value.copy(isLoading = true)
-                    }
-
-                }
+                _favQuoteState.value=_favQuoteState.value.copy(dataList = it, isLoading = false)
             }
         }
     }
@@ -65,8 +50,9 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
 
                 Log.d("TAG","Before liked-"+quoteEvent.quote.liked.toString())
                 Log.d("TAG","Before id-"+ quoteEvent.quote.id)
+
                 viewModelScope.launch {
-//                    quoteUseCase.likedQuote(quoteEvent.quote)
+
                     val updatedQuote = favQuoteUseCase.favLikedQuote(quoteEvent.quote)
 
                     _favQuoteState.value=_favQuoteState.value.copy(dataList = _favQuoteState.value.dataList.map { quote->

@@ -34,28 +34,22 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                     val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
                     val qotDef =  async { api.getQuoteOfTheDay().map { it.toQuote() } }
 
-                    val quotesList = quotesListDef.await()
-                    val qot=qotDef.await()
+                    val currList = db.getQuoteDao().getAllQuotes()
 
-//                     quoteHome = QuoteHome(
-//                        quotesList = quotesList.toMutableList(),
-//                        quotesOfTheDay = qot
-//                    )
-
-
-                    quotesList.forEach { it->
+                    currList.onEach {
                         if(!it.liked){
                             db.getQuoteDao().deleteQuote(it)
                         }
                     }
 
-//                    db.getQuoteDao().deleteAll()
+                    val quotesList = quotesListDef.await()
+                    val qot=qotDef.await()
 
                     quotesList.let { list->
                         db.getQuoteDao().insertQuoteList(quotesList)
                     }
 
-                    Log.d("TAG","From impl inside try-" + db.getQuoteDao().getAllQuotes().size)
+                    Log.d("TAG","QuoteImpl inside try - Size of all list=" + db.getQuoteDao().getAllQuotes().size)
 
                     quoteHome= QuoteHome(
                         quotesList = db.getQuoteDao().getAllQuotes(),

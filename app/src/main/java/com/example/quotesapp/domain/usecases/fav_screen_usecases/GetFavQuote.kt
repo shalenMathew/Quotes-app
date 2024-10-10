@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class GetFavQuote @Inject constructor(private val quoteRepository: FavQuoteRepository) {
 
-    operator fun invoke(): Flow<Resource<List<Quote>>> {
+    operator fun invoke(): Flow<List<Quote>> {
         return quoteRepository.getAllLikedQuotes()
     }
 

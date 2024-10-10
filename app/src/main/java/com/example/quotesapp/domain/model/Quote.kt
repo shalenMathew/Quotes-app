@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Quote(
-    @PrimaryKey(autoGenerate = true)
-    val id:Int=0,
+    @PrimaryKey()
+    val id:Int?=null,
     val quote: String,
     val author:String,
     var liked:Boolean,

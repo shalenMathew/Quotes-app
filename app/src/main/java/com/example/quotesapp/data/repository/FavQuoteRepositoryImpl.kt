@@ -13,27 +13,8 @@ import javax.inject.Inject
 
 class FavQuoteRepositoryImpl (private val db: QuoteDatabase):FavQuoteRepository {
 
-    override fun getAllLikedQuotes(): Flow<Resource<List<Quote>>> {
-        return flow {
-
-            emit(Resource.Loading())
-
-            try {
-
-                var list:List<Quote>?
-
-                withContext(Dispatchers.IO){
-                    list = db.getQuoteDao().getAllLikedQuotes()
-                }
-
-                Log.d("TAG","FavImpl "+ list?.size.toString())
-
-                emit(Resource.Success(list))
-
-            }catch (e:Exception){
-                emit(Resource.Error(message = e.message.toString()))
-            }
-        }
+    override fun getAllLikedQuotes(): Flow<List<Quote>> {
+    return db.getQuoteDao().getAllLikedQuotes()
     }
 
     override suspend fun saveLikedQuote(quote: Quote) {

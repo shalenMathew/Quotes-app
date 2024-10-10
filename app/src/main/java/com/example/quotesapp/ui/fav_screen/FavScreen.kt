@@ -20,25 +20,33 @@ import com.example.quotesapp.ui.viewmodel.FavQuoteViewModel
 @Composable
 fun FavScreen(paddingValues: PaddingValues, quoteViewModel:FavQuoteViewModel= hiltViewModel()) {
 
+
+    val state = quoteViewModel.favQuoteState.value
+
     Box(modifier=Modifier.padding(paddingValues)
         .fillMaxSize().background(color = Color.Black)){
 
-        if(quoteViewModel.favQuoteState.value.isLoading){
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.Transparent)
-                , contentAlignment = Alignment.Center){
-                Text(quoteViewModel.favQuoteState.value.error, color = White)
-            }
-        }else{
-            LazyColumn(modifier=Modifier.fillMaxSize()) {
-                items(quoteViewModel.favQuoteState.value.dataList){ quote ->
-                    FavQuoteItem(quote,quoteViewModel)
+            if (state.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Color.Transparent), contentAlignment = Alignment.Center
+                ) {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = Color.Transparent)
+                        , contentAlignment = Alignment.Center){
+                        Text(state.error, color = White)
+                    }
                 }
-
+            } else {
+            LazyColumn(modifier=Modifier.fillMaxSize()) {
+                items(state.dataList) { quote ->
+                    FavQuoteItem(quote, quoteViewModel)
+                }
             }
+            }
+
         }
 
     }
-
-}

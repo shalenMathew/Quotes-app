@@ -37,7 +37,8 @@ return QuoteUseCase(getQuote = getQuote, likedQuote =likedQuote )
     @Singleton
     @Provides
     fun providesQuoteDatabase(application: Application):QuoteDatabase{
-        return Room.databaseBuilder(application,QuoteDatabase::class.java,"quote_db").build()
+        return Room.databaseBuilder(application,QuoteDatabase::class.java,"quote_db")
+            .fallbackToDestructiveMigration().build()
     }
 
 @Singleton

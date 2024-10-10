@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.quotesapp.domain.model.Quote
 
 
-@Database(entities = [Quote::class], version = 1)
+@Database(entities = [Quote::class], version = 3)
 abstract class QuoteDatabase:RoomDatabase() {
 
     abstract fun getQuoteDao():QuoteDao

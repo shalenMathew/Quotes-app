@@ -40,7 +40,7 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
     val gradient = Brush.radialGradient(
         0.0f to customBlack,
         1.0f to customGrey,
-        radius = 15.0f,
+        radius = 200.0f,
         tileMode = TileMode.Repeated
     )
 
@@ -88,7 +88,6 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
                            .clickable {
                                quoteViewModel.onEvent(FavQuoteEvent.Like(quote))
                            }.align(Alignment.BottomEnd))
-
             }
 
         }

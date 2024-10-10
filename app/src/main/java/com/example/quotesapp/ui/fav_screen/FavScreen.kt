@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.quotesapp.ui.theme.GIFont
 import com.example.quotesapp.ui.viewmodel.FavQuoteViewModel
 
 
@@ -40,11 +41,19 @@ fun FavScreen(paddingValues: PaddingValues, quoteViewModel:FavQuoteViewModel= hi
                     }
                 }
             } else {
-            LazyColumn(modifier=Modifier.fillMaxSize()) {
-                items(state.dataList) { quote ->
-                    FavQuoteItem(quote, quoteViewModel)
+                if(state.dataList.isNotEmpty()){
+                    LazyColumn(modifier=Modifier.fillMaxSize()) {
+                        items(state.dataList) { quote ->
+                            FavQuoteItem(quote, quoteViewModel)
+                        }
+                    }
+                }else{
+                    Text("Looks empty...",
+                        color = White,
+                        fontFamily = GIFont,
+                        modifier = Modifier.align(
+                        Alignment.Center))
                 }
-            }
             }
 
         }

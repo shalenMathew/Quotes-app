@@ -47,10 +47,6 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
         when(quoteEvent){
 
             is FavQuoteEvent.Like -> {
-
-                Log.d("TAG","Before liked-"+quoteEvent.quote.liked.toString())
-                Log.d("TAG","Before id-"+ quoteEvent.quote.id)
-
                 viewModelScope.launch {
 
                     val updatedQuote = favQuoteUseCase.favLikedQuote(quoteEvent.quote)
@@ -62,9 +58,6 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
                     delay(100)
                     _favQuoteState.value=_favQuoteState.value.copy(isLoading = false)
 
-//                    Log.d("TAG","After liked-"+ updatedQuote.liked)
-//                    Log.d("TAG","After-"+ updatedQuote.quote)
-//                    Log.d("TAG","After id-"+ updatedQuote.id)
                 }
 
             }

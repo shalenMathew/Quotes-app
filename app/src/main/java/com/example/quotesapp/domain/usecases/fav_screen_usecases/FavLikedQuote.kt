@@ -11,8 +11,6 @@ class FavLikedQuote @Inject constructor(val quoteRepository: FavQuoteRepository)
 
         val updatedQuote = quote.copy(liked = !quote.liked)
         quoteRepository.saveLikedQuote(updatedQuote)
-        Log.d("TAG","use case -"+updatedQuote.liked.toString())
-
         return updatedQuote
     }
 }

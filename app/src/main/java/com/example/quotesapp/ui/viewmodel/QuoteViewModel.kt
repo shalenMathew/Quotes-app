@@ -59,9 +59,6 @@ class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase)
         when(quoteEvent){
 
             is QuoteEvent.Like -> {
-
-                Log.d("TAG","Before like-"+quoteEvent.quote.liked.toString())
-                Log.d("TAG","Before id-"+ quoteEvent.quote.id)
                 viewModelScope.launch {
 //                    quoteUseCase.likedQuote(quoteEvent.quote)
                     val updatedQuote = quoteUseCase.likedQuote(quoteEvent.quote)
@@ -73,9 +70,6 @@ class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase)
                     delay(100)
                     _quoteState.value=_quoteState.value.copy(isLoading = false)
 
-//                    Log.d("TAG","After liked-"+ updatedQuote.liked)
-//                    Log.d("TAG","After-"+ updatedQuote.quote)
-//                    Log.d("TAG","After id-"+ updatedQuote.id)
                 }
 
             }

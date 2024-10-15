@@ -14,6 +14,9 @@ Who are trying to find simpler projects to begin their contribution journey
 
 [![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/InvestIq-AndroidApp/releases)
 
+## App demo 📽️
+https://github.com/user-attachments/assets/ac831639-4646-4711-9723-8ba5d537381e
+
 
 ## Built With 🛠
 - Kotlin
@@ -24,9 +27,6 @@ Who are trying to find simpler projects to begin their contribution journey
 - Hilt
 - Retrofit
 - Room
-
-## App demo 📽️
-https://github.com/user-attachments/assets/ac831639-4646-4711-9723-8ba5d537381e
 
 ## Contribution 🤝
 - If your new to open source and want to play around with contribution you can do it here or u can raise issue if you want to make any improvements or fix any bugs

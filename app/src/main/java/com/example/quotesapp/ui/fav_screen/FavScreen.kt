@@ -48,6 +48,7 @@ fun FavScreen(paddingValues: PaddingValues, quoteViewModel:FavQuoteViewModel= hi
                         }
                     }
                 }else{
+
                     Text("Looks empty...",
                         color = White,
                         fontFamily = GIFont,

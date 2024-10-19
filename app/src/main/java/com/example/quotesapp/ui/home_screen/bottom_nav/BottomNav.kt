@@ -20,10 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Icon
@@ -42,7 +40,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
@@ -52,16 +49,16 @@ import com.example.quotesapp.ui.theme.bottomNavItem
 
 
 @Composable
-fun BottomNavNoAnimation(
+fun BottomNavAnimation(
      navigator:NavHostController
 ) {
 
     var selectedScreen by remember { mutableStateOf(0) }
     val haptic = LocalHapticFeedback.current
 
-    val screens= listOf(
-        Screen.Home,
-        Screen.Fav
+    val tabItem = listOf(
+         BottomNav.Home,
+        BottomNav.Fav
     )
 
     val navBackStackEntry by navigator.currentBackStackEntryAsState()
@@ -70,7 +67,8 @@ fun BottomNavNoAnimation(
     // for scenarios when user clicks back press
     LaunchedEffect(navBackStackEntry) {
         val currentDes = navBackStackEntry?.destination?.route
-        selectedScreen = screens.indexOfFirst { currentDes==it.route }
+        selectedScreen = tabItem.indexOfFirst { currentDes==it.route }
+        if (selectedScreen<0) selectedScreen=0
     }
 
 
@@ -89,8 +87,8 @@ fun BottomNavNoAnimation(
             Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            for (screen in screens) {
-                val isSelected = screen == screens[selectedScreen]
+            for (screen in tabItem) {
+                val isSelected = screen == tabItem[selectedScreen]
                 val animatedWeight by animateFloatAsState(targetValue = if (isSelected) 1.5f else 1f)
                 Box(
                     modifier = Modifier.weight(animatedWeight),
@@ -125,7 +123,7 @@ fun BottomNavNoAnimation(
 @Composable
 private fun BottomNavItem(
     modifier: Modifier = Modifier,
-    item: Screen,
+    item: BottomNav,
     isSelected: Boolean,
 ) {
 
@@ -216,9 +214,29 @@ fun FlipIcon(
 
 sealed class Screen(
     val route: String,
+    val needBottomNav:Boolean
+) {
+    object Home: Screen("Home",true)
+    object Fav: Screen("Favourites",true)
+    object Splash: Screen("Splash",false)
+
+    companion object{
+        val values:List<Screen> = listOf(Home,Fav,Splash)
+    }
+
+}
+
+
+
+
+sealed class BottomNav(
+    val route: String,
     val activeIcon: ImageVector,
     val inactiveIcon: ImageVector
-) {
-    object Home: Screen("Home", Icons.Filled.Home, Icons.Outlined.Home)
-    object Fav: Screen("Favourites", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
+){
+    object Home: BottomNav(Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home)
+    object Fav: BottomNav(Screen.Fav.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
 }
+
+
+

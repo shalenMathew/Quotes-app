@@ -63,7 +63,6 @@ fun BottomNavAnimation(
 
     val navBackStackEntry by navigator.currentBackStackEntryAsState()
 
-
     // for scenarios when user clicks back press
     LaunchedEffect(navBackStackEntry) {
         val currentDes = navBackStackEntry?.destination?.route
@@ -71,9 +70,7 @@ fun BottomNavAnimation(
         if (selectedScreen<0) selectedScreen=0
     }
 
-
     Box(
-
         modifier= Modifier
             .navigationBarsPadding()
             .shadow(5.dp)
@@ -104,7 +101,7 @@ fun BottomNavAnimation(
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
 //                            selectedScreen = screens.indexOf(screen)
                             navigator.navigate(screen.route){
-                                popUpTo(navigator.graph.startDestinationId){
+                                popUpTo(Screen.Home.route){
                                     inclusive=false
                                 }
                                 launchSingleTop=true
@@ -118,7 +115,6 @@ fun BottomNavAnimation(
         }
     }
 }
-
 
 @Composable
 private fun BottomNavItem(
@@ -225,9 +221,6 @@ sealed class Screen(
     }
 
 }
-
-
-
 
 sealed class BottomNav(
     val route: String,

@@ -39,6 +39,8 @@ import com.example.quotesapp.ui.theme.customBlack
 import com.example.quotesapp.ui.theme.customGrey
 
 
+// new branch
+
 @Preview
 @Composable
 fun QuoteItem(data:Quote=Quote(quote = "ok", author = "o", liked = false)){

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/quote_background"
+       android:orientation="vertical"
+       android:padding="20dp">
+
+    <!-- Quotation Icon -->
+    <ImageView
+        android:id="@+id/quote_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/quotation" />
+
+    <TextView
+        android:id="@+id/quote_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="The is some random shit ,
+        wnhswisn swisjwiswjsnwisn"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:fontFamily="@font/glaciaiindifference_regular"
+        android:lineSpacingExtra="6sp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingHorizontal="15dp"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"/>
+
+
+    <TextView
+        android:id="@+id/quote_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="- Author"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:paddingTop="10dp"/>
+
+    <!-- Spacer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+
+    <!-- Quotes Footer -->
+    <TextView
+        android:id="@+id/quote_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quotes"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:fontFamily="@font/glaciaiindifference_regular"
+        android:gravity="center"
+        android:lineSpacingExtra="10sp"/>
+</LinearLayout>
+
+    </FrameLayout>

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -53,6 +54,7 @@ import com.example.quotesapp.ui.viewmodel.QuoteViewModel
 fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
 
     val context = LocalContext.current
+    val activity = context as ComponentActivity
 
 
     val gradient = Brush.radialGradient(
@@ -68,6 +70,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
             .clip(RoundedCornerShape(20.dp))
             .background(gradient)
             .fillMaxSize()){
+
 
         AsyncImage(
             model = R.drawable.quotation,
@@ -127,13 +130,11 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
             AsyncImage(model = R.drawable.send,
                 contentDescription = null,
                 modifier= Modifier.size(35.dp).clickable {
-                    val  intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, data.quote) // The text you want to share
-                        type = "text/plain" // MIME type for text
+
+                    createImageFromXml(context, data) { bitmap ->
+                        showSharePreview(context,bitmap)
                     }
-                    // Start the share intent
-                    context.startActivity(Intent.createChooser(intent, "Share Quote via"))
+
                 })
         }
     }

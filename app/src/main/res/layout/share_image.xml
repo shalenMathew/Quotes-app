@@ -37,7 +37,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="15dp"/>
+        android:layout_height="12dp"/>
 
 
     <TextView
@@ -60,7 +60,7 @@
         android:id="@+id/quote_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Quotes"
+        android:text="Quotes.app"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:fontFamily="@font/glaciaiindifference_regular"

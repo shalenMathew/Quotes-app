@@ -144,8 +144,6 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
 fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {
 
     val state = quoteViewModel.quoteState.value
-//    val mutableList = state.dataList
-
 
     if(state.isLoading){
         Box(modifier = Modifier

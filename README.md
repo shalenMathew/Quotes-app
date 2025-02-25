@@ -12,7 +12,7 @@ Who are trying to find simpler projects to begin their contribution journey
 
 ***Install the apk from here 👇***
 
-[![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/InvestIq-AndroidApp/releases)
+[![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/Quotes-app/releases)
 
 ## Trailer 📽️
 https://github.com/user-attachments/assets/ac831639-4646-4711-9723-8ba5d537381e

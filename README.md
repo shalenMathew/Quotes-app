@@ -1,5 +1,3 @@
-
-
 # Quotes App 💭
 
 ![Quotes bg](https://github.com/user-attachments/assets/f3ed5b09-b63d-4fc1-8dc9-17a90c6c0aa2)
@@ -17,6 +15,8 @@ Who are trying to find simpler projects to begin their contribution journey
 [![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/Quotes-app/releases)
 
 ## Trailer 📽️
+https://github.com/user-attachments/assets/38a15a1e-b324-4355-8574-49e83cf044cd
+
 https://github.com/user-attachments/assets/ac831639-4646-4711-9723-8ba5d537381e
 
 

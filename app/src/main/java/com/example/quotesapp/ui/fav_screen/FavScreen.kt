@@ -45,6 +45,7 @@ fun FavScreen(paddingValues: PaddingValues, quoteViewModel:FavQuoteViewModel= hi
                     LazyColumn(modifier=Modifier.fillMaxSize()) {
                         items(state.dataList) { quote ->
                             FavQuoteItem(quote, quoteViewModel)
+
                         }
                     }
                 }else{

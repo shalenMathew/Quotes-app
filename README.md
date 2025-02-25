@@ -1,6 +1,7 @@
+
 # Quotes App 💭
 
-![Quotes](https://github.com/user-attachments/assets/10fcaec5-a349-4de3-b896-1d47c67046bd)
+![Quotes bg](https://github.com/user-attachments/assets/48fd80fb-fd0b-4af8-b88a-63c901e081a3)
 
 ### Quotes App is built to demonstrate the use of Modern Android development tools.The app follows latest android principles and components
 

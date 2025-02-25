@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.BLACK,Color.BLACK),
             navigationBarStyle = SystemBarStyle.light(Color.BLACK,Color.BLACK)
+
         )
         setContent {
             QuotesAppTheme {

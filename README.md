@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/ec223930-4e78-479f-91cd-9d6625efd04a
 - Jetpack Compose
 - Flow
 - Coroutines
-- MVVM+Clean Architecture
+- Clean Architecture(MVVM)
 - Hilt
 - Retrofit
 - Room

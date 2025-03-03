@@ -1,8 +1,9 @@
-package com.example.quotesapp.ui.home_screen
+package com.example.quotesapp.ui.intro_screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -32,24 +34,12 @@ fun SplashScreen(navHost: NavHostController) {
 
     var isVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        isVisible=!isVisible
-        delay(3000)
-        isVisible=!isVisible
-        delay(1000)
-        navHost.navigate(Screen.Home.route){
-            popUpTo(Screen.Splash.route){
-                inclusive = true
-            }
-        }
-    }
-
         AnimatedVisibility(visible = isVisible, enter = fadeIn(), exit = fadeOut()) {
 
             Box(modifier = Modifier.fillMaxSize()) {
 
-                AsyncImage(
-                    model = R.drawable.splash_3,
+                Image(
+                    painter = painterResource(id = R.drawable.splash_3),
                     modifier = Modifier.fillMaxSize(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop)
@@ -66,4 +56,20 @@ fun SplashScreen(navHost: NavHostController) {
             }
 
         }
+
+    LaunchedEffect(Unit) {
+        isVisible=true
+        delay(3000)
+        isVisible=false
+        delay(500)
+
+
+        // navigate to next screen
+        navHost.navigate(Screen.Home.route){
+            popUpTo(Screen.Splash.route){
+                inclusive = true
+            }
+        }
+    }
+
 }

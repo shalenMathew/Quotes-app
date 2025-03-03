@@ -17,7 +17,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.quotesapp.ui.fav_screen.FavScreen
 import com.example.quotesapp.ui.home_screen.HomeScreen
-import com.example.quotesapp.ui.home_screen.SplashScreen
+import com.example.quotesapp.ui.intro_screen.SplashScreen
 import com.example.quotesapp.ui.home_screen.bottom_nav.BottomNavAnimation
 import com.example.quotesapp.ui.home_screen.bottom_nav.Screen
 import com.example.quotesapp.ui.theme.QuotesAppTheme

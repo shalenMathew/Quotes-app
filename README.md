@@ -1,6 +1,5 @@
 # Quotes App 💭
-
-![GameHok](https://github.com/user-attachments/assets/5911c796-28f7-43fe-83d6-8a622857208e)
+![Quotes bg](https://github.com/user-attachments/assets/4ed2b63b-51e7-46e5-8723-c07e952b8576)
 
 ### Quotes App is built to demonstrate the use of Modern Android development tools.The app follows latest android principles and components
 
@@ -15,11 +14,6 @@ Who are trying to find simpler projects to begin their contribution journey
 [![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/Quotes-app/releases)
 
 ## Trailer 📽️
-
-
-https://github.com/user-attachments/assets/e41e3e47-b8af-4f69-86be-78823413f0c2
-
-
 
 https://github.com/user-attachments/assets/38a15a1e-b324-4355-8574-49e83cf044cd
 

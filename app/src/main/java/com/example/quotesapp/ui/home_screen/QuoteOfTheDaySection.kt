@@ -36,7 +36,7 @@ fun QuoteOfTheDaySection(quoteViewModel: QuoteViewModel) {
             Text(text = state.qot?.quote ?: state.error,
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Thin,
-                fontSize = 15.sp,
+                fontSize = 16.sp,
                 modifier = Modifier.padding(start = 15.dp, top = 5.dp),
                 color = Color.White)
         }

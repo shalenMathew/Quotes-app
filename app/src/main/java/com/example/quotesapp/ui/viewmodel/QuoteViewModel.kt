@@ -31,6 +31,7 @@ class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase)
            quoteUseCase.getQuote().collect{it->
 
                when(it){
+
                   is Resource.Success->{
 //                      Log.d("TAG","viewmodel " + it.data!!.quotesList[0].toString())
 
@@ -39,8 +40,6 @@ class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase)
                               qot = data.quotesOfTheDay[0], isLoading = false)
                       } ?:{ _quoteState.value = _quoteState.value.copy(dataList = mutableListOf(),
                           qot =null , isLoading = false) }
-
-
                   }
 
                    is Resource.Error -> {

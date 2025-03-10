@@ -49,7 +49,7 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
     val gradient = Brush.radialGradient(
         0.0f to customBlack,
         1.0f to customGrey,
-        radius = 600.0f,
+        radius = 900.0f,
         tileMode = TileMode.Repeated
     )
 

@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -72,8 +74,8 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
             .fillMaxSize()){
 
 
-        AsyncImage(
-            model = R.drawable.quotation,
+        Image(
+            painter = painterResource(R.drawable.quotation),
             contentDescription = null,
             modifier= Modifier
                 .align(Alignment.TopStart)
@@ -87,7 +89,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
             Text(text = data.quote,
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
+                fontSize = 19.sp,
                 modifier = Modifier.padding(horizontal = 15.dp)
                     .fillMaxWidth(),
                 color = White,

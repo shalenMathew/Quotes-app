@@ -1,17 +1,11 @@
 package com.example.quotesapp.ui.viewmodel
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
-import com.example.quotesapp.domain.usecases.fav_screen_usecases.GetFavQuote
-import com.example.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.example.quotesapp.ui.fav_screen.util.FavQuoteEvent
 import com.example.quotesapp.ui.fav_screen.util.FavQuoteState
-import com.example.quotesapp.ui.home_screen.util.QuoteEvent
-import com.example.quotesapp.ui.home_screen.util.QuoteState
-import com.example.quotesapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

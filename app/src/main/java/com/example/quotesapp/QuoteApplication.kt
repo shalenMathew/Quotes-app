@@ -6,5 +6,4 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class QuoteApplication:Application() {
-    // development
 }

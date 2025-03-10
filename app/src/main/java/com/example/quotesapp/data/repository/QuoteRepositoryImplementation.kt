@@ -21,6 +21,9 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
         return flow {
 
+
+            // improve this some coroutine mistake
+
             var quoteHome:QuoteHome? = null
 
             emit(Resource.Loading())
@@ -28,7 +31,6 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
             Log.d("TAG",Thread.currentThread().name)
 
             try {
-
                 withContext(Dispatchers.IO){
 
                     val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
@@ -49,7 +51,8 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                         db.getQuoteDao().insertQuoteList(quotesList)
                     }
 
-                    Log.d("TAG","QuoteImpl inside try - Size of all list=" + db.getQuoteDao().getAllQuotes().size)
+                    Log.d("TAG","QuoteImpl inside try - Size of all list="
+                            + db.getQuoteDao().getAllQuotes().size)
 
                     quoteHome= QuoteHome(
                         quotesList = db.getQuoteDao().getAllQuotes(),

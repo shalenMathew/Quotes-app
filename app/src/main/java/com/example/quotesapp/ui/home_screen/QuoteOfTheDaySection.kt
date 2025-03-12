@@ -30,14 +30,14 @@ fun QuoteOfTheDaySection(quoteViewModel: QuoteViewModel) {
             Text(text = "Quote of the day",
                 fontFamily = GIFont,
                 fontSize = 35.sp,
-                modifier = Modifier.padding(start = 15.dp, top = 18.dp),
+                modifier = Modifier.padding(start = 15.dp),
                 color = Color.White)
 
             Text(text = state.qot?.quote ?: state.error,
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Thin,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(start = 15.dp, top = 5.dp),
+                modifier = Modifier.padding(start = 15.dp, top = 5.dp, end = 15.dp),
                 color = Color.White)
         }
     }

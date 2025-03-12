@@ -21,7 +21,6 @@ import com.example.quotesapp.ui.viewmodel.FavQuoteViewModel
 @Composable
 fun FavScreen(paddingValues: PaddingValues, quoteViewModel:FavQuoteViewModel= hiltViewModel()) {
 
-
     val state = quoteViewModel.favQuoteState.value
 
     Box(modifier=Modifier.padding(paddingValues)

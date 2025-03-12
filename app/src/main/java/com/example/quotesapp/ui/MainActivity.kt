@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
+import androidx.core.view.WindowCompat
 
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable

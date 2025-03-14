@@ -27,7 +27,7 @@
         android:text="The is some random shit ,
         wnhswisn swisjwiswjsnwisn"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:fontFamily="@font/glaciaiindifference_regular"
         android:lineSpacingExtra="6sp"
         android:gravity="center"

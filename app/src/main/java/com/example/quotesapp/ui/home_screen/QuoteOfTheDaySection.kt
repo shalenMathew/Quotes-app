@@ -1,5 +1,6 @@
 package com.example.quotesapp.ui.home_screen
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.quotesapp.ui.theme.GIFont
 import com.example.quotesapp.ui.viewmodel.QuoteViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Composable
-fun QuoteOfTheDaySection(quoteViewModel: QuoteViewModel) {
+fun QuoteOfTheDaySection(
+    quoteViewModel: QuoteViewModel,
+) {
 
     val state = quoteViewModel.quoteState.value
 

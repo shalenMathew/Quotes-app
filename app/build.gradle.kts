@@ -95,4 +95,9 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
 
 
+    // Glance Widget
+    implementation ("androidx.glance:glance-appwidget:1.1.1")
+
+
+
 }

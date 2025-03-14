@@ -1,6 +1,7 @@
 package com.example.quotesapp.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.quotesapp.data.local.QuoteDatabase
 import com.example.quotesapp.data.remote.QuoteApi

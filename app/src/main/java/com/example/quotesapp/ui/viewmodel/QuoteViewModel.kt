@@ -1,21 +1,30 @@
 package com.example.quotesapp.ui.viewmodel
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.dataStoreFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.example.quotesapp.ui.home_screen.util.QuoteEvent
 import com.example.quotesapp.ui.home_screen.util.QuoteState
 import com.example.quotesapp.util.Resource
+import com.example.quotesapp.util.saveQuote
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase):ViewModel() {
+class QuoteViewModel @Inject constructor(
+    private val quoteUseCase: QuoteUseCase,
+    @ApplicationContext private  val context: Context
+):ViewModel() {
 
     private val _quoteState = mutableStateOf(QuoteState())
     val quoteState = _quoteState
@@ -23,6 +32,12 @@ class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase)
     init {
         getQuote()
     }
+
+//    private fun  saveQuotesToPref(){
+//        viewModelScope.launch {
+//            context.saveQuote()
+//        }
+//    }
 
    private fun getQuote(){
 
@@ -36,10 +51,17 @@ class QuoteViewModel @Inject constructor(private val quoteUseCase: QuoteUseCase)
 //                      Log.d("TAG","viewmodel " + it.data!!.quotesList[0].toString())
 
                       it.data?.let { data->
+                          // saving in state
                           _quoteState.value = _quoteState.value.copy(dataList = data.quotesList.toMutableList(),
                               qot = data.quotesOfTheDay[0], isLoading = false)
-                      } ?:{ _quoteState.value = _quoteState.value.copy(dataList = mutableListOf(),
-                          qot =null , isLoading = false) }
+
+                          // saving the quote in datastore
+                          context.saveQuote(data.quotesOfTheDay[0].quote)
+
+                      } ?:{
+                          _quoteState.value = _quoteState.value.copy(dataList = mutableListOf(),
+                          qot =null , isLoading = false)
+                      }
                   }
 
                    is Resource.Error -> {

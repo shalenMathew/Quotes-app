@@ -27,7 +27,7 @@
         android:text="The is some random shit ,
         wnhswisn swisjwiswjsnwisn"
         android:textColor="@android:color/white"
-        android:textSize="22sp"
+        android:textSize="25sp"
         android:fontFamily="@font/glaciaiindifference_regular"
         android:lineSpacingExtra="6sp"
         android:gravity="center"
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:text="- Author"
         android:textColor="@android:color/darker_gray"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:gravity="center"
         android:paddingTop="10dp"/>
 

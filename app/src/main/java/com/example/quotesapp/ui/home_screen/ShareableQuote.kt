@@ -65,15 +65,18 @@ fun createImageFromXml(context: Context, quote: Quote, callback: (Bitmap) -> Uni
     authorTextView.text = "- ${quote.author}"
 
     // Measure and layout the view
+
+    val width = 1000 // Fixed width
     view.measure(
-        View.MeasureSpec.makeMeasureSpec(1000, View.MeasureSpec.EXACTLY),
-        View.MeasureSpec.makeMeasureSpec(600, View.MeasureSpec.EXACTLY)
+        View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
     )
 
-    view.layout(0, 0, 1000, 600)
+    val height = view.measuredHeight
+    view.layout(0, 0, width,height)
 
     // Create a Bitmap
-    val bitmap = Bitmap.createBitmap(1000, 600, Bitmap.Config.ARGB_8888)
+    val bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
     view.draw(canvas)
 

@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.theme
+package com.example.quotesapp.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

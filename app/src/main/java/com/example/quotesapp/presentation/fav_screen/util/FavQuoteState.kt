@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.fav_screen.util
+package com.example.quotesapp.presentation.fav_screen.util
 
 import com.example.quotesapp.domain.model.Quote
 

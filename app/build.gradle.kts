@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.example.quotesapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.quotesapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -97,6 +97,10 @@ dependencies {
 
     // Glance Widget
     implementation ("androidx.glance:glance-appwidget:1.1.1")
+
+
+    // work manager
+    implementation ("androidx.work:work-runtime-ktx:2.10.0")
 
 
 

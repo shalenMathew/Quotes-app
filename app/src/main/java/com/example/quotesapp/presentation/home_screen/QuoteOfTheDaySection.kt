@@ -1,6 +1,5 @@
-package com.example.quotesapp.ui.home_screen
+package com.example.quotesapp.presentation.home_screen
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.quotesapp.ui.theme.GIFont
-import com.example.quotesapp.ui.viewmodel.QuoteViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.example.quotesapp.presentation.theme.GIFont
+import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 
 @Composable
 fun QuoteOfTheDaySection(

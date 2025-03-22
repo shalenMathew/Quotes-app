@@ -1,9 +1,9 @@
-package com.example.quotesapp.ui.widget
+package com.example.quotesapp.presentation.widget
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
@@ -25,14 +25,19 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.quotesapp.R
+import com.example.quotesapp.presentation.workmanager.WidgetWorkManager
 import com.example.quotesapp.util.QUOTE_KEY
 import com.example.quotesapp.util.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.TimeUnit
 
-
-object CounterWidget: GlanceAppWidget() {
+object QuotesWidgetObj: GlanceAppWidget() {
 
     override suspend fun provideGlance(
         context: Context,
@@ -42,13 +47,14 @@ object CounterWidget: GlanceAppWidget() {
             context.dataStore.data.first()[QUOTE_KEY] ?: "No quote saved yet"
         }
 
+        Log.d("WID,","quote $savedQuote")
+
         provideContent {
             QuoteWidget(savedQuote)
         }
 
     }
 }
-
 
 @Composable
 fun QuoteWidget(savedQuote: String) {
@@ -79,11 +85,26 @@ fun QuoteWidget(savedQuote: String) {
     }
 }
 
-class SimpleCounterWidgetReceiver: GlanceAppWidgetReceiver() {
+class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
-        get() = CounterWidget
+        get() = QuotesWidgetObj
+
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        scheduleWidgetUpdate(context)
+    }
+
+    private fun scheduleWidgetUpdate(context: Context) {
+
+        val workRequest = PeriodicWorkRequestBuilder<WidgetWorkManager>(15, TimeUnit.MINUTES).build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "quotes_widget_update",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+
+    }
+
 }
-
-
-
 

@@ -1,16 +1,12 @@
-package com.example.quotesapp.ui.viewmodel
+package com.example.quotesapp.presentation.viewmodel
 
-import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.datastore.dataStoreFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
-import com.example.quotesapp.ui.home_screen.util.QuoteEvent
-import com.example.quotesapp.ui.home_screen.util.QuoteState
+import com.example.quotesapp.presentation.home_screen.util.QuoteEvent
+import com.example.quotesapp.presentation.home_screen.util.QuoteState
 import com.example.quotesapp.util.Resource
 import com.example.quotesapp.util.saveQuote
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +20,8 @@ import javax.inject.Inject
 class QuoteViewModel @Inject constructor(
     private val quoteUseCase: QuoteUseCase,
     @ApplicationContext private  val context: Context
-):ViewModel() {
+):ViewModel()
+{
 
     private val _quoteState = mutableStateOf(QuoteState())
     val quoteState = _quoteState
@@ -78,7 +75,6 @@ class QuoteViewModel @Inject constructor(
     fun onEvent(quoteEvent: QuoteEvent){
 
         when(quoteEvent){
-
             is QuoteEvent.Like -> {
                 viewModelScope.launch {
 //                    quoteUseCase.likedQuote(quoteEvent.quote)

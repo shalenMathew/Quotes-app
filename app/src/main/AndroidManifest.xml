@@ -16,7 +16,7 @@
         android:theme="@style/Theme.QuotesApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.QuotesApp">
@@ -38,7 +38,7 @@
         </provider>
 
 
-        <receiver android:name=".ui.widget.SimpleCounterWidgetReceiver"
+        <receiver android:name=".presentation.widget.QuotesWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

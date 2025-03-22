@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.home_screen.bottom_nav
+package com.example.quotesapp.presentation.home_screen.bottom_nav
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -45,7 +45,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.quotesapp.ui.theme.bottomNavItem
+import com.example.quotesapp.presentation.theme.bottomNavItem
 
 
 @Composable

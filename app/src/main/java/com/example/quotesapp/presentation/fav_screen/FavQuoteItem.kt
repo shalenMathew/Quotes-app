@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.fav_screen
+package com.example.quotesapp.presentation.fav_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -32,13 +31,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
-import com.example.quotesapp.ui.fav_screen.util.FavQuoteEvent
-import com.example.quotesapp.ui.home_screen.createImageFromXml
-import com.example.quotesapp.ui.home_screen.showSharePreview
-import com.example.quotesapp.ui.theme.GIFont
-import com.example.quotesapp.ui.theme.customBlack
-import com.example.quotesapp.ui.theme.customGrey
-import com.example.quotesapp.ui.viewmodel.FavQuoteViewModel
+import com.example.quotesapp.presentation.fav_screen.util.FavQuoteEvent
+import com.example.quotesapp.presentation.home_screen.createImageFromXml
+import com.example.quotesapp.presentation.home_screen.showSharePreview
+import com.example.quotesapp.presentation.theme.GIFont
+import com.example.quotesapp.presentation.theme.customBlack
+import com.example.quotesapp.presentation.theme.customGrey
+import com.example.quotesapp.presentation.viewmodel.FavQuoteViewModel
 
 
 @Composable

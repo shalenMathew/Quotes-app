@@ -28,6 +28,7 @@ https://github.com/user-attachments/assets/ec223930-4e78-479f-91cd-9d6625efd04a
 - Hilt
 - Retrofit
 - Room
+- WorkManager
 
 ## Contribution 🤝
 - If your new to open source and want to play around with contribution you can do it here or u can raise issue if you want to make any improvements or fix any bugs

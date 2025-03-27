@@ -26,13 +26,18 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import com.example.quotesapp.R
 import com.example.quotesapp.presentation.workmanager.WidgetWorkManager
 import com.example.quotesapp.util.QUOTE_KEY
 import com.example.quotesapp.util.dataStore
+import dagger.assisted.AssistedFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
@@ -59,7 +64,9 @@ object QuotesWidgetObj: GlanceAppWidget() {
 @Composable
 fun QuoteWidget(savedQuote: String) {
     Column(
-        modifier = GlanceModifier.fillMaxWidth().wrapContentHeight()
+        modifier = GlanceModifier
+            .fillMaxWidth()
+            .wrapContentHeight()
             .background(Color.Black)
             .padding(horizontal = 12.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -91,6 +98,7 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
+        Log.d("WorkManagerStatus", "Widget enabled, scheduling update")
         scheduleWidgetUpdate(context)
     }
 
@@ -103,6 +111,17 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
             ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
+
+
+//        val workRequest = OneTimeWorkRequestBuilder<WidgetWorkManager>()
+//            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST) // Runs instantly
+//            .build()
+//
+//        WorkManager.getInstance(context).enqueueUniqueWork(
+//            "quotes_widget_update",
+//            ExistingWorkPolicy.REPLACE, // Ensures it runs fresh every time
+//            workRequest
+//        )
 
     }
 

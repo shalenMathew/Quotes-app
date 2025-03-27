@@ -53,7 +53,7 @@ class QuoteViewModel @Inject constructor(
                               qot = data.quotesOfTheDay[0], isLoading = false)
 
                           // saving the quote in datastore
-                          context.saveQuote(data.quotesOfTheDay[0].quote)
+//                          context.saveQuote(data.quotesList[0].quote) // change this to data.quotesOfTheDay[0].quote later
 
                       } ?:{
                           _quoteState.value = _quoteState.value.copy(dataList = mutableListOf(),

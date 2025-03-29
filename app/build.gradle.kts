@@ -5,16 +5,18 @@ plugins {
     id ("kotlin-kapt")
     id ("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.compose)
+
 }
 
 android {
     namespace = "com.example.quotesapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.quotesapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -44,7 +46,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
     packaging {
         resources {
@@ -77,9 +79,19 @@ dependencies {
     implementation ("io.github.aghajari:LazySwipeCards:1.0.1")
 
     //Dagger - Hilt
-    implementation ("com.google.dagger:hilt-android:2.51.1")
-    ksp ("com.google.dagger:hilt-android-compiler:2.51.1")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation ("com.google.dagger:hilt-android:2.54")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0") // hilt for nav
+    implementation("androidx.hilt:hilt-work:1.2.0")
+
+//    ksp ("com.google.dagger:hilt-android-compiler:2.54")
+//    kapt("androidx.hilt:hilt-compiler:1.2.0")
+
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    kapt("com.google.dagger:hilt-compiler:2.54")
+
+//    kapt ("com.google.dagger:hilt-android-compiler:2.54")
+//    kapt ("com.google.dagger:hilt-compiler:2.54")
+
 
     //Room Database
     implementation ("androidx.room:room-runtime:2.6.1")
@@ -93,6 +105,16 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
     implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+
+
+    // Glance Widget
+    implementation ("androidx.glance:glance-appwidget:1.1.1")
+
+
+    // work manager
+    implementation ("androidx.work:work-runtime-ktx:2.10.0")
+
+
 
 
 }

@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui
+package com.example.quotesapp.presentation
 
 import android.graphics.Color
 import android.os.Bundle
@@ -15,13 +15,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.quotesapp.ui.fav_screen.FavScreen
-import com.example.quotesapp.ui.home_screen.HomeScreen
-import com.example.quotesapp.ui.intro_screen.SplashScreen
-import com.example.quotesapp.ui.home_screen.bottom_nav.BottomNavAnimation
-import com.example.quotesapp.ui.home_screen.bottom_nav.Screen
-import com.example.quotesapp.ui.theme.QuotesAppTheme
-import com.example.quotesapp.ui.viewmodel.QuoteViewModel
+import androidx.work.WorkManager
+import com.example.quotesapp.presentation.fav_screen.FavScreen
+import com.example.quotesapp.presentation.home_screen.HomeScreen
+import com.example.quotesapp.presentation.intro_screen.SplashScreen
+import com.example.quotesapp.presentation.home_screen.bottom_nav.BottomNavAnimation
+import com.example.quotesapp.presentation.home_screen.bottom_nav.Screen
+import com.example.quotesapp.presentation.theme.QuotesAppTheme
+import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -42,6 +43,8 @@ class MainActivity : ComponentActivity() {
             QuotesAppTheme {
 
                 val navHost = rememberNavController()
+
+                checkWorkManagerStatus()
 
                 Scaffold(bottomBar = {
 
@@ -75,5 +78,21 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun checkWorkManagerStatus() {
+
+        val workManager = WorkManager.getInstance(this)
+
+        workManager.getWorkInfosForUniqueWorkLiveData("quotes_widget_update").observe(this) { workInfoList ->
+            if (workInfoList.isNotEmpty()) {
+                for (workInfo in workInfoList) {
+                    Log.d("WorkManagerStatus", "Work State: ${workInfo.state}")
+                }
+            } else {
+                Log.d("WorkManagerStatus", "No Work Found")
+            }
+        }
+    }
+
 }
 

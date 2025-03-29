@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.intro_screen
+package com.example.quotesapp.presentation.intro_screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -21,10 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
 import com.example.quotesapp.R
-import com.example.quotesapp.ui.home_screen.bottom_nav.Screen
-import com.example.quotesapp.ui.theme.GIFont
+import com.example.quotesapp.presentation.home_screen.bottom_nav.Screen
+import com.example.quotesapp.presentation.theme.GIFont
 import kotlinx.coroutines.delay
 
 

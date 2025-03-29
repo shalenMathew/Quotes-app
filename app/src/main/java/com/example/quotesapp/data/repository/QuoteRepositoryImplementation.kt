@@ -11,6 +11,7 @@ import com.example.quotesapp.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
@@ -30,7 +31,7 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
             Log.d("TAG",Thread.currentThread().name)
 
-            try {
+//            try {
                 withContext(Dispatchers.IO){
 
                     val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
@@ -62,13 +63,16 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
                 emit(Resource.Success(quoteHome))
 
-            }catch (e:Exception){
-                emit(Resource.Error(e.message.toString()))
-                Log.d("TAG","From impl inside catch "+e.message.toString())
-            }
+//            }catch (e:Exception){
+//                emit(Resource.Error(e.message.toString()))
+//                Log.d("TAG","From impl inside catch "+e.message.toString())
+//            }
 
 
 
+        }.catch { e ->
+            emit(Resource.Error(e.message ?: "Unknown error"))
+            Log.d("TAG", "Error in getQuote: ${e.message}")
         }
 
     }

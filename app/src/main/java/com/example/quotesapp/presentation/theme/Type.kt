@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.theme
+package com.example.quotesapp.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

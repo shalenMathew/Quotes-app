@@ -6,7 +6,7 @@
 
     <application
         android:name=".QuoteApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -16,8 +16,9 @@
         android:theme="@style/Theme.QuotesApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
+            android:launchMode="singleInstance"
             android:label="@string/app_name"
             android:theme="@style/Theme.QuotesApp">
             <intent-filter>
@@ -37,7 +38,20 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
 
+        <receiver android:name=".presentation.widget.QuotesWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/quote_widget_info" />
+        </receiver>
 
     </application>
 

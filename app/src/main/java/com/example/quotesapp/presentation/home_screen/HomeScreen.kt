@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.home_screen
+package com.example.quotesapp.presentation.home_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,9 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.quotesapp.R
-import com.example.quotesapp.ui.viewmodel.QuoteViewModel
+import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 
 
 @Composable

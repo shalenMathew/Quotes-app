@@ -1,4 +1,4 @@
-package com.example.quotesapp.ui.home_screen.util
+package com.example.quotesapp.presentation.home_screen.util
 
 import com.example.quotesapp.domain.model.Quote
 

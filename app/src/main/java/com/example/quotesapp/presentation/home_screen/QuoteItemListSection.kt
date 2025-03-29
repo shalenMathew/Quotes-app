@@ -1,9 +1,5 @@
-package com.example.quotesapp.ui.home_screen
+package com.example.quotesapp.presentation.home_screen
 
-import android.content.Intent
-import android.util.Log
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,18 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,11 +34,11 @@ import coil.compose.AsyncImage
 import com.aghajari.compose.lazyswipecards.LazySwipeCards
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
-import com.example.quotesapp.ui.home_screen.util.QuoteEvent
-import com.example.quotesapp.ui.theme.GIFont
-import com.example.quotesapp.ui.theme.customBlack
-import com.example.quotesapp.ui.theme.customGrey
-import com.example.quotesapp.ui.viewmodel.QuoteViewModel
+import com.example.quotesapp.presentation.home_screen.util.QuoteEvent
+import com.example.quotesapp.presentation.theme.GIFont
+import com.example.quotesapp.presentation.theme.customBlack
+import com.example.quotesapp.presentation.theme.customGrey
+import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 
 @Composable
 fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){

@@ -35,11 +35,11 @@ class WidgetWorkManager @AssistedInject constructor(
 
           Log.d("WorkManagerStatus", "Work started")
 
-      val response = fetchQuotes(context)
+          val response = fetchQuotes(context)
 
-//          if (!response){
-//              return Result.retry()
-//          }
+          if (!response){
+              return Result.retry()
+          }
 
           val savedQuote = context.dataStore.data.first()[QUOTE_KEY] ?: "No quote saved yet!!!"
           Log.d("WorkManagerStatus", "Saved Quote in DataStore work manager: $savedQuote")

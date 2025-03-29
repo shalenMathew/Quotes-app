@@ -34,6 +34,6 @@ suspend fun Context.saveQuote(quote: String) {
 
 fun Context.getSavedQuote(): Flow<String> {
     return dataStore.data.map { preferences ->
-        preferences[QUOTE_KEY] ?: "No quote saved yet"
+        preferences[QUOTE_KEY] ?: "No quote saved yet..."
     }
 }

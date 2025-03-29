@@ -1,6 +1,8 @@
 package com.example.quotesapp.presentation.widget
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -10,6 +12,8 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
@@ -26,18 +30,13 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
-import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.WorkerParameters
 import com.example.quotesapp.R
+import com.example.quotesapp.presentation.MainActivity
 import com.example.quotesapp.presentation.workmanager.WidgetWorkManager
 import com.example.quotesapp.util.QUOTE_KEY
 import com.example.quotesapp.util.dataStore
-import dagger.assisted.AssistedFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
@@ -49,26 +48,27 @@ object QuotesWidgetObj: GlanceAppWidget() {
         id: GlanceId
     ) {
         val savedQuote = runBlocking {
-            context.dataStore.data.first()[QUOTE_KEY] ?: "No quote saved yet"
+            context.dataStore.data.first()[QUOTE_KEY] ?: "widget is refreshing, will be updated in some min..."
         }
 
         Log.d("WID,","quote $savedQuote")
 
         provideContent {
-            QuoteWidget(savedQuote)
+            QuoteWidget(context,savedQuote)
         }
 
     }
 }
 
 @Composable
-fun QuoteWidget(savedQuote: String) {
+fun QuoteWidget(context: Context, savedQuote: String) {
     Column(
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
             .background(Color.Black)
-            .padding(horizontal = 12.dp, vertical = 5.dp),
+            .padding(horizontal = 12.dp, vertical = 5.dp)
+            .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -104,7 +104,7 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
 
     private fun scheduleWidgetUpdate(context: Context) {
 
-        val workRequest = PeriodicWorkRequestBuilder<WidgetWorkManager>(15, TimeUnit.MINUTES).build()
+        val workRequest = PeriodicWorkRequestBuilder<WidgetWorkManager>(24, TimeUnit.HOURS).build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "quotes_widget_update",

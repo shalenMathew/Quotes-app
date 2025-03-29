@@ -58,7 +58,7 @@ fun SplashScreen(navHost: NavHostController) {
 
     LaunchedEffect(Unit) {
         isVisible=true
-        delay(3000)
+        delay(1500)
         isVisible=false
         delay(500)
 

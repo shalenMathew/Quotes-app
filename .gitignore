@@ -13,6 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+google-services.json
+
 
 
 # Compiled class files

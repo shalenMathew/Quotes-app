@@ -1,5 +1,7 @@
 package com.example.quotesapp.presentation.fav_screen
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
 import com.example.quotesapp.presentation.fav_screen.util.FavQuoteEvent
@@ -38,12 +41,15 @@ import com.example.quotesapp.presentation.theme.GIFont
 import com.example.quotesapp.presentation.theme.customBlack
 import com.example.quotesapp.presentation.theme.customGrey
 import com.example.quotesapp.presentation.viewmodel.FavQuoteViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 
 
 @Composable
 fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
 
     val context = LocalContext.current
+    val activity = context as ComponentActivity
+    val firebaseAnalytics = (activity.application as QuoteApplication).firebaseAnalytics
 
     val gradient = Brush.radialGradient(
         0.0f to customBlack,
@@ -100,6 +106,13 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
                                .size(35.dp)
                                .clickable {
 
+                                   val bundle= Bundle().apply {
+                                       putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                                       putString(FirebaseAnalytics.Param.ITEM_NAME, "share")
+                                   }
+
+                                   firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
+
                                createImageFromXml(context, quote) { bitmap ->
                                    showSharePreview(context,bitmap)
                                }
@@ -115,6 +128,14 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
                                .size(30.dp)
                                .clickable {
                                    quoteViewModel.onEvent(FavQuoteEvent.Like(quote))
+
+                                   val bundle= Bundle().apply {
+                                       putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                                       putString(FirebaseAnalytics.Param.ITEM_NAME, "like")
+                                   }
+
+                                   firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
+
                                })
                    }
 

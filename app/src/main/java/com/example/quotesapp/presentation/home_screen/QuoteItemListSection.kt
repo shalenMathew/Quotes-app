@@ -1,5 +1,6 @@
 package com.example.quotesapp.presentation.home_screen
 
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aghajari.compose.lazyswipecards.LazySwipeCards
+import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
 import com.example.quotesapp.presentation.home_screen.util.QuoteEvent
@@ -39,12 +41,14 @@ import com.example.quotesapp.presentation.theme.GIFont
 import com.example.quotesapp.presentation.theme.customBlack
 import com.example.quotesapp.presentation.theme.customGrey
 import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 
 @Composable
 fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
 
     val context = LocalContext.current
     val activity = context as ComponentActivity
+    val firebaseAnalytics = (activity.application as QuoteApplication).firebaseAnalytics
 
 
     val gradient = Brush.radialGradient(
@@ -105,6 +109,14 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                         modifier= Modifier.size(35.dp)
                             .clickable {
                                 quoteViewModel.onEvent(QuoteEvent.Like(data))
+
+                                val bundle= Bundle().apply {
+                                    putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                                    putString(FirebaseAnalytics.Param.ITEM_NAME, "like")
+                                }
+
+                                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
+
                             })
                 }else{
                     AsyncImage(model = R.drawable.heart_unfilled,
@@ -112,6 +124,14 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                         modifier= Modifier.size(35.dp)
                             .clickable {
                                 quoteViewModel.onEvent(QuoteEvent.Like(data))
+
+                                val bundle= Bundle().apply {
+                                    putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                                    putString(FirebaseAnalytics.Param.ITEM_NAME, "unlike")
+                                }
+
+                                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
+
                             })
                 }
 
@@ -125,10 +145,18 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                         showSharePreview(context,bitmap)
                     }
 
+                    val bundle= Bundle().apply {
+                        putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                        putString(FirebaseAnalytics.Param.ITEM_NAME, "share")
+                    }
+
+                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
+
                 })
         }
     }
 }
+
 
 @Composable
 fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {

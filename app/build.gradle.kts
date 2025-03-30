@@ -6,6 +6,7 @@ plugins {
     id ("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
 
 }
 
@@ -113,6 +114,11 @@ dependencies {
 
     // work manager
     implementation ("androidx.work:work-runtime-ktx:2.10.0")
+
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
+    implementation ("com.google.firebase:firebase-analytics-ktx")
+
 
 
 

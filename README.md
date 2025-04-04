@@ -41,3 +41,10 @@ Twitter - https://twitter.com/shalenMathew
 
 Linkedln - https://www.linkedin.com/in/shalen-mathew-3b566921b/
 
+Linktree - https://linktr.ee/shalenmathew
+
+
+## 📝 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+

@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/quote_background"
        android:orientation="vertical"
-       android:padding="20dp">
+       android:padding="20dp"
+        android:gravity="center">
 
     <!-- Quotation Icon -->
     <ImageView
@@ -30,9 +31,10 @@
         android:textSize="27sp"
         android:fontFamily="@font/glaciaiindifference_regular"
         android:lineSpacingExtra="6sp"
-        android:gravity="center"
         android:paddingTop="12dp"
-        android:paddingHorizontal="5dp"/>
+        android:paddingHorizontal="5dp"
+        android:gravity="center"
+        />
 
 
     <View
@@ -48,7 +50,8 @@
         android:textColor="@android:color/darker_gray"
         android:textSize="22sp"
         android:gravity="center"
-        android:paddingTop="10dp"/>
+        android:paddingTop="10dp"
+        />
 
     <!-- Spacer -->
     <View
@@ -64,8 +67,9 @@
         android:textColor="@android:color/white"
         android:textSize="22sp"
         android:fontFamily="@font/glaciaiindifference_regular"
+        android:lineSpacingExtra="10sp"
         android:gravity="center"
-        android:lineSpacingExtra="10sp"/>
+        />
 </LinearLayout>
 
     </FrameLayout>

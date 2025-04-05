@@ -61,9 +61,6 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
         return FavQuoteUseCase(getFavQuote,favLikedQuote)
     }
 
-
-
-
     @Singleton
     @Provides
     fun providesQuotesApi():QuoteApi{

@@ -10,9 +10,11 @@ import com.example.quotesapp.domain.repository.QuoteRepository
 import com.example.quotesapp.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:QuoteDatabase):QuoteRepository {
@@ -23,57 +25,49 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
         return flow {
 
 
-            // improve this some coroutine mistake
-
             var quoteHome:QuoteHome? = null
 
             emit(Resource.Loading())
 
             Log.d("TAG",Thread.currentThread().name)
+            
+            coroutineScope {
 
-//            try {
-                withContext(Dispatchers.IO){
 
-                    val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
-                    val qotDef =  async { api.getQuoteOfTheDay().map { it.toQuote() } }
+                val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
+                val qotDef =  async { api.getQuoteOfTheDay().map { it.toQuote() } }
 
-                    val currList = db.getQuoteDao().getAllQuotes()
+                val currList = db.getQuoteDao().getAllQuotes()
 
-                    currList.onEach {
-                        if(!it.liked){
-                            db.getQuoteDao().deleteQuote(it)
-                        }
+                currList.onEach {
+                    if(!it.liked){
+                        db.getQuoteDao().deleteQuote(it)
                     }
-
-                    val quotesList = quotesListDef.await()
-                    val qot=qotDef.await()
-
-                    quotesList.let { list->
-                        db.getQuoteDao().insertQuoteList(quotesList)
-                    }
-
-                    Log.d("TAG","QuoteImpl inside try - Size of all list="
-                            + db.getQuoteDao().getAllQuotes().size)
-
-                    quoteHome= QuoteHome(
-                        quotesList = db.getQuoteDao().getAllQuotes(),
-                        quotesOfTheDay = qot
-                    )
                 }
 
+                val quotesList = quotesListDef.await()
+                val qot=qotDef.await()
+
+                quotesList.let { list->
+                    db.getQuoteDao().insertQuoteList(quotesList)
+                }
+
+                Log.d("TAG","QuoteImpl inside try - Size of all list="
+                        + db.getQuoteDao().getAllQuotes().size)
+
+                quoteHome= QuoteHome(
+                    quotesList = db.getQuoteDao().getAllQuotes(),
+                    quotesOfTheDay = qot
+                )
+
                 emit(Resource.Success(quoteHome))
-
-//            }catch (e:Exception){
-//                emit(Resource.Error(e.message.toString()))
-//                Log.d("TAG","From impl inside catch "+e.message.toString())
-//            }
-
-
+            }
 
         }.catch { e ->
             emit(Resource.Error(e.message ?: "Unknown error"))
             Log.d("TAG", "Error in getQuote: ${e.message}")
-        }
+
+        }.flowOn(Dispatchers.IO)
 
     }
 

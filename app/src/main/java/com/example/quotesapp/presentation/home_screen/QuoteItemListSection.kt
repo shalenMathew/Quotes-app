@@ -170,7 +170,9 @@ fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {
             , contentAlignment = Alignment.Center){
             CircularProgressIndicator(color = White)
         }
-    }else if (state.error.isNotEmpty()){
+    }
+
+    else if (state.error.isNotEmpty()){
 
         Box(modifier = Modifier
             .fillMaxSize()

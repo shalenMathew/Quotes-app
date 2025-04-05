@@ -53,7 +53,8 @@ class WidgetWorkManager @AssistedInject constructor(
 
           return Result.success()
 
-        }catch (e: Exception){
+        }
+      catch (e: Exception) {
           Log.d("WorkManagerStatus", "Exception in doWork", e)
             Result.failure()
         }
@@ -61,7 +62,7 @@ class WidgetWorkManager @AssistedInject constructor(
     }
 
 
-    private suspend fun fetchQuotes(context: Context): Boolean {
+    private suspend fun fetchQuotes(context: Context):Boolean {
 
    return try {
 
@@ -98,7 +99,7 @@ class WidgetWorkManager @AssistedInject constructor(
             }
         }
 
-    }catch (e: Exception){
+    } catch (e: Exception){
         Log.d("WorkManagerStatus", "Exception in fetchQuotes", e)
       false
     }

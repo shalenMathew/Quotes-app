@@ -30,6 +30,14 @@ https://github.com/user-attachments/assets/ec223930-4e78-479f-91cd-9d6625efd04a
 - Room
 - WorkManager
 
+## 🚀 Features
+- view inspirational quotes every day
+- save your favorite quotes offline
+- share your favorite quotes with friends & family
+- add a home screen widget that refreshes every 24 hours
+- get daily motivational quote notifications
+
+
 ## Contribution 🤝
 - If your new to open source and want to play around with contribution you can do it here or u can raise issue if you want to make any improvements or fix any bugs
 - Tip for beginners : Try to fix small bugs and dont get overwhelmed by the source code , take your time... Start by making small fixes or making small changes 👍

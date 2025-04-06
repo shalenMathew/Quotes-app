@@ -1,7 +1,12 @@
 package com.example.quotesapp.presentation
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -10,20 +15,26 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
-
+import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
+import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.presentation.fav_screen.FavScreen
 import com.example.quotesapp.presentation.home_screen.HomeScreen
-import com.example.quotesapp.presentation.intro_screen.SplashScreen
 import com.example.quotesapp.presentation.home_screen.bottom_nav.BottomNavAnimation
 import com.example.quotesapp.presentation.home_screen.bottom_nav.Screen
+import com.example.quotesapp.presentation.intro_screen.SplashScreen
 import com.example.quotesapp.presentation.theme.QuotesAppTheme
 import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
+import com.example.quotesapp.presentation.workmanager.notification.ScheduleNotification
+import com.example.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
+import com.example.quotesapp.util.Constants
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -31,6 +42,11 @@ import dagger.hilt.android.AndroidEntryPoint
 // even when not explicitly mention @inject the viewmodel creation and its factory creation is taken care by hilt behind the scenes
 // so the activities or fragments which needs to be injected by hilt should be annotated using this annotation
 class MainActivity : ComponentActivity() {
+
+    private lateinit var firebaseAnalytics:FirebaseAnalytics
+
+    @Inject lateinit var scheduleNotification:ScheduleNotification
+    @Inject lateinit var scheduleWidget: ScheduleWidgetRefresh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +58,20 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuotesAppTheme {
 
-                val navHost = rememberNavController()
 
+                firebaseAnalytics = (application as QuoteApplication).firebaseAnalytics
+                scheduleNotification.scheduleNotification()
+//                scheduleWidget.scheduleWidgetRefresh()
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    scheduleWidget.scheduleWidgetRefresh()
+                }, 4000)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestNotificationPermission()
+                }
+
+                val navHost = rememberNavController()
                 checkWorkManagerStatus()
 
                 Scaffold(bottomBar = {
@@ -63,7 +91,8 @@ class MainActivity : ComponentActivity() {
                         Log.d("TAG","currentScreen = $currentScreen")
                     }
 
-                }) { paddingValues ->
+                })
+                { paddingValues ->
 
                  val quoteViewModel:QuoteViewModel by viewModels()
 
@@ -75,6 +104,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                 }
+
+
             }
         }
     }
@@ -92,7 +123,29 @@ class MainActivity : ComponentActivity() {
                 Log.d("WorkManagerStatus", "No Work Found")
             }
         }
+
+
+        workManager.getWorkInfosForUniqueWorkLiveData("quotes_notification").observe(this) { workInfoList ->
+            if (workInfoList.isNotEmpty()) {
+                for (workInfo in workInfoList) {
+                    Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Work State: ${workInfo.state}")
+                }
+            } else {
+                Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "No Work Found")
+            }
+        }
+
+    }
+
+    private fun requestNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE)
+        }
     }
 
 }
+
+
 

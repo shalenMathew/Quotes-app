@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.workmanager
+package com.example.quotesapp.presentation.workmanager.widget
 
 import android.content.Context
 import android.util.Log
@@ -9,10 +9,10 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.example.quotesapp.presentation.widget.QuotesWidgetObj
-import com.example.quotesapp.util.QUOTE_KEY
 import com.example.quotesapp.util.Resource
+import com.example.quotesapp.util.WIDGET_QUOTE_KEY
 import com.example.quotesapp.util.dataStore
-import com.example.quotesapp.util.saveQuote
+import com.example.quotesapp.util.saveWidgetQuote
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -20,11 +20,10 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
-
 @HiltWorker
 class WidgetWorkManager @AssistedInject constructor(
     @Assisted private val  context: Context,
-   @Assisted private val params: WorkerParameters,
+    @Assisted private val params: WorkerParameters,
     private val quoteUseCase: QuoteUseCase
 ) : CoroutineWorker(context, params)
 {
@@ -41,19 +40,22 @@ class WidgetWorkManager @AssistedInject constructor(
               return Result.retry()
           }
 
-          val savedQuote = context.dataStore.data.first()[QUOTE_KEY] ?: "No quote saved yet!!!"
+          val savedQuote = context.dataStore.data.first()[WIDGET_QUOTE_KEY] ?: "No quote saved yet!!!"
           Log.d("WorkManagerStatus", "Saved Quote in DataStore work manager: $savedQuote")
 
           val glanceAppWidgetManager = GlanceAppWidgetManager(applicationContext)
           val widgetIds = glanceAppWidgetManager.getGlanceIds(QuotesWidgetObj::class.java)
 
-          widgetIds.forEach { it->
-              QuotesWidgetObj.updateAll(applicationContext)
+          if(widgetIds.isNotEmpty()){
+              widgetIds.forEach { it->
+                  QuotesWidgetObj.updateAll(applicationContext)
+              }
           }
 
           return Result.success()
 
-        }catch (e: Exception){
+        }
+      catch (e: Exception) {
           Log.d("WorkManagerStatus", "Exception in doWork", e)
             Result.failure()
         }
@@ -61,7 +63,7 @@ class WidgetWorkManager @AssistedInject constructor(
     }
 
 
-    private suspend fun fetchQuotes(context: Context): Boolean {
+    private suspend fun fetchQuotes(context: Context):Boolean {
 
    return try {
 
@@ -69,10 +71,10 @@ class WidgetWorkManager @AssistedInject constructor(
 
      val response =
          withTimeoutOrNull(5000) {
-         quoteUseCase.getQuote()
-             .filter { it is Resource.Success || it is Resource.Error}
-             .first()
-     }
+             quoteUseCase.getQuote()
+                 .filter { it is Resource.Success || it is Resource.Error }
+                 .first()
+         }
         when(response){
 
             is Resource.Success->{
@@ -80,7 +82,7 @@ class WidgetWorkManager @AssistedInject constructor(
 
                 if(quote!=null){
                     Log.d("WorkManagerStatus", "Fetched Quote: $quote")
-                    context.saveQuote(quote)
+                    context.saveWidgetQuote(quote)
                      true
                 }else{
                     Log.d("WorkManagerStatus", "Quote is null")
@@ -98,7 +100,7 @@ class WidgetWorkManager @AssistedInject constructor(
             }
         }
 
-    }catch (e: Exception){
+    } catch (e: Exception){
         Log.d("WorkManagerStatus", "Exception in fetchQuotes", e)
       false
     }

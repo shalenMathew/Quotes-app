@@ -11,6 +11,4 @@ interface QuoteApi {
     @GET("today")
    suspend fun getQuoteOfTheDay():QuotesDto
 
-
-
 }

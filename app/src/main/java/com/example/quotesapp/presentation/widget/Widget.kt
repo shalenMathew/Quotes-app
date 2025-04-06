@@ -1,8 +1,6 @@
 package com.example.quotesapp.presentation.widget
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -34,8 +32,8 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.quotesapp.R
 import com.example.quotesapp.presentation.MainActivity
-import com.example.quotesapp.presentation.workmanager.WidgetWorkManager
-import com.example.quotesapp.util.QUOTE_KEY
+import com.example.quotesapp.presentation.workmanager.widget.WidgetWorkManager
+import com.example.quotesapp.util.WIDGET_QUOTE_KEY
 import com.example.quotesapp.util.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -48,7 +46,7 @@ object QuotesWidgetObj: GlanceAppWidget() {
         id: GlanceId
     ) {
         val savedQuote = runBlocking {
-            context.dataStore.data.first()[QUOTE_KEY] ?: "widget is refreshing, will be updated in some min..."
+            context.dataStore.data.first()[WIDGET_QUOTE_KEY] ?: "widget is refreshing, will be updated in some time.Or try rebooting the device"
         }
 
         Log.d("WID,","quote $savedQuote")
@@ -99,12 +97,12 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
         Log.d("WorkManagerStatus", "Widget enabled, scheduling update")
-        scheduleWidgetUpdate(context)
+//        scheduleWidgetUpdate(context)
     }
 
     private fun scheduleWidgetUpdate(context: Context) {
 
-        val workRequest = PeriodicWorkRequestBuilder<WidgetWorkManager>(24, TimeUnit.HOURS).build()
+        val workRequest = PeriodicWorkRequestBuilder<WidgetWorkManager>(15, TimeUnit.HOURS).build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "quotes_widget_update",

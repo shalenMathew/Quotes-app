@@ -10,4 +10,5 @@ import com.example.quotesapp.domain.model.Quote
 
 sealed class QuoteEvent {
     data class Like(val quote: Quote):QuoteEvent()
+    data object Retry: QuoteEvent()
 }

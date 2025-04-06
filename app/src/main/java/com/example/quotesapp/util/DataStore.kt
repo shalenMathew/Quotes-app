@@ -14,13 +14,15 @@ import kotlinx.coroutines.flow.map
 val Context.dataStore by preferencesDataStore("quote_prefs")
 
 
-val QUOTE_KEY = stringPreferencesKey("quote")
+val WIDGET_QUOTE_KEY = stringPreferencesKey("widgetQuote")
+val NOTIFICATION_QUOTE_KEY = stringPreferencesKey("notificationQuote")
+val NOTIFICATION_AUTHOR_KEY = stringPreferencesKey("notificationAuthor")
 
 
-suspend fun Context.saveQuote(quote: String) {
+suspend fun Context.saveWidgetQuote(quote: String) {
     // saving quote of the day
     dataStore.edit { preferences ->
-        preferences[QUOTE_KEY] = quote
+        preferences[WIDGET_QUOTE_KEY] = quote
     }
 
     val intent = Intent(this, QuotesWidgetReceiver::class.java).apply {
@@ -28,12 +30,25 @@ suspend fun Context.saveQuote(quote: String) {
     }
 
     sendBroadcast(intent)
+}
 
+suspend fun Context.saveNotificationQuote(quote: String,author: String){
+    dataStore.edit { preferences ->
+        preferences[NOTIFICATION_QUOTE_KEY] = quote
+        preferences[NOTIFICATION_AUTHOR_KEY] = author
+    }
+}
+
+fun Context.getSavedNotificationQuote(): Flow<String> {
+    return dataStore.data.map { preferences ->
+        preferences[NOTIFICATION_QUOTE_KEY] ?: "No quote saved yet..."
+        preferences[NOTIFICATION_AUTHOR_KEY] ?: "No author saved yet..."
+    }
 }
 
 
-fun Context.getSavedQuote(): Flow<String> {
+fun Context.getSavedWidgetQuote(): Flow<String> {
     return dataStore.data.map { preferences ->
-        preferences[QUOTE_KEY] ?: "No quote saved yet..."
+        preferences[WIDGET_QUOTE_KEY] ?: "No quote saved yet..."
     }
 }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="500dp"
+        android:background="@drawable/quote_background"
+        android:padding="20dp">
+
+        <!-- Quotation Icon -->
+        <ImageView
+            android:id="@+id/quote_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/quotation"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+        <!-- Centered content: Quote + Author -->
+        <LinearLayout
+            android:id="@+id/quote_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:paddingHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/quote_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is a sample quote. It may be short or long depending on what is fetched from the API."
+                android:textColor="@android:color/white"
+                android:textSize="28sp"
+                android:fontFamily="@font/glaciaiindifference_regular"
+                android:lineSpacingExtra="6sp"
+                android:paddingTop="12dp" />
+
+            <TextView
+                android:id="@+id/quote_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Author"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="25sp"
+                android:gravity="start"
+                android:paddingTop="45dp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/quote_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quotes.app"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:fontFamily="@font/glaciaiindifference_regular"
+            android:lineSpacingExtra="10sp"
+            android:layout_alignParentBottom="true"
+            android:textAlignment="center"
+            android:layout_marginTop="16dp" />
+
+    </RelativeLayout>
+
+</FrameLayout>

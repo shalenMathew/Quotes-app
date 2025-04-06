@@ -26,8 +26,7 @@ class ScheduleNotification @Inject constructor(@ApplicationContext private val c
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "quotes_notification",
             ExistingPeriodicWorkPolicy.KEEP,
-            workRequest
-        )
+            workRequest)
 
     }
 

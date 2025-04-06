@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
 import com.example.quotesapp.QuoteApplication
+import com.example.quotesapp.R
 import com.example.quotesapp.presentation.fav_screen.FavScreen
 import com.example.quotesapp.presentation.home_screen.HomeScreen
 import com.example.quotesapp.presentation.home_screen.bottom_nav.BottomNavAnimation
@@ -32,7 +33,9 @@ import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 import com.example.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.example.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.example.quotesapp.util.Constants
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -58,6 +61,20 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuotesAppTheme {
 
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.d("TAG", "Fetching FCM registration token failed", task.exception)
+                        return@OnCompleteListener
+                    }
+
+                    // Get new FCM registration token
+                    val token = task.result
+
+
+                    Log.d("TAG", "Token - $token")
+
+                })
+
 
                 firebaseAnalytics = (application as QuoteApplication).firebaseAnalytics
                 scheduleNotification.scheduleNotification()
@@ -65,7 +82,7 @@ class MainActivity : ComponentActivity() {
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     scheduleWidget.scheduleWidgetRefresh()
-                }, 4000)
+                }, 5000)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     requestNotificationPermission()

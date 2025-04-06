@@ -7,6 +7,7 @@ plugins {
     id("com.google.devtools.ksp")
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 
 }
 
@@ -117,8 +118,9 @@ dependencies {
 
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
-    implementation ("com.google.firebase:firebase-analytics-ktx")
-
+    implementation ("com.google.firebase:firebase-analytics-ktx") // analytics
+    implementation("com.google.firebase:firebase-crashlytics-ktx:18.6.4") // crashanalytics
+    implementation("com.google.firebase:firebase-messaging") // fcm
 
 
 

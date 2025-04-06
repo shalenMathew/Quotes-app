@@ -16,14 +16,14 @@ import java.io.File
 
 fun createImageFromXml(context: Context, quote: Quote, callback: (Bitmap) -> Unit) {
     val inflater = LayoutInflater.from(context)
-    val view = inflater.inflate(R.layout.share_image, null, false)
+    val view = inflater.inflate(R.layout.share_image_2, null, false)
 
     // Set the quote text dynamically
     val quoteTextView = view.findViewById<TextView>(R.id.quote_text)
     val authorTextView = view.findViewById<TextView>(R.id.quote_author)
 
     quoteTextView.text = quote.quote
-    authorTextView.text = "- ${quote.author}"
+    authorTextView.text = "${quote.author}"
 
     // Measure and layout the view
 

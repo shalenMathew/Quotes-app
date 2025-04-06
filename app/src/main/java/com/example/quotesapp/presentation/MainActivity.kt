@@ -61,21 +61,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuotesAppTheme {
 
-                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        Log.d("TAG", "Fetching FCM registration token failed", task.exception)
-                        return@OnCompleteListener
-                    }
-
-                    // Get new FCM registration token
-                    val token = task.result
-
-
-                    Log.d("TAG", "Token - $token")
-
-                })
-
-
                 firebaseAnalytics = (application as QuoteApplication).firebaseAnalytics
                 scheduleNotification.scheduleNotification()
 //                scheduleWidget.scheduleWidgetRefresh()

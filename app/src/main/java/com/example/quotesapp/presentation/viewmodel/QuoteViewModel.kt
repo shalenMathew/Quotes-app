@@ -1,6 +1,7 @@
 package com.example.quotesapp.presentation.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +9,6 @@ import com.example.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.example.quotesapp.presentation.home_screen.util.QuoteEvent
 import com.example.quotesapp.presentation.home_screen.util.QuoteState
 import com.example.quotesapp.util.Resource
-import com.example.quotesapp.util.saveQuote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -30,13 +30,7 @@ class QuoteViewModel @Inject constructor(
         getQuote()
     }
 
-//    private fun  saveQuotesToPref(){
-//        viewModelScope.launch {
-//            context.saveQuote()
-//        }
-//    }
-
-   private fun getQuote(){
+    private fun getQuote(){
 
        viewModelScope.launch {
 
@@ -45,19 +39,16 @@ class QuoteViewModel @Inject constructor(
                when(it){
 
                   is Resource.Success->{
-//                      Log.d("TAG","viewmodel " + it.data!!.quotesList[0].toString())
+                      Log.d("TAG","from viewmodel, fetched dat succesfully " + it.data?.quotesList[0].toString() )
 
                       it.data?.let { data->
                           // saving in state
                           _quoteState.value = _quoteState.value.copy(dataList = data.quotesList.toMutableList(),
-                              qot = data.quotesOfTheDay[0], isLoading = false)
-
-                          // saving the quote in datastore
-//                          context.saveQuote(data.quotesList[0].quote) // change this to data.quotesOfTheDay[0].quote later
+                              qot = data.quotesOfTheDay[0], isLoading = false, error = "")
 
                       } ?:{
                           _quoteState.value = _quoteState.value.copy(dataList = mutableListOf(),
-                          qot =null , isLoading = false)
+                          qot =null , isLoading = false, error = "")
                       }
                   }
 
@@ -65,7 +56,7 @@ class QuoteViewModel @Inject constructor(
                      _quoteState.value = _quoteState.value.copy(error = it.message ?: "Something went wrong", isLoading = false)
                    }
                    is Resource.Loading -> {
-                       _quoteState.value =_quoteState.value.copy(isLoading = true)
+                       _quoteState.value =_quoteState.value.copy(isLoading = true, dataList = mutableListOf(), error = "")
                    }
                }
            }
@@ -75,6 +66,7 @@ class QuoteViewModel @Inject constructor(
     fun onEvent(quoteEvent: QuoteEvent){
 
         when(quoteEvent){
+
             is QuoteEvent.Like -> {
                 viewModelScope.launch {
 //                    quoteUseCase.likedQuote(quoteEvent.quote)
@@ -90,6 +82,10 @@ class QuoteViewModel @Inject constructor(
                 }
 
             }
+            is QuoteEvent.Retry -> {
+                getQuote()
+            }
+
         }
 
     }

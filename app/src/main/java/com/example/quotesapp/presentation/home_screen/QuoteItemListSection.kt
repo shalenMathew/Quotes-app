@@ -15,6 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,8 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.aghajari.compose.lazyswipecards.LazySwipeCards
 import com.example.quotesapp.QuoteApplication
@@ -102,7 +108,8 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
             .padding(horizontal = 20.dp,vertical=28.dp)) {
 
 
-                if (data.liked ){
+                if (data.liked )
+                {
 
                     AsyncImage(model = R.drawable.heart_filled,
                         contentDescription = null,
@@ -118,7 +125,9 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                                 firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
 
                             })
-                }else{
+                }
+                else
+                {
                     AsyncImage(model = R.drawable.heart_unfilled,
                         contentDescription = null,
                         modifier= Modifier.size(35.dp)
@@ -139,7 +148,8 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
 
             AsyncImage(model = R.drawable.send,
                 contentDescription = null,
-                modifier= Modifier.size(35.dp).clickable {
+                modifier= Modifier.size(35.dp).clickable
+                {
 
                     createImageFromXml(context, data) { bitmap ->
                         showSharePreview(context,bitmap)
@@ -163,7 +173,8 @@ fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {
 
     val state = quoteViewModel.quoteState.value
 
-    if(state.isLoading){
+    if(state.isLoading)
+    {
         Box(modifier = Modifier
             .fillMaxSize()
             .background(color = Color.Transparent)
@@ -171,21 +182,40 @@ fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {
             CircularProgressIndicator(color = White)
         }
     }
-
-    else if (state.error.isNotEmpty()){
-
+    else if (state.error.isNotEmpty())
+    {
         Box(modifier = Modifier
+            .padding(5.dp)
             .fillMaxSize()
             .background(color = Color.Transparent)
             , contentAlignment = Alignment.Center){
-              Text(state.error, color = White)
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Text(text = state.error,color = White, modifier = Modifier.fillMaxWidth(),textAlign = TextAlign.Center)
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Button(onClick = {
+
+                    // retry fetching data
+                    quoteViewModel.onEvent(QuoteEvent.Retry)
+
+                }, colors = ButtonDefaults.buttonColors(White)) {
+                    Text("Refresh",
+                        color = Color.Black, fontSize = 15.sp,
+                        modifier = Modifier.padding(5.dp))
+                }
+            }
         }
 
-    }else{
+    }
+    else
+    {
             LazySwipeCards(cardColor = Color.Transparent,
                 cardShadowElevation = 0.dp,
                 translateSize = 8.dp,
-                swipeThreshold = 0.4f) {
+                swipeThreshold = 0.3f) {
 
                 items(state.dataList) {it->
                     QuoteItem(it,quoteViewModel)
@@ -196,4 +226,6 @@ fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {
             }
     }
     }
+
+
 

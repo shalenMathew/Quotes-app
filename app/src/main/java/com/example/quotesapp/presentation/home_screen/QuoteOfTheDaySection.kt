@@ -35,7 +35,7 @@ fun QuoteOfTheDaySection(
                 modifier = Modifier.padding(start = 15.dp),
                 color = Color.White)
 
-            Text(text = state.qot?.quote ?: state.error,
+            Text(text = state.qot?.quote ?: "",
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Thin,
                 fontSize = 16.sp,

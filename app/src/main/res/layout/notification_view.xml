@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#dddddd">
+
+    <TextView
+        android:id="@+id/nv_title"
+        android:text="Design is intelligence making sense that make no sense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:textAlignment="textStart"
+        android:paddingEnd="40dp"
+        android:paddingStart="20dp"
+        android:paddingBottom="25dp"
+        android:paddingTop="15dp"
+        />
+
+    <TextView
+        android:id="@+id/nv_author"
+        android:text="August Ames"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:textSize="23sp"
+        android:textAlignment="textStart"
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
+        android:paddingBottom="15dp"
+        />
+
+
+</LinearLayout>

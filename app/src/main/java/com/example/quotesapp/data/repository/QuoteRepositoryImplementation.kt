@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 
 class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:QuoteDatabase):QuoteRepository {
 
@@ -24,15 +25,13 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
         return flow {
 
-
             var quoteHome:QuoteHome? = null
 
             emit(Resource.Loading())
 
             Log.d("TAG",Thread.currentThread().name)
-            
-            coroutineScope {
 
+            coroutineScope {
 
                 val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
                 val qotDef =  async { api.getQuoteOfTheDay().map { it.toQuote() } }
@@ -64,8 +63,25 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
             }
 
         }.catch { e ->
-            emit(Resource.Error(e.message ?: "Unknown error"))
+
+            val errorMessage = when (e) {
+                is IOException-> "No internet connection. Please try again."
+                is HttpException -> {
+                    when (e.code()) {
+                        400 -> "Bad Request"
+                        401 -> "Unauthorized"
+                        403 -> "Forbidden"
+                        429 -> "To many request to the server please check back in some time"
+                        else -> {"Unknown error ${e.message()}"}
+                    }
+                    }
+                else -> "Something went wrong. Please try again."
+            }
+
+
             Log.d("TAG", "Error in getQuote: ${e.message}")
+
+            emit(Resource.Error(errorMessage))
 
         }.flowOn(Dispatchers.IO)
 

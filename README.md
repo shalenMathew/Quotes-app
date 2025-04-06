@@ -31,11 +31,11 @@ https://github.com/user-attachments/assets/ec223930-4e78-479f-91cd-9d6625efd04a
 - WorkManager
 
 ## 🚀 Features
-- view inspirational quotes every day
-- save your favorite quotes offline
-- share your favorite quotes with friends & family
-- add a home screen widget that refreshes every 24 hours
-- get daily motivational quote notifications
+- ✨ fresh motivational quotes daily
+- 📂 save favorites offline
+- 📤 share quotes with friends & family
+- 🏠 home screen widget (auto-refreshes every 24hrs)
+- 🔔 daily inspiration via notifications
 
 
 ## Contribution 🤝

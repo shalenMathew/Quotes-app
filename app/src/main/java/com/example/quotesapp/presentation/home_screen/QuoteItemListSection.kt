@@ -92,7 +92,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                     .fillMaxWidth(),
                 color = White,
                 style = TextStyle(
-                    lineHeight = 40.sp // Set the line height
+                    lineHeight = 40.sp
                 )
             )
 

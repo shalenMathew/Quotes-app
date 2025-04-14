@@ -21,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
+import com.example.quotesapp.BuildConfig
 import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.R
 import com.example.quotesapp.presentation.fav_screen.FavScreen
@@ -35,6 +36,8 @@ import com.example.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefre
 import com.example.quotesapp.util.Constants
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -45,8 +48,6 @@ import javax.inject.Inject
 // even when not explicitly mention @inject the viewmodel creation and its factory creation is taken care by hilt behind the scenes
 // so the activities or fragments which needs to be injected by hilt should be annotated using this annotation
 class MainActivity : ComponentActivity() {
-
-    private lateinit var firebaseAnalytics:FirebaseAnalytics
 
     @Inject lateinit var scheduleNotification:ScheduleNotification
     @Inject lateinit var scheduleWidget: ScheduleWidgetRefresh
@@ -61,7 +62,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuotesAppTheme {
 
-                firebaseAnalytics = (application as QuoteApplication).firebaseAnalytics
+                var firebaseAnalytics:FirebaseAnalytics = Firebase.analytics
+
+                if (BuildConfig.DEBUG) {
+                    Log.d("TAG","DEBUGGING MODE")
+                    firebaseAnalytics.setAnalyticsCollectionEnabled(false)
+                } else {
+                    Log.d("TAG","RELEASE MODE")
+                    firebaseAnalytics.setAnalyticsCollectionEnabled(true)
+                }
+
+//                firebaseAnalytics = (application as QuoteApplication).firebaseAnalytics
                 scheduleNotification.scheduleNotification()
 //                scheduleWidget.scheduleWidgetRefresh()
 

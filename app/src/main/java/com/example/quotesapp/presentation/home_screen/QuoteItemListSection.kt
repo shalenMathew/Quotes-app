@@ -1,6 +1,7 @@
 package com.example.quotesapp.presentation.home_screen
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.aghajari.compose.lazyswipecards.LazySwipeCards
+import com.example.quotesapp.BuildConfig
 import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
@@ -117,13 +119,16 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                             .clickable {
                                 quoteViewModel.onEvent(QuoteEvent.Like(data))
 
-                                val bundle= Bundle().apply {
-                                    putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                                    putString(FirebaseAnalytics.Param.ITEM_NAME, "like")
+                                if(!BuildConfig.DEBUG){
+                                    val bundle= Bundle().apply {
+                                        putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                                        putString(FirebaseAnalytics.Param.ITEM_NAME, "like")
+                                    }
+
+                                    Log.d("TAG","LIKED")
+
+                                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
                                 }
-
-                                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
-
                             })
                 }
                 else
@@ -134,12 +139,13 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                             .clickable {
                                 quoteViewModel.onEvent(QuoteEvent.Like(data))
 
-                                val bundle= Bundle().apply {
-                                    putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                                    putString(FirebaseAnalytics.Param.ITEM_NAME, "unlike")
+                                if(!BuildConfig.DEBUG){
+                                    val bundle= Bundle().apply {
+                                        putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                                        putString(FirebaseAnalytics.Param.ITEM_NAME, "unlike")
+                                    }
+                                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
                                 }
-
-                                firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
 
                             })
                 }
@@ -155,12 +161,18 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                         showSharePreview(context,bitmap)
                     }
 
-                    val bundle= Bundle().apply {
-                        putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                        putString(FirebaseAnalytics.Param.ITEM_NAME, "share")
+
+                    if(!BuildConfig.DEBUG){
+
+                        val bundle= Bundle().apply {
+                            putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
+                            putString(FirebaseAnalytics.Param.ITEM_NAME, "share")
+                        }
+
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
+
                     }
 
-                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
 
                 })
         }

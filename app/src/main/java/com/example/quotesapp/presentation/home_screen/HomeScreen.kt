@@ -1,5 +1,6 @@
 package com.example.quotesapp.presentation.home_screen
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.quotesapp.R
 import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 
@@ -23,9 +26,18 @@ fun HomeScreen(paddingValues: PaddingValues,
                quoteViewModel: QuoteViewModel){
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)){
-        Image(painter = painterResource(R.drawable.bg),
+
+        val painter = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            rememberAsyncImagePainter(R.drawable.bg)
+        } else {
+            painterResource(R.drawable.bg)
+        }
+
+        Image(painter = painter,
             contentDescription = null,
-            modifier = Modifier.size(200.dp).align(Alignment.TopEnd))
+            modifier = Modifier.size(200.dp).align(Alignment.TopEnd),
+
+            )
 
         Column(modifier = Modifier.fillMaxSize()
             .background(Color.Transparent)

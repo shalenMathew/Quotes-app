@@ -38,7 +38,6 @@ android {
             debug {
 
                 buildConfigField("Boolean", "ENABLE_ANALYTICS", "false")
-//                applicationIdSuffix=".debug"
                 isDebuggable = true
             }
         }

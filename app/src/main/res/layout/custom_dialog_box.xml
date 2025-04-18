@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    >
+
+    <ImageView
+        android:id="@+id/cd_preview"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ksi"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:layout_margin="12dp"
+        android:layout_below="@id/cd_preview"
+        >
+
+
+        <ImageView
+            android:id="@+id/cd_cancel"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/cancel"
+            android:layout_marginEnd="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/cd_customize"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/custom"
+            android:layout_marginEnd="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/cd_download"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/downloads"
+            android:layout_marginEnd="30dp"
+            />
+
+        <ImageView
+            android:id="@+id/cd_share"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/share"
+            />
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -22,8 +22,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.work.WorkManager
 import com.example.quotesapp.BuildConfig
-import com.example.quotesapp.QuoteApplication
-import com.example.quotesapp.R
 import com.example.quotesapp.presentation.fav_screen.FavScreen
 import com.example.quotesapp.presentation.home_screen.HomeScreen
 import com.example.quotesapp.presentation.home_screen.bottom_nav.BottomNavAnimation
@@ -34,11 +32,9 @@ import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 import com.example.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.example.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.example.quotesapp.util.Constants
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -52,12 +48,13 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var scheduleNotification:ScheduleNotification
     @Inject lateinit var scheduleWidget: ScheduleWidgetRefresh
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(Color.BLACK,Color.BLACK),
             navigationBarStyle = SystemBarStyle.light(Color.BLACK,Color.BLACK)
-
         )
         setContent {
             QuotesAppTheme {
@@ -72,17 +69,16 @@ class MainActivity : ComponentActivity() {
                     firebaseAnalytics.setAnalyticsCollectionEnabled(true)
                 }
 
-//                firebaseAnalytics = (application as QuoteApplication).firebaseAnalytics
                 scheduleNotification.scheduleNotification()
-//                scheduleWidget.scheduleWidgetRefresh()
+
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     scheduleWidget.scheduleWidgetRefresh()
                 }, 5000)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    requestNotificationPermission()
-                }
+
+                /* REQUESTING NECESSARY PERMISSIONS  */
+                requestNecessaryPermissions()
 
                 val navHost = rememberNavController()
                 checkWorkManagerStatus()
@@ -150,13 +146,35 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    private fun requestNecessaryPermissions() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermission()
+        }
+
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            requestWriteExternalStoragePermission()
+        }
+
+    }
+
+    private fun requestWriteExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+           requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.REQUEST_CODE_WRITE_STORAGE)
+        }
+    }
+
     private fun requestNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE)
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE_NOTIFICATION)
         }
     }
+
 
 }
 

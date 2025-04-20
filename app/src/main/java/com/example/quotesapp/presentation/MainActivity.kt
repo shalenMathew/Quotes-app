@@ -12,7 +12,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
@@ -20,18 +19,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.work.WorkManager
 import com.example.quotesapp.BuildConfig
-import com.example.quotesapp.presentation.fav_screen.FavScreen
-import com.example.quotesapp.presentation.home_screen.HomeScreen
-import com.example.quotesapp.presentation.home_screen.bottom_nav.BottomNavAnimation
-import com.example.quotesapp.presentation.home_screen.bottom_nav.Screen
-import com.example.quotesapp.presentation.intro_screen.SplashScreen
+import com.example.quotesapp.presentation.navigation.AppNavigation
+import com.example.quotesapp.presentation.screens.fav_screen.FavScreen
+import com.example.quotesapp.presentation.screens.home_screen.HomeScreen
+import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.BottomNavAnimation
+import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
+import com.example.quotesapp.presentation.screens.intro_screen.SplashScreen
+import com.example.quotesapp.presentation.screens.share_screen.ShareScreen
 import com.example.quotesapp.presentation.theme.QuotesAppTheme
-import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 import com.example.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.example.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.example.quotesapp.util.Constants
+import com.example.quotesapp.util.checkWorkManagerStatus
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -79,9 +79,9 @@ class MainActivity : ComponentActivity() {
 
                 /* REQUESTING NECESSARY PERMISSIONS  */
                 requestNecessaryPermissions()
+                checkWorkManagerStatus(this,this)
 
                 val navHost = rememberNavController()
-                checkWorkManagerStatus()
 
                 Scaffold(bottomBar = {
 
@@ -102,51 +102,15 @@ class MainActivity : ComponentActivity() {
 
                 })
                 { paddingValues ->
-
-                 val quoteViewModel:QuoteViewModel by viewModels()
-
-                    NavHost(navController = navHost, startDestination = Screen.Splash.route){
-                        composable(Screen.Splash.route){ SplashScreen(navHost) }
-                        composable(Screen.Home.route){  HomeScreen(paddingValues,quoteViewModel) }
-                        composable(Screen.Fav.route){ FavScreen(paddingValues) }
-
-                    }
-
+                    // CHANGE APP NAVIGATION
+                    AppNavigation(navHost = navHost, paddingValues = paddingValues)
                 }
-
 
             }
         }
     }
 
-    private fun checkWorkManagerStatus() {
-
-        val workManager = WorkManager.getInstance(this)
-
-        workManager.getWorkInfosForUniqueWorkLiveData("quotes_widget_update").observe(this) { workInfoList ->
-            if (workInfoList.isNotEmpty()) {
-                for (workInfo in workInfoList) {
-                    Log.d("WorkManagerStatus", "Work State: ${workInfo.state}")
-                }
-            } else {
-                Log.d("WorkManagerStatus", "No Work Found")
-            }
-        }
-
-
-        workManager.getWorkInfosForUniqueWorkLiveData("quotes_notification").observe(this) { workInfoList ->
-            if (workInfoList.isNotEmpty()) {
-                for (workInfo in workInfoList) {
-                    Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Work State: ${workInfo.state}")
-                }
-            } else {
-                Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "No Work Found")
-            }
-        }
-
-    }
-
-    private fun requestNecessaryPermissions() {
+    fun requestNecessaryPermissions() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermission()
@@ -163,7 +127,7 @@ class MainActivity : ComponentActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED
         ) {
-           requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.REQUEST_CODE_WRITE_STORAGE)
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.REQUEST_CODE_WRITE_STORAGE)
         }
     }
 
@@ -174,7 +138,6 @@ class MainActivity : ComponentActivity() {
             requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE_NOTIFICATION)
         }
     }
-
 
 }
 

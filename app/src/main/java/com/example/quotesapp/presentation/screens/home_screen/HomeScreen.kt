@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.home_screen
+package com.example.quotesapp.presentation.screens.home_screen
 
 import android.os.Build
 import androidx.compose.foundation.Image
@@ -13,9 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.quotesapp.R
 import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
@@ -23,7 +24,9 @@ import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 
 @Composable
 fun HomeScreen(paddingValues: PaddingValues,
-               quoteViewModel: QuoteViewModel){
+               navHost: NavHostController,
+               quoteViewModel: QuoteViewModel= hiltViewModel()
+){
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)){
 
@@ -44,7 +47,7 @@ fun HomeScreen(paddingValues: PaddingValues,
             .padding(paddingValues)) {
 
             QuoteOfTheDaySection(quoteViewModel)
-            QuoteItemListSection(quoteViewModel)
+            QuoteItemListSection(quoteViewModel,navHost)
         }
     }
 }

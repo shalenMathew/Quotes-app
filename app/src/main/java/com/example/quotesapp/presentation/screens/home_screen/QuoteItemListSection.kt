@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.home_screen
+package com.example.quotesapp.presentation.screens.home_screen
 
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -34,17 +33,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.aghajari.compose.lazyswipecards.LazySwipeCards
 import com.example.quotesapp.BuildConfig
 import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
-import com.example.quotesapp.presentation.home_screen.util.QuoteEvent
+import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
+import com.example.quotesapp.presentation.screens.home_screen.util.QuoteEvent
 import com.example.quotesapp.presentation.theme.GIFont
 import com.example.quotesapp.presentation.theme.customBlack
 import com.example.quotesapp.presentation.theme.customGrey
@@ -52,7 +51,7 @@ import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 
 @Composable
-fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
+fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostController){
 
     val context = LocalContext.current
     val activity = context as ComponentActivity
@@ -157,10 +156,11 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
                 modifier= Modifier.size(35.dp).clickable
                 {
 
-                    createImageFromXml(context, data) { bitmap ->
-                        showSharePreview(context,bitmap)
-                    }
+//                     createImageFromXml(context, data) { bitmap ->
+//                        showSharePreview(context,bitmap,data)
+//                    }
 
+                    navHost.navigate(Screen.Share.route)
 
                     if(!BuildConfig.DEBUG){
 
@@ -181,7 +181,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel){
 
 
 @Composable
-fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {
+fun QuoteItemListSection( quoteViewModel: QuoteViewModel,navHost: NavHostController) {
 
     val state = quoteViewModel.quoteState.value
 
@@ -230,7 +230,7 @@ fun QuoteItemListSection( quoteViewModel: QuoteViewModel) {
                 swipeThreshold = 0.3f) {
 
                 items(state.dataList) {it->
-                    QuoteItem(it,quoteViewModel)
+                    QuoteItem(it,quoteViewModel,navHost)
                 }
                 onSwiped { item, _ ->
                     state.dataList.add(item as Quote)

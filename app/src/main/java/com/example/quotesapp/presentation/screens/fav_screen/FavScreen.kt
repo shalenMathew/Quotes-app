@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.fav_screen
+package com.example.quotesapp.presentation.screens.fav_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,12 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.quotesapp.presentation.theme.GIFont
 import com.example.quotesapp.presentation.viewmodel.FavQuoteViewModel
 
 
 @Composable
-fun FavScreen(paddingValues: PaddingValues, quoteViewModel:FavQuoteViewModel= hiltViewModel()) {
+fun FavScreen(paddingValues: PaddingValues,
+              navHost: NavHostController,
+              quoteViewModel:FavQuoteViewModel= hiltViewModel()) {
 
     val state = quoteViewModel.favQuoteState.value
 
@@ -43,7 +46,7 @@ fun FavScreen(paddingValues: PaddingValues, quoteViewModel:FavQuoteViewModel= hi
                 if(state.dataList.isNotEmpty()){
                     LazyColumn(modifier=Modifier.fillMaxSize()) {
                         items(state.dataList) { quote ->
-                            FavQuoteItem(quote, quoteViewModel)
+                            FavQuoteItem(quote, quoteViewModel,navHost)
 
                         }
                     }

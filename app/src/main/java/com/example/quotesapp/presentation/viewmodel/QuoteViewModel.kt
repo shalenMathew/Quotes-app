@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
-import com.example.quotesapp.presentation.home_screen.util.QuoteEvent
-import com.example.quotesapp.presentation.home_screen.util.QuoteState
+import com.example.quotesapp.presentation.screens.home_screen.util.QuoteEvent
+import com.example.quotesapp.presentation.screens.home_screen.util.QuoteState
 import com.example.quotesapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

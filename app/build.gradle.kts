@@ -134,6 +134,8 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging") // fcm
 
 
+    implementation ("com.google.android.material:material:1.12.0")
+
 
 
 }

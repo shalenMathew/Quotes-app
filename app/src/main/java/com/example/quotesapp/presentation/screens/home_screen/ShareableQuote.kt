@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.home_screen
+package com.example.quotesapp.presentation.screens.home_screen
 
 import android.app.AlertDialog
 import android.content.ContentValues
@@ -22,6 +22,55 @@ import com.example.quotesapp.domain.model.Quote
 import java.io.File
 
 fun createImageFromXml(context: Context, quote: Quote, callback: (Bitmap) -> Unit) {
+
+  customImageOne(context,quote,callback)
+//    customImageTwo(context,quote,callback)
+
+
+}
+
+fun customImageTwo(
+    context: Context,
+    quote: Quote,
+    callback: (Bitmap) -> Unit
+) {
+
+    val inflater = LayoutInflater.from(context)
+    val view = inflater.inflate(R.layout.share_image_3, null, false)
+
+    // Set the quote text dynamically
+    val quoteTextView = view.findViewById<TextView>(R.id.quote_text)
+    val authorTextView = view.findViewById<TextView>(R.id.quote_author)
+
+    quoteTextView.text = quote.quote
+    authorTextView.text = "${quote.author}"
+
+    // Measure and layout the view
+
+    val width = 1000 // Fixed width
+    view.measure(
+        View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    )
+
+    val height = view.measuredHeight
+    view.layout(0, 0, width,height)
+
+    // Create a Bitmap
+    val bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    view.draw(canvas)
+
+    callback(bitmap)
+
+}
+
+fun customImageOne(
+    context: Context,
+    quote: Quote,
+    callback: (Bitmap) -> Unit
+) {
+
     val inflater = LayoutInflater.from(context)
     val view = inflater.inflate(R.layout.share_image_2, null, false)
 
@@ -49,6 +98,7 @@ fun createImageFromXml(context: Context, quote: Quote, callback: (Bitmap) -> Uni
     view.draw(canvas)
 
     callback(bitmap)
+
 }
 
 fun saveAndShareImage(context: Context, bitmap: Bitmap) {
@@ -72,14 +122,13 @@ fun saveAndShareImage(context: Context, bitmap: Bitmap) {
     context.startActivity(Intent.createChooser(intent, "Share Quote via"))
 }
 
-fun showSharePreview(context: Context, bitmap: Bitmap) {
+fun showSharePreview(context: Context, bitmap: Bitmap, quote: Quote) {
 
     val view = LayoutInflater.from(context).inflate(R.layout.custom_dialog_box, null)
 
     val share = view.findViewById<ImageView>(R.id.cd_share)
     val download = view.findViewById<ImageView>(R.id.cd_download)
     val custom = view.findViewById<ImageView>(R.id.cd_customize)
-    val cancel = view.findViewById<ImageView>(R.id.cd_cancel)
     val preview = view.findViewById<ImageView>(R.id.cd_preview)
 
 preview.setImageBitmap(bitmap)
@@ -88,14 +137,15 @@ preview.setImageBitmap(bitmap)
         .setView(view)
         .create()
 
+
+
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
     share.setOnClickListener {
         saveAndShareImage(context,bitmap)
         dialog.dismiss()
     }
 
-    cancel.setOnClickListener {
-        dialog.dismiss()
-    }
 
     download.setOnClickListener {
         Log.d("TAG","download")
@@ -104,8 +154,10 @@ preview.setImageBitmap(bitmap)
     }
 
     custom.setOnClickListener {
-        Log.d("TAG","custom")
-//        dialog.dismiss()
+
+        customImageTwo(context = context, quote = quote) { bit->
+            preview.setImageBitmap(bitmap)
+        }
     }
 
     dialog.show()

@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.home_screen.bottom_nav
+package com.example.quotesapp.presentation.screens.home_screen.bottom_nav
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -215,9 +215,10 @@ sealed class Screen(
     object Home: Screen("Home",true)
     object Fav: Screen("Favourites",true)
     object Splash: Screen("Splash",false)
+    object Share: Screen("Share",false)
 
     companion object{
-        val values:List<Screen> = listOf(Home,Fav,Splash)
+        val values:List<Screen> = listOf(Home,Fav,Splash,Share)
     }
 
 }

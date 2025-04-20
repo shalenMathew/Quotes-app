@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.fav_screen
+package com.example.quotesapp.presentation.screens.fav_screen
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,13 +30,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
-import com.example.quotesapp.presentation.fav_screen.util.FavQuoteEvent
-import com.example.quotesapp.presentation.home_screen.createImageFromXml
-import com.example.quotesapp.presentation.home_screen.showSharePreview
+import com.example.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
+import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
 import com.example.quotesapp.presentation.theme.GIFont
 import com.example.quotesapp.presentation.theme.customBlack
 import com.example.quotesapp.presentation.theme.customGrey
@@ -45,7 +45,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 
 @Composable
-fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
+fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel, navHost: NavHostController){
 
     val context = LocalContext.current
     val activity = context as ComponentActivity
@@ -113,9 +113,11 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel){
 
                                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
 
-                               createImageFromXml(context, quote) { bitmap ->
-                                   showSharePreview(context,bitmap)
-                               }
+//                               createImageFromXml(context, quote) { bitmap ->
+//                                   showSharePreview(context, bitmap, quote = quote)
+//                               }
+
+                                   navHost.navigate(Screen.Share.route)
 
                            })
 

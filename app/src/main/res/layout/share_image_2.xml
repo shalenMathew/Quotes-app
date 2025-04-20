@@ -12,6 +12,8 @@
         android:background="@drawable/quote_background"
         android:padding="20dp">
 
+
+
         <!-- Quotation Icon -->
         <ImageView
             android:id="@+id/quote_icon"

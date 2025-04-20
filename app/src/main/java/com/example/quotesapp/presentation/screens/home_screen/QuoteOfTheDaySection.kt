@@ -1,4 +1,4 @@
-package com.example.quotesapp.presentation.home_screen
+package com.example.quotesapp.presentation.screens.home_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

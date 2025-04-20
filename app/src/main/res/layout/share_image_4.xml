@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="400dp"
+    android:background="#FF2D2D"
+    android:padding="24dp"
+    >
+
+    <LinearLayout
+        android:id="@+id/quote_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        >
+
+        <TextView
+            
+            android:id="@+id/quote_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Katty Perry"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:textStyle="normal"
+            android:layout_marginBottom="20dp"
+            />
+
+        <TextView
+            android:id="@+id/quote_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is a sample code made for testing \n and purpose"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:lineSpacingExtra="8dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/quote_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quotes.app"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textStyle="normal"
+
+        />
+
+</RelativeLayout>

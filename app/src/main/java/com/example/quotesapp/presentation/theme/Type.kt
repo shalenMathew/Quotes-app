@@ -36,8 +36,14 @@ val Typography = Typography(
 
 )
 
+val Poppins = FontFamily(
+    Font(R.font.poppinsbold,FontWeight.Bold),
+    Font(R.font.poppinsregular,FontWeight.Medium)
+    )
+
 val GIFont = FontFamily(
     Font(R.font.glaciaiindifference_bold,FontWeight.Bold),
     Font(R.font.glaciaiindifference_regular,FontWeight.Medium),
     Font(R.font.glaciaiindifference_itallic,FontWeight.Thin)
 )
+

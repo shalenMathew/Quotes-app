@@ -14,4 +14,7 @@ val customBlack = Color(0xFF000000)
 val customGrey = Color(0xFF383838)
 val Grey = Color(0xFF999999)
 
+val DarkerGrey = Color(0xffaaaaaa)
+val Violet = Color(0xFFA259FF)
+
 val bottomNavItem = Color(0xFF282828)

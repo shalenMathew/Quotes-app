@@ -41,6 +41,7 @@
                 android:lineHeight="53sp"
                 android:paddingTop="12dp"
                 android:text="The best thing about design is it make sense until it make no sense."
+
                 android:textColor="@android:color/white"
                 android:textSize="28sp" />
 

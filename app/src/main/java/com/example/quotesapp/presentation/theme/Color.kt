@@ -16,5 +16,9 @@ val Grey = Color(0xFF999999)
 
 val DarkerGrey = Color(0xffaaaaaa)
 val Violet = Color(0xFFA259FF)
+val  Orange = Color(0xFFFF4A14)
+val Green = Color(0xFFC1FF72)
+val Red = Color(0xFFFF2D2D)
+val bratGreen = Color(0xFF8bcf00)
 
 val bottomNavItem = Color(0xFF282828)

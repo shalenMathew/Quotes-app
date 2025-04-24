@@ -26,8 +26,13 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
 import com.example.quotesapp.presentation.theme.DarkerGrey
+import com.example.quotesapp.presentation.theme.Green
+import com.example.quotesapp.presentation.theme.Orange
 import com.example.quotesapp.presentation.theme.Poppins
+import com.example.quotesapp.presentation.theme.Red
 import com.example.quotesapp.presentation.theme.Violet
+import com.example.quotesapp.presentation.theme.bratGreen
+import com.example.quotesapp.presentation.theme.bratTheme
 
 /**  THIS SECTION COMPRISES OF ALL DIFFERENT STYLES OF QUOTES */
 
@@ -116,7 +121,7 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
         Card (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 20.dp)
+                .padding(horizontal = 15.dp, vertical = 20.dp)
                 .shadow(
                     elevation = 20.dp,
                     shape = RoundedCornerShape(24.dp),
@@ -180,14 +185,13 @@ fun CircleDot(color: Color) {
     )
 }
 
-
 /** RED SPOTIFY THEME STYLE */
 @Composable
-fun RedQuoteCard(modifier: Modifier,quote: Quote) {
+fun SolidColorQuoteCard(modifier: Modifier,quote: Quote) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(0xFFFF2D2D))
+            .background(Green)
 
     ) {
         Column(
@@ -232,6 +236,28 @@ fun RedQuoteCard(modifier: Modifier,quote: Quote) {
 
     }
 }
+
+
+/** brat THEME STYLE */
+@Composable
+fun BratScreen(modifier: Modifier,quote: Quote) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(color = bratGreen),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = quote.quote,
+            fontSize = 15.sp,
+            fontFamily = bratTheme,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
+        )
+    }
+}
+
 
 
 

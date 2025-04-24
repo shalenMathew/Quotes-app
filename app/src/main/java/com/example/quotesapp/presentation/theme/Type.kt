@@ -47,3 +47,7 @@ val GIFont = FontFamily(
     Font(R.font.glaciaiindifference_itallic,FontWeight.Thin)
 )
 
+val bratTheme = FontFamily(
+    Font(R.font.arialnarrow,FontWeight.Medium),
+)
+

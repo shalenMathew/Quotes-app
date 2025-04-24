@@ -92,3 +92,12 @@ fun shareImg(context: Context , bitmap: Bitmap){
 
 
 }
+
+sealed class QuoteStyle(){
+
+    object DefaultTheme : QuoteStyle()
+    object CodeSnippetTheme : QuoteStyle()
+    object SpotifyTheme: QuoteStyle()
+    object bratTheme : QuoteStyle()
+
+}

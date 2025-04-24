@@ -209,7 +209,7 @@ fun RedQuoteCard(modifier: Modifier,quote: Quote) {
 
             Text(
                 text = quote.quote,
-                fontSize = 19.sp,
+                fontSize = 18.sp,
                 color = Color.Black,
                 fontFamily = Poppins,
                 fontWeight = FontWeight.Bold,

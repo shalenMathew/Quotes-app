@@ -6,7 +6,7 @@
 **This a minimalistic quotes app.**
 
 ## Built with
-> 	[https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android3.svg]()
+> [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android2.svg">]()
 
 This project will be best for you if ur someone who are looking to learn more about android development or
 

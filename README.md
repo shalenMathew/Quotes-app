@@ -11,7 +11,7 @@
 
 ## Socials
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">]()
-> [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Twitter/twitter1.svg">]([https://x.com/RushedLyrics](https://x.com/quotesdotapp)
+> [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Twitter/twitter1.svg">](https://x.com/quotesdotapp)
 
 This project will be best for you if ur someone who are looking to learn more about android development or
 

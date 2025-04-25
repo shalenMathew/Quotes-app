@@ -27,9 +27,7 @@ import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
 import com.example.quotesapp.presentation.theme.DarkerGrey
 import com.example.quotesapp.presentation.theme.Green
-import com.example.quotesapp.presentation.theme.Orange
 import com.example.quotesapp.presentation.theme.Poppins
-import com.example.quotesapp.presentation.theme.Red
 import com.example.quotesapp.presentation.theme.Violet
 import com.example.quotesapp.presentation.theme.bratGreen
 import com.example.quotesapp.presentation.theme.bratTheme
@@ -96,7 +94,7 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
 
             Text(
                 text = "Quotes.app",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 lineHeight = 32.sp,
                 color = Color.White,
                 fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
@@ -137,10 +135,10 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Black)
-                    .padding(24.dp)
+//                    .padding(24.dp)
             ) {
                 Row(
-                    modifier = Modifier.padding(bottom = 28.dp)
+                    modifier = Modifier.padding(bottom = 28.dp, start = 20.dp, top = 24.dp)
                 ) {
                     CircleDot(color = Color(0xFFFF3B30))
                     Spacer(modifier = Modifier.width(8.dp))
@@ -153,22 +151,23 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
                     text = quote.quote,
                     color = Color.White,
                     fontSize = 19.sp,
-                    lineHeight = 38.sp
+                    lineHeight = 38.sp,
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                 )
 
                 Text(
                     text = quote.author,
                     color = Color(0xFF00E0FF),
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(top = 18.dp)
+                    modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp,)
                 )
 
                 Text(
                     text = "Quotes.app",
                     color = Color(0xFFFF48B0),
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     modifier = Modifier
-                        .padding(top = 38.dp)
+                        .padding(top = 38.dp, bottom = 12.dp)
                         .align(Alignment.CenterHorizontally)
                 )
             }
@@ -226,7 +225,7 @@ fun SolidColorQuoteCard(modifier: Modifier,quote: Quote) {
             Text(
                 text = "Quotes.app",
                 color =Color.Black,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 modifier = Modifier
                     .padding(top = 30.dp, bottom = 12.dp)
                     .align(Alignment.CenterHorizontally)

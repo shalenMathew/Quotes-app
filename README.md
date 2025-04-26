@@ -1,5 +1,5 @@
 # Quotes App 💭
-![Quotes bg](https://github.com/user-attachments/assets/4ed2b63b-51e7-46e5-8723-c07e952b8576)
+![Quotes wide design 2](https://github.com/user-attachments/assets/18e5b285-231b-4a24-ba29-5c76ceb6c884)
 
 ### Quotes App is built to demonstrate the use of Modern Android development tools.The app follows latest android principles and components
 
@@ -21,6 +21,14 @@ Who are trying to find simpler projects to begin their contribution journey
 ***Install the apk from here 👇***
 
 [![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/Quotes-app/releases)
+
+## Screenshots 📱
+
+| ![ps1](https://github.com/user-attachments/assets/2681c3b7-9f8b-4197-b299-29a32c78b0ab) | ![ps2](https://github.com/user-attachments/assets/b4e1a0b7-cb23-4ba8-99fb-50906d763f18) |
+|:-------------------------------------------------------------------:|:-------------------------------------------------------------------:|
+| ![ps3](https://github.com/user-attachments/assets/7d9ad398-953e-43e5-979d-6f7dac00ec2f) | ![ps4](https://github.com/user-attachments/assets/c509da3a-27ee-4bc0-b55f-f0f63d8d1a84) |
+| ![ps5](https://github.com/user-attachments/assets/fa3d4399-b635-4de7-9420-29e7e135bab8) | ![ps6](https://github.com/user-attachments/assets/ecf36fc0-527e-493f-8d17-043fa10285ec) | 
+
 
 ## Trailer 📽️
 

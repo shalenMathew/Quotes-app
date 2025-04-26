@@ -20,7 +20,8 @@ Who are trying to find simpler projects to begin their contribution journey
 
 ***Install the apk from here 👇***
 
-[![Static Badge](https://img.shields.io/badge/Quotes_app-Apk-red?logo=android)](https://github.com/shalenMathew/Quotes-app/releases)
+[![Static Badge](https://img.shields.io/badge/Quotes.app-APK-red?logo=android&labelColor=black)](https://github.com/shalenMathew/Quotes-app/releases)
+
 
 ## Screenshots 📱
 

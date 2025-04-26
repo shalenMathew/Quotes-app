@@ -27,7 +27,7 @@ Who are trying to find simpler projects to begin their contribution journey
 | ![ps1](https://github.com/user-attachments/assets/2681c3b7-9f8b-4197-b299-29a32c78b0ab) | ![ps2](https://github.com/user-attachments/assets/b4e1a0b7-cb23-4ba8-99fb-50906d763f18) |
 |:-------------------------------------------------------------------:|:-------------------------------------------------------------------:|
 | ![ps3](https://github.com/user-attachments/assets/7d9ad398-953e-43e5-979d-6f7dac00ec2f) | ![ps4](https://github.com/user-attachments/assets/c509da3a-27ee-4bc0-b55f-f0f63d8d1a84) |
-| ![ps5](https://github.com/user-attachments/assets/fa3d4399-b635-4de7-9420-29e7e135bab8) | ![ps6](https://github.com/user-attachments/assets/ecf36fc0-527e-493f-8d17-043fa10285ec) | 
+| ![ps5](https://github.com/user-attachments/assets/2bd2c559-6ff3-4565-bc95-c7b9d9076f68) | ![ps6](https://github.com/user-attachments/assets/f2c7aefa-d357-47b9-bd4f-ac052d7c42fa) | 
 
 
 ## Trailer 📽️

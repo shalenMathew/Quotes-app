@@ -35,7 +35,8 @@ fun SettingsScreen(paddingValues: PaddingValues){
         .background(Color.Black))
     {
 
-        Column(modifier = Modifier.padding(horizontal = 15.dp).fillMaxWidth().wrapContentHeight()) {
+        Column(modifier = Modifier.padding(horizontal = 15.dp).fillMaxWidth().wrapContentHeight())
+        {
 
 
             Text(text = "Settings", fontFamily = GIFont, fontWeight = FontWeight.Medium,
@@ -44,7 +45,14 @@ fun SettingsScreen(paddingValues: PaddingValues){
                 fontSize = 35.sp
             )
 
+
             LazyColumn(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+
+                item{Text(text = "Socials", color = Color.White,
+                    modifier=Modifier.padding(start=12.dp, bottom = 12.dp),
+                    fontSize = 20.sp,
+                    fontFamily = GIFont, fontWeight = FontWeight.Medium
+                )}
 
                 items(cardsRow.size) { cardRowIndex->
                     CardSection(index = cardRowIndex)

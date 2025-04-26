@@ -61,9 +61,7 @@ fun CardSection(index: Int) {
                 }
                 .clip(shape)
                 .background(Color(0xFF1C1C1E))
-                .padding(horizontal = 16.dp, vertical = 14.dp)
-
-                    ,
+                .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -91,10 +89,8 @@ fun CardSection(index: Int) {
                 contentDescription = null,
                 tint = Color.White
             )
-//        }
-
-
     }
+
 }
 
 
@@ -103,7 +99,7 @@ val cardsRow = listOf<CardRow>(
     CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew" ),
     CardRow(icon = R.drawable.ic_github, name = "Github", url = "https://github.com/shalenMathew" ),
     CardRow(icon = R.drawable.ic_linkedin, name = "LinkedIn", url = "https://www.linkedin.com/in/shalen-mathew-3b566921b" ),
-    CardRow(icon = R.drawable.link, name = "LinkTree", url = "https://linktr.ee/shalenmathew")
+    CardRow(icon = R.drawable.link, name = "LinkTree", url = "https://linktr.ee/shalenmathew0")
 
 )
 

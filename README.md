@@ -35,6 +35,11 @@ Who are trying to find simpler projects to begin their contribution journey
 
 https://github.com/user-attachments/assets/38a15a1e-b324-4355-8574-49e83cf044cd
 
+
+https://github.com/user-attachments/assets/aacf551e-c42d-4d8c-8860-3255bf6761ea
+
+
+
 ## Built With 🛠
 - Kotlin
 - Jetpack Compose

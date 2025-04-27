@@ -156,10 +156,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                 modifier= Modifier.size(35.dp).clickable
                 {
 
-//                     createImageFromXml(context, data) { bitmap ->
-//                        showSharePreview(context,bitmap,data)
-//                    }
-
+                    navHost.currentBackStackEntry?.savedStateHandle?.set("quote",data)
                     navHost.navigate(Screen.Share.route)
 
                     if(!BuildConfig.DEBUG){

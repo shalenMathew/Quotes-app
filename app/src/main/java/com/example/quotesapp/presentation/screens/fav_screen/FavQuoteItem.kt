@@ -112,11 +112,7 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel, navHost: NavHo
                                    }
 
                                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
-
-//                               createImageFromXml(context, quote) { bitmap ->
-//                                   showSharePreview(context, bitmap, quote = quote)
-//                               }
-
+                                   navHost.currentBackStackEntry?.savedStateHandle?.set("quote",quote)
                                    navHost.navigate(Screen.Share.route)
 
                            })

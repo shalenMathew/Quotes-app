@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("kotlin-parcelize")
 
 }
 
@@ -92,7 +93,7 @@ dependencies {
     implementation ("io.github.aghajari:LazySwipeCards:1.0.1")
 
     //Dagger - Hilt
-    implementation ("com.google.dagger:hilt-android:2.54")
+    implementation ("com.google.dagger:hilt-android:2.56.2")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0") // hilt for nav
     implementation("androidx.hilt:hilt-work:1.2.0")
 
@@ -107,17 +108,17 @@ dependencies {
 
 
     //Room Database
-    implementation ("androidx.room:room-runtime:2.6.1")
-    ksp ("androidx.room:room-compiler:2.6.1")
-    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation ("androidx.room:room-runtime:2.7.0")
+    ksp ("androidx.room:room-compiler:2.7.0")
+    implementation ("androidx.room:room-ktx:2.7.0")
 
 
     //Retrofit2
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+    implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
     implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
+    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
 
 
     // Glance Widget
@@ -135,7 +136,6 @@ dependencies {
 
 
     implementation ("com.google.android.material:material:1.12.0")
-
 
 
 }

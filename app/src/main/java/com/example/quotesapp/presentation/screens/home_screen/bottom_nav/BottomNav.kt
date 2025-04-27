@@ -22,8 +22,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,7 +60,8 @@ fun BottomNavAnimation(
 
     val tabItem = listOf(
          BottomNav.Home,
-        BottomNav.Fav
+        BottomNav.Fav,
+        BottomNav.Settings
     )
 
     val navBackStackEntry by navigator.currentBackStackEntryAsState()
@@ -216,9 +219,10 @@ sealed class Screen(
     object Fav: Screen("Favourites",true)
     object Splash: Screen("Splash",false)
     object Share: Screen("Share",false)
+    object Settings: Screen("Settings",true)
 
     companion object{
-        val values:List<Screen> = listOf(Home,Fav,Splash,Share)
+        val values:List<Screen> = listOf(Home,Fav,Splash,Share, Settings)
     }
 
 }
@@ -230,6 +234,7 @@ sealed class BottomNav(
 ){
     object Home: BottomNav(Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home)
     object Fav: BottomNav(Screen.Fav.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
+    object Settings: BottomNav(Screen.Settings.route, Icons.Filled.Person,Icons.Outlined.Person)
 }
 
 

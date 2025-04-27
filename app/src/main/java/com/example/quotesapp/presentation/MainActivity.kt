@@ -2,7 +2,6 @@ package com.example.quotesapp.presentation
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,18 +14,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.quotesapp.BuildConfig
 import com.example.quotesapp.presentation.navigation.AppNavigation
-import com.example.quotesapp.presentation.screens.fav_screen.FavScreen
-import com.example.quotesapp.presentation.screens.home_screen.HomeScreen
 import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.BottomNavAnimation
 import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
-import com.example.quotesapp.presentation.screens.intro_screen.SplashScreen
-import com.example.quotesapp.presentation.screens.share_screen.ShareScreen
 import com.example.quotesapp.presentation.theme.QuotesAppTheme
 import com.example.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.example.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
@@ -48,17 +41,14 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var scheduleNotification:ScheduleNotification
     @Inject lateinit var scheduleWidget: ScheduleWidgetRefresh
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(Color.BLACK,Color.BLACK),
-            navigationBarStyle = SystemBarStyle.light(Color.BLACK,Color.BLACK)
+            navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
         )
         setContent {
             QuotesAppTheme {
-
                 var firebaseAnalytics:FirebaseAnalytics = Firebase.analytics
 
                 if (BuildConfig.DEBUG) {
@@ -83,7 +73,8 @@ class MainActivity : ComponentActivity() {
 
                 val navHost = rememberNavController()
 
-                Scaffold(bottomBar = {
+                Scaffold(
+                    containerColor = androidx.compose.ui.graphics.Color.Black, bottomBar = {
 
                     val currentBackStackEntry by navHost.currentBackStackEntryAsState()
                     val currentDestination = currentBackStackEntry?.destination?.route

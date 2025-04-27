@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.quotesapp.R
 import com.example.quotesapp.presentation.theme.GIFont
+import androidx.core.net.toUri
 
 @Composable
 fun CardSection(index: Int) {
@@ -56,7 +57,7 @@ fun CardSection(index: Int) {
                     color = Color.Black,
                     shape = RectangleShape )
                 .clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(card.url))
+                    val intent = Intent(Intent.ACTION_VIEW, card.url.toUri())
                     context.startActivity(intent)
                 }
                 .clip(shape)
@@ -99,8 +100,7 @@ val cardsRow = listOf<CardRow>(
     CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew" ),
     CardRow(icon = R.drawable.ic_github, name = "Github", url = "https://github.com/shalenMathew" ),
     CardRow(icon = R.drawable.ic_linkedin, name = "LinkedIn", url = "https://www.linkedin.com/in/shalen-mathew-3b566921b" ),
-    CardRow(icon = R.drawable.link, name = "LinkTree", url = "https://linktr.ee/shalenmathew0")
-
+    CardRow(icon = R.drawable.link, name = "LinkTree", url = "https://linktr.ee/shalenmathew")
 )
 
 data class CardRow(val icon: Int,val name: String, val url: String)

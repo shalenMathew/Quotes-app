@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.quotesapp.BuildConfig
 import com.example.quotesapp.presentation.screens.settings_screen.components.CardSection
 import com.example.quotesapp.presentation.screens.settings_screen.components.cardsRow
 import com.example.quotesapp.presentation.theme.GIFont
@@ -62,17 +63,31 @@ fun SettingsScreen(paddingValues: PaddingValues){
 
         }
 
-        Text(text = "made with \uD83E\uDD75 by Shalen Mathew"
-        , modifier = Modifier
-            .wrapContentSize()
-            .padding(horizontal = 12.dp)
-                .align(Alignment.BottomCenter)
-            ,
-            fontSize = 12.sp,
-            color = Color.White,
-            fontFamily = Poppins,
-            fontWeight = FontWeight.Medium
-        )
+        if (BuildConfig.DEBUG){
+            Text(text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)"
+                , modifier = Modifier
+                    .wrapContentSize()
+                    .padding(horizontal = 12.dp)
+                    .align(Alignment.BottomCenter)
+                ,
+                fontSize = 12.sp,
+                color = Color.White,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.Medium
+            )
+        }else{
+            Text(text = "made with \uD83E\uDD75 by Shalen Mathew"
+                , modifier = Modifier
+                    .wrapContentSize()
+                    .padding(horizontal = 12.dp)
+                    .align(Alignment.BottomCenter)
+                ,
+                fontSize = 12.sp,
+                color = Color.White,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.Medium
+            )
+        }
 
     }
 

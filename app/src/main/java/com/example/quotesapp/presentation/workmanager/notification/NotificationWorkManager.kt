@@ -29,7 +29,7 @@ import com.example.quotesapp.util.NOTIFICATION_QUOTE_KEY
 import com.example.quotesapp.util.Resource
 import com.example.quotesapp.util.dataStore
 import com.example.quotesapp.util.saveNotificationQuote
-import com.google.firebase.analytics.FirebaseAnalytics
+
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -50,7 +50,6 @@ class NotificationWorkManager @AssistedInject constructor(
         return try {
 
             Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Work started")
-             val firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext)
 
             val response = fetchQuotes(context)
 
@@ -58,11 +57,6 @@ class NotificationWorkManager @AssistedInject constructor(
                 return Result.retry()
             }
 
-            val bundle = Bundle().apply {
-                putString("notification_worker_status", "started")
-            }
-
-            firebaseAnalytics.logEvent("notification_worker",bundle)
 
             val savedQuote = context.dataStore.data.first()[NOTIFICATION_QUOTE_KEY] ?: "No quote saved yet!!!"
             val savedAuthor= context.dataStore.data.first()[NOTIFICATION_AUTHOR_KEY] ?: "No quote saved yet!!!"

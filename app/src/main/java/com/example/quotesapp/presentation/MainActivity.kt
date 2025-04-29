@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.quotesapp.BuildConfig
 import com.example.quotesapp.presentation.navigation.AppNavigation
 import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.BottomNavAnimation
 import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
@@ -25,9 +24,6 @@ import com.example.quotesapp.presentation.workmanager.notification.ScheduleNotif
 import com.example.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.example.quotesapp.util.Constants
 import com.example.quotesapp.util.checkWorkManagerStatus
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -49,15 +45,6 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             QuotesAppTheme {
-                var firebaseAnalytics:FirebaseAnalytics = Firebase.analytics
-
-                if (BuildConfig.DEBUG) {
-                    Log.d("TAG","DEBUGGING MODE")
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(false)
-                } else {
-                    Log.d("TAG","RELEASE MODE")
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true)
-                }
 
                 scheduleNotification.scheduleNotification()
 

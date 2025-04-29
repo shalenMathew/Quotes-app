@@ -6,10 +6,9 @@ plugins {
     id ("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     alias(libs.plugins.kotlin.compose)
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+//    id("com.google.gms.google-services")
+//    id("com.google.firebase.crashlytics")
     id("kotlin-parcelize")
-
 }
 
 android {
@@ -37,17 +36,36 @@ android {
             }
 
             debug {
-
                 buildConfigField("Boolean", "ENABLE_ANALYTICS", "false")
                 isDebuggable = true
             }
         }
+
+//    flavorDimensions += "default"
+//
+//    productFlavors {
+//
+//        create("fdroid") {
+//            dimension = "default"
+//            applicationIdSuffix = ".fdroid"
+//            versionNameSuffix = "-fdroid"
+//            buildConfigField("Boolean", "ENABLE_ANALYTICS", "false")
+//        }
+//
+//        create("play") {
+//            dimension = "default"
+//            applicationIdSuffix = ".play"
+//            versionNameSuffix = "-play"
+//            buildConfigField("Boolean", "ENABLE_ANALYTICS", "true")
+//        }
+//    }
 
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -68,6 +86,12 @@ android {
     }
 
 }
+
+// related to flavors
+//if (project.gradle.startParameter.taskNames.any { it.contains("play") }) {
+//    apply(plugin = "com.google.gms.google-services")
+//    apply(plugin = "com.google.firebase.crashlytics")
+//}
 
 dependencies {
 
@@ -129,13 +153,19 @@ dependencies {
     implementation ("androidx.work:work-runtime-ktx:2.10.0")
 
     //firebase
+
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     implementation ("com.google.firebase:firebase-analytics-ktx") // analytics
     implementation("com.google.firebase:firebase-crashlytics-ktx:18.6.4") // crashanalytics
     implementation("com.google.firebase:firebase-messaging") // fcm
 
 
-    implementation ("com.google.android.material:material:1.12.0")
+    // flavors customization
+//    "playImplementation"(platform("com.google.firebase:firebase-bom:33.11.0"))
+//    "playImplementation"("com.google.firebase:firebase-analytics-ktx") // analytics
+//    "playImplementation"("com.google.firebase:firebase-crashlytics-ktx")  // crashanalytics
+//    "playImplementation"("com.google.firebase:firebase-messaging")  // fcm
 
+    implementation ("com.google.android.material:material:1.12.0")
 
 }

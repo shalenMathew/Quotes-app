@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,7 +37,10 @@ fun SettingsScreen(paddingValues: PaddingValues){
         .background(Color.Black))
     {
 
-        Column(modifier = Modifier.padding(horizontal = 15.dp).fillMaxWidth().wrapContentHeight())
+        Column(modifier = Modifier
+            .padding(horizontal = 15.dp)
+            .fillMaxWidth()
+            .wrapContentHeight())
         {
 
 
@@ -47,7 +51,9 @@ fun SettingsScreen(paddingValues: PaddingValues){
             )
 
 
-            LazyColumn(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+            LazyColumn(modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()) {
 
                 item{Text(text = "Socials", color = Color.White,
                     modifier=Modifier.padding(start=12.dp, bottom = 12.dp),
@@ -61,33 +67,38 @@ fun SettingsScreen(paddingValues: PaddingValues){
 
             }
 
+            Spacer(Modifier.weight(1f))
+
+            if (BuildConfig.DEBUG){
+                Text(text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)"
+                    , modifier = Modifier
+                        .wrapContentSize()
+                        .padding(horizontal = 12.dp)
+//                        .align(Alignment.BottomCenter)
+                    ,
+                    fontSize = 12.sp,
+                    color = Color.White,
+                    fontFamily = Poppins,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            else{
+                Text(text = "made with \uD83E\uDD75 by Shalen Mathew"
+                    , modifier = Modifier
+                        .wrapContentSize()
+                        .padding(horizontal = 12.dp)
+//                        .align(Alignment.BottomCenter)
+                    ,
+                    fontSize = 12.sp,
+                    color = Color.White,
+                    fontFamily = Poppins,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
         }
 
-        if (BuildConfig.DEBUG){
-            Text(text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)"
-                , modifier = Modifier
-                    .wrapContentSize()
-                    .padding(horizontal = 12.dp)
-                    .align(Alignment.BottomCenter)
-                ,
-                fontSize = 12.sp,
-                color = Color.White,
-                fontFamily = Poppins,
-                fontWeight = FontWeight.Medium
-            )
-        }else{
-            Text(text = "made with \uD83E\uDD75 by Shalen Mathew"
-                , modifier = Modifier
-                    .wrapContentSize()
-                    .padding(horizontal = 12.dp)
-                    .align(Alignment.BottomCenter)
-                ,
-                fontSize = 12.sp,
-                color = Color.White,
-                fontFamily = Poppins,
-                fontWeight = FontWeight.Medium
-            )
-        }
+
 
     }
 

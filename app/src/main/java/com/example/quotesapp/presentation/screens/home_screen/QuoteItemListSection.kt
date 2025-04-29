@@ -38,8 +38,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.aghajari.compose.lazyswipecards.LazySwipeCards
-import com.example.quotesapp.BuildConfig
-import com.example.quotesapp.QuoteApplication
 import com.example.quotesapp.R
 import com.example.quotesapp.domain.model.Quote
 import com.example.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
@@ -48,15 +46,13 @@ import com.example.quotesapp.presentation.theme.GIFont
 import com.example.quotesapp.presentation.theme.customBlack
 import com.example.quotesapp.presentation.theme.customGrey
 import com.example.quotesapp.presentation.viewmodel.QuoteViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
+
 
 @Composable
 fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostController){
 
     val context = LocalContext.current
     val activity = context as ComponentActivity
-    val firebaseAnalytics = (activity.application as QuoteApplication).firebaseAnalytics
-
 
     val gradient = Brush.radialGradient(
         0.0f to customBlack,
@@ -118,16 +114,6 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                             .clickable {
                                 quoteViewModel.onEvent(QuoteEvent.Like(data))
 
-                                if(!BuildConfig.DEBUG){
-                                    val bundle= Bundle().apply {
-                                        putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                                        putString(FirebaseAnalytics.Param.ITEM_NAME, "like")
-                                    }
-
-                                    Log.d("TAG","LIKED")
-
-                                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
-                                }
                             })
                 }
                 else
@@ -138,13 +124,6 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                             .clickable {
                                 quoteViewModel.onEvent(QuoteEvent.Like(data))
 
-                                if(!BuildConfig.DEBUG){
-                                    val bundle= Bundle().apply {
-                                        putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                                        putString(FirebaseAnalytics.Param.ITEM_NAME, "unlike")
-                                    }
-                                    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
-                                }
 
                             })
                 }
@@ -158,17 +137,6 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
 
                     navHost.currentBackStackEntry?.savedStateHandle?.set("quote",data)
                     navHost.navigate(Screen.Share.route)
-
-                    if(!BuildConfig.DEBUG){
-
-                        val bundle= Bundle().apply {
-                            putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                            putString(FirebaseAnalytics.Param.ITEM_NAME, "share")
-                        }
-
-                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
-
-                    }
 
 
                 })

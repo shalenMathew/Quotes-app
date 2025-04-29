@@ -1,0 +1,9 @@
+A minimalistic quotes app with Tinder-like swipeable cards, delivering inspiration & positive energy in your life
+
+Features 
+
+✨ fresh motivational quotes daily
+📂 save favorites offline
+📤 share quotes with friends & family
+🏠 home screen widget (auto-refreshes every 24hrs)
+🔔 daily inspiration via notifications

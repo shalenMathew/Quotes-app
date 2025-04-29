@@ -41,7 +41,7 @@ import com.example.quotesapp.presentation.theme.GIFont
 import com.example.quotesapp.presentation.theme.customBlack
 import com.example.quotesapp.presentation.theme.customGrey
 import com.example.quotesapp.presentation.viewmodel.FavQuoteViewModel
-import com.google.firebase.analytics.FirebaseAnalytics
+
 
 
 @Composable
@@ -49,7 +49,6 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel, navHost: NavHo
 
     val context = LocalContext.current
     val activity = context as ComponentActivity
-    val firebaseAnalytics = (activity.application as QuoteApplication).firebaseAnalytics
 
     val gradient = Brush.radialGradient(
         0.0f to customBlack,
@@ -106,12 +105,6 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel, navHost: NavHo
                                .size(35.dp)
                                .clickable {
 
-                                   val bundle= Bundle().apply {
-                                       putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                                       putString(FirebaseAnalytics.Param.ITEM_NAME, "share")
-                                   }
-
-                                   firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE,bundle)
                                    navHost.currentBackStackEntry?.savedStateHandle?.set("quote",quote)
                                    navHost.navigate(Screen.Share.route)
 
@@ -126,13 +119,6 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel, navHost: NavHo
                                .size(30.dp)
                                .clickable {
                                    quoteViewModel.onEvent(FavQuoteEvent.Like(quote))
-
-                                   val bundle= Bundle().apply {
-                                       putString(FirebaseAnalytics.Param.CONTENT_TYPE,"btn_click")
-                                       putString(FirebaseAnalytics.Param.ITEM_NAME, "like")
-                                   }
-
-                                   firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,bundle)
 
                                })
                    }

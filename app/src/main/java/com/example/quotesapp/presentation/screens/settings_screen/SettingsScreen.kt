@@ -29,39 +29,49 @@ import com.example.quotesapp.presentation.theme.Poppins
 
 
 @Composable
-fun SettingsScreen(paddingValues: PaddingValues){
+fun SettingsScreen(paddingValues: PaddingValues) {
 
-    Box(modifier = Modifier
-        .padding(paddingValues)
-        .fillMaxSize()
-        .background(Color.Black))
+    Box(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+            .background(Color.Black)
+    )
     {
 
-        Column(modifier = Modifier
-            .padding(horizontal = 15.dp)
-            .fillMaxWidth()
-            .wrapContentHeight())
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 15.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
+        )
         {
 
 
-            Text(text = "Settings", fontFamily = GIFont, fontWeight = FontWeight.Medium,
+            Text(
+                text = "Settings", fontFamily = GIFont, fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(vertical = 15.dp, horizontal = 15.dp),
                 color = Color.White,
                 fontSize = 35.sp
             )
 
 
-            LazyColumn(modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
 
-                item{Text(text = "Socials", color = Color.White,
-                    modifier=Modifier.padding(start=12.dp, bottom = 12.dp),
-                    fontSize = 20.sp,
-                    fontFamily = GIFont, fontWeight = FontWeight.Medium
-                )}
+                item {
+                    Text(
+                        text = "Socials", color = Color.White,
+                        modifier = Modifier.padding(start = 12.dp, bottom = 12.dp),
+                        fontSize = 20.sp,
+                        fontFamily = GIFont, fontWeight = FontWeight.Medium
+                    )
+                }
 
-                items(cardsRow.size) { cardRowIndex->
+                items(cardsRow.size) { cardRowIndex ->
                     CardSection(index = cardRowIndex)
                 }
 
@@ -69,9 +79,10 @@ fun SettingsScreen(paddingValues: PaddingValues){
 
             Spacer(Modifier.weight(1f))
 
-            if (BuildConfig.DEBUG){
-                Text(text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)"
-                    , modifier = Modifier
+            if (BuildConfig.DEBUG) {
+                Text(
+                    text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
+                    modifier = Modifier
                         .wrapContentSize()
                         .padding(horizontal = 12.dp)
 //                        .align(Alignment.BottomCenter)
@@ -81,10 +92,9 @@ fun SettingsScreen(paddingValues: PaddingValues){
                     fontFamily = Poppins,
                     fontWeight = FontWeight.Medium
                 )
-            }
-            else{
-                Text(text = "made with \uD83E\uDD75 by Shalen Mathew"
-                    , modifier = Modifier
+            } else {
+                Text(
+                    text = "made with \uD83E\uDD75 by Shalen Mathew", modifier = Modifier
                         .wrapContentSize()
                         .padding(horizontal = 12.dp)
 //                        .align(Alignment.BottomCenter)
@@ -98,8 +108,5 @@ fun SettingsScreen(paddingValues: PaddingValues){
 
         }
 
-
-
     }
-
-}
+    }

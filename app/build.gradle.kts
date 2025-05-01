@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.quotesapp"
+    namespace = "com.shalenmathew.quotesapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.quotesapp"
+        applicationId = "com.shalenmathew.quotesapp"
         minSdk = 24
         targetSdk = 35
         versionCode = 23

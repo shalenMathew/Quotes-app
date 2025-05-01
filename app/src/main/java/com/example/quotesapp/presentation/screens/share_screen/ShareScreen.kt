@@ -11,14 +11,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -31,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
@@ -70,9 +68,11 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
             .fillMaxSize(),
     ) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .wrapContentSize()
+            .align(Alignment.Center)) {
 
-            Spacer(modifier = Modifier.weight(1f))
+//            Spacer(modifier = Modifier.weight(1f))
 
             if (quote != null) {
                 CaptureBitmap(quoteData = quote,quoteStyleState) { capturedBitmap ->
@@ -84,67 +84,71 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
                 Toast.makeText(context, "quote is null", Toast.LENGTH_SHORT).show()
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+//            Spacer(modifier = Modifier.weight(1f))
 
+        }
 
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .wrapContentHeight(),
-                contentAlignment = Alignment.BottomEnd
+        Box(
+            modifier = Modifier.fillMaxWidth()
+                .wrapContentHeight()
+                .background(color = Color.Black)
+                .align(Alignment.BottomEnd),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .background(Color.Black)
+                    .padding(horizontal = 50.dp, vertical = 18.dp),
+                horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
 
-                Row(
-                    modifier = Modifier
-                        .background(Color.Black)
-                        .padding(horizontal = 50.dp, vertical = 18.dp),
-                    horizontalArrangement = Arrangement.spacedBy(30.dp)
-                ) {
-
-                    Image(
-                        painter = painterResource(R.drawable.custom), contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier.size(28.dp)
-                            .clickable {
-                                showSheet = true
-                            })
-
-                    Image(
-                        painter = painterResource(R.drawable.downloads), contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier.size(28.dp).clickable {
-
-                            imgBitmap?.let {
-                                saveImgInGallery(context, it.asAndroidBitmap())
-                            } ?: run {
-                                Toast.makeText(context, "No image to save", Toast.LENGTH_SHORT)
-                                    .show()
-                                Log.d("TAG", "ShareScreen: imgBitmap is null")
-                            }
-
+                Image(
+                    painter = painterResource(R.drawable.custom), contentDescription = null,
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier.size(28.dp)
+                        .clickable {
+                            showSheet = true
                         })
 
-                    Image(
-                        painter = painterResource(R.drawable.share), contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier.size(28.dp)
-                            .clickable {
-                                imgBitmap?.let {
-                                    shareImg(context, it.asAndroidBitmap())
-                                } ?: run {
-                                    Toast.makeText(context, "No image to share", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
+                Image(
+                    painter = painterResource(R.drawable.downloads), contentDescription = null,
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier.size(28.dp).clickable {
+
+                        imgBitmap?.let {
+                            saveImgInGallery(context, it.asAndroidBitmap())
+                        } ?: run {
+                            Toast.makeText(context, "No image to save", Toast.LENGTH_SHORT)
+                                .show()
+                            Log.d("TAG", "ShareScreen: imgBitmap is null")
+                        }
+
+                    })
+
+                Image(
+                    painter = painterResource(R.drawable.share), contentDescription = null,
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier.size(28.dp)
+                        .clickable {
+                            imgBitmap?.let {
+                                shareImg(context, it.asAndroidBitmap())
+                            } ?: run {
+                                Toast.makeText(context, "No image to share", Toast.LENGTH_SHORT)
+                                    .show()
                             }
+                        }
 
-                    )
-
-                }
+                )
 
             }
 
         }
 
     }
+
+
+
 
 
     if (showSheet) {
@@ -271,11 +275,7 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
                                 },
                             contentScale = ContentScale.Fit)
                     }
-
                 }
-
-
-
             }
 
         }

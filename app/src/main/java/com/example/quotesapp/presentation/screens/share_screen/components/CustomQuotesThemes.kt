@@ -184,7 +184,7 @@ fun CircleDot(color: Color) {
     )
 }
 
-/** RED SPOTIFY THEME STYLE */
+/** SPOTIFY THEME STYLE */
 @Composable
 fun SolidColorQuoteCard(modifier: Modifier,quote: Quote) {
     Box(
@@ -240,16 +240,18 @@ fun SolidColorQuoteCard(modifier: Modifier,quote: Quote) {
 /** brat THEME STYLE */
 @Composable
 fun BratScreen(modifier: Modifier,quote: Quote) {
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .background(color = bratGreen),
+            .fillMaxHeight()
+            .background(color = bratGreen)
+            .padding(5.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = quote.quote,
-            fontSize = 15.sp,
+            fontSize = 18.sp,
             fontFamily = bratTheme,
             fontWeight = FontWeight.Medium,
             color = Color.Black

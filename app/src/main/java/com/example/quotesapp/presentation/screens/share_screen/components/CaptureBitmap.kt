@@ -24,7 +24,8 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun CaptureBitmap(quoteData: Quote, quoteStyleState: QuoteStyle, onCapture: (ImageBitmap) -> Unit){
+fun CaptureBitmap(quoteData: Quote, quoteStyleState: QuoteStyle, onCapture: (ImageBitmap) -> Unit)
+{
 
     val coroutineScope = rememberCoroutineScope()
     var capturedImg by remember { mutableStateOf<ImageBitmap?>(null) }
@@ -74,7 +75,6 @@ fun CaptureBitmap(quoteData: Quote, quoteStyleState: QuoteStyle, onCapture: (Ima
             BratScreen(modifier = modifier,quoteData)
         }
     }
-
 
 }
 

@@ -30,10 +30,11 @@ Who are trying to find simpler projects to begin their contribution journey
 
 ## Screenshots 📱
 
-| ![ln 3](https://github.com/user-attachments/assets/6aa573aa-2f7f-49db-9a06-ba0431356352) | ![ps2](https://github.com/user-attachments/assets/b4e1a0b7-cb23-4ba8-99fb-50906d763f18) |
-|:-------------------------------------------------------------------:|:-------------------------------------------------------------------:|
-| ![ps3](https://github.com/user-attachments/assets/7d9ad398-953e-43e5-979d-6f7dac00ec2f) | ![ps4](https://github.com/user-attachments/assets/c509da3a-27ee-4bc0-b55f-f0f63d8d1a84) |
-| ![ps5](https://github.com/user-attachments/assets/2bd2c559-6ff3-4565-bc95-c7b9d9076f68) | ![ps6](https://github.com/user-attachments/assets/f2c7aefa-d357-47b9-bd4f-ac052d7c42fa) | 
+| ![ln 3](https://github.com/user-attachments/assets/6aa573aa-2f7f-49db-9a06-ba0431356352) | ![ln 2](https://github.com/user-attachments/assets/f5b2a7e7-779d-4de5-bbe6-7ea557f1bf58) |
+|:-------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------:|
+| ![ps2](https://github.com/user-attachments/assets/bf0dc10d-e73a-4f3c-99bf-dcfbf2a8e53f)  |  ![ps3](https://github.com/user-attachments/assets/7bff2bac-7f71-43c4-9a5e-0b820bef81c8) |
+| ![ps4](https://github.com/user-attachments/assets/d1c42711-d1b1-406c-bb20-0faaf3ccf97b)  |  ![ps5](https://github.com/user-attachments/assets/4adceb39-b558-41d1-9a07-d3a8c5e37345) | 
+| ![ps6](https://github.com/user-attachments/assets/fe16e863-6f2e-4d64-a753-6beda8a0a0b1)  |  | 
 
 
 ## Trailer 📽️

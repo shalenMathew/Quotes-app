@@ -5,10 +5,10 @@
 
 **This a minimalistic quotes app.**
 
-https://apt.izzysoft.de/fdroid/index/apk/com.shalenmathew.quotesapp
+
 
 ### Get From
-> [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://github.com/shalenMathew/Quotes-app/releases)
+> [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.shalenmathew.quotesapp)
 
 ## Built with
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android2.svg">]()

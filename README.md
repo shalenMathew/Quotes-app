@@ -24,11 +24,6 @@ This project will be best for you if ur someone who are looking to learn more ab
 Who are trying to find simpler projects to begin their contribution journey
 
 
-***Install the apk from here 👇***
-
-[![Static Badge](https://img.shields.io/badge/Quotes.app-APK-red?logo=android&labelColor=black)](https://github.com/shalenMathew/Quotes-app/releases)
-
-
 ## Screenshots 📱
 
 | ![ln 3](https://github.com/user-attachments/assets/6aa573aa-2f7f-49db-9a06-ba0431356352) | ![ps2](https://github.com/user-attachments/assets/bf0dc10d-e73a-4f3c-99bf-dcfbf2a8e53f) |

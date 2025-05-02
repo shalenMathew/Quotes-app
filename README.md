@@ -8,7 +8,7 @@
 https://apt.izzysoft.de/fdroid/index/apk/com.shalenmathew.quotesapp
 
 ### Get From
-> [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">]([https://apt.izzysoft.de/packages/com.shub39.rush/latest](https://github.com/shalenMathew/Quotes-app/releases/tag/v2.4))
+> [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">]([https://apt.izzysoft.de/packages/com.shub39.rush/latest](https://github.com/shalenMathew/Quotes-app/releases)
 
 ## Built with
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Android/android2.svg">]()

@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -117,12 +118,10 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                 else
                 {
                     AsyncImage(model = R.drawable.heart_unfilled,
-                        contentDescription = null,
+                        contentDescription = "share",
                         modifier= Modifier.size(35.dp)
                             .clickable {
                                 quoteViewModel.onEvent(QuoteEvent.Like(data))
-
-
                             })
                 }
 
@@ -130,7 +129,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
 
             AsyncImage(model = R.drawable.send,
                 contentDescription = null,
-                modifier= Modifier.size(35.dp).clickable
+                modifier= Modifier.size(35.dp).testTag("share").clickable
                 {
 
                     navHost.currentBackStackEntry?.savedStateHandle?.set("quote",data)

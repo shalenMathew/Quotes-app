@@ -52,14 +52,14 @@ object QuotesWidgetObj: GlanceAppWidget() {
         Log.d("WID,","quote $savedQuote")
 
         provideContent {
-            QuoteWidget(context,savedQuote)
+            QuoteWidget(savedQuote)
         }
 
     }
 }
 
 @Composable
-fun QuoteWidget(context: Context, savedQuote: String) {
+fun QuoteWidget(savedQuote: String) {
     Column(
         modifier = GlanceModifier
             .fillMaxWidth()
@@ -97,30 +97,6 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
         Log.d("WorkManagerStatus", "Widget enabled, scheduling update")
-//        scheduleWidgetUpdate(context)
-    }
-
-    private fun scheduleWidgetUpdate(context: Context) {
-
-        val workRequest = PeriodicWorkRequestBuilder<WidgetWorkManager>(15, TimeUnit.HOURS).build()
-
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-            "quotes_widget_update",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            workRequest
-        )
-
-
-//        val workRequest = OneTimeWorkRequestBuilder<WidgetWorkManager>()
-//            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST) // Runs instantly
-//            .build()
-//
-//        WorkManager.getInstance(context).enqueueUniqueWork(
-//            "quotes_widget_update",
-//            ExistingWorkPolicy.REPLACE, // Ensures it runs fresh every time
-//            workRequest
-//        )
-
     }
 
 }

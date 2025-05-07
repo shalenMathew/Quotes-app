@@ -108,7 +108,6 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
 }
 
 /** CODE SNIPPET STYLE */
-
 @Composable
 fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
     Box(
@@ -119,15 +118,15 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
         Card (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 20.dp)
+                .padding(horizontal = 15.dp, vertical = 50.dp)
                 .shadow(
                     elevation = 20.dp,
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(8.dp),
                     ambientColor = Color.Black.copy(alpha = 1f),
                     spotColor = Color.Black.copy(alpha = 1f)
                 )
             ,
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(5.dp),
             elevation = CardDefaults.cardElevation(5.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Black)
         ) {
@@ -150,24 +149,24 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
                 Text(
                     text = quote.quote,
                     color = Color.White,
-                    fontSize = 19.sp,
-                    lineHeight = 38.sp,
+                    fontSize = 15.sp,
+                    lineHeight = 30.sp,
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                 )
 
                 Text(
                     text = quote.author,
                     color = Color(0xFF00E0FF),
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp,)
                 )
 
                 Text(
                     text = "Quotes.app",
                     color = Color(0xFFFF48B0),
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier
-                        .padding(top = 38.dp, bottom = 12.dp)
+                        .padding(top = 20.dp, bottom = 8.dp)
                         .align(Alignment.CenterHorizontally)
                 )
             }

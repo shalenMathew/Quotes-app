@@ -6,5 +6,4 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 
 fun QuotesDtoItem.toQuote():Quote{
     return  Quote(quote =q, author =a, liked = false)
-
 }

@@ -12,6 +12,7 @@ class FavQuoteRepositoryImpl (private val db: QuoteDatabase):FavQuoteRepository 
     }
 
     override suspend fun saveLikedQuote(quote: Quote) {
+        // this fun only saves liked quotes thats its job
         db.getQuoteDao().insertLikedQuote(quote)
     }
 }

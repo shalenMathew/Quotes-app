@@ -99,5 +99,6 @@ sealed class QuoteStyle(){
     object CodeSnippetTheme : QuoteStyle()
     object SpotifyTheme: QuoteStyle()
     object bratTheme : QuoteStyle()
+    object igorTheme : QuoteStyle()
 
 }

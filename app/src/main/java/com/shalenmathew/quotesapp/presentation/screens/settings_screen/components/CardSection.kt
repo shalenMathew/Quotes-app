@@ -94,7 +94,7 @@ fun CardSection(index: Int) {
 val cardsRow = listOf<CardRow>(
     CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew" ),
     CardRow(icon = R.drawable.ic_github, name = "Github", url = "https://github.com/shalenMathew/Quotes-app" ),
-    CardRow(icon = R.drawable.ic_discord, name = "Discord", url = "https://discord.gg/zUgYzvAk" ),
+    CardRow(icon = R.drawable.ic_discord, name = "Discord", url = "https://discord.gg/QpDJh3rT4q" ),
     CardRow(icon = R.drawable.ic_linkedin, name = "LinkedIn", url = "https://www.linkedin.com/in/shalen-mathew-3b566921b" ),
     CardRow(icon = R.drawable.ic_link, name = "LinkTree", url = "https://linktr.ee/shalenmathew"),
     CardRow(icon = R.drawable.ic_coffee, name = "buy me a coffee", url = "https://buymeacoffee.com/shalenmathew"),

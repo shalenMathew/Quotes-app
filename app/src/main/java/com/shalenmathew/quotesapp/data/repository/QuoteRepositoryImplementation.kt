@@ -33,6 +33,9 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
             coroutineScope {
 
+                /// coroutine scope is a type of scope that allows you to launch multiple coroutines and await for their results
+                // before moving forward
+
                 val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
                 val qotDef =  async { api.getQuoteOfTheDay().map { it.toQuote() } }
 
@@ -40,7 +43,8 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
                 currList.onEach {
                     if(!it.liked){
-                        db.getQuoteDao().deleteQuote(it)
+                        db.getQuoteDao().deleteQuote(it)  // here u dont need to launch a coroutine as , launch is used to launch a
+                    // coroutine and flow alreday have a running coroutine under its hood ... so u dont need to launch another coroutine
                     }
                 }
 

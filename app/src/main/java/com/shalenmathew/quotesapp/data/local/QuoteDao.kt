@@ -21,16 +21,16 @@ interface QuoteDao {
     @Delete
    suspend fun deleteQuote(quote: Quote)
 
-    @Query(" SELECT * FROM Quote WHERE liked==1 ORDER BY id ASC ")
+    @Query(" SELECT * FROM Quote WHERE liked==1 ORDER BY id DESC ")
     fun getAllLikedQuotes(): Flow<List<Quote> > // i think the list is not updated as no one is observing the data like flow or live data
     // list is static snapshot we need a observer like flow or live data
 
-    // BUG FIXED - > the issue is i was not wrapping the list in any flow or live data causing into not observe the changes
-    // and made the simple idea of fetching data from db complicated by using resources with it
-    // resources are generally used with remote api than room
 
     @Query(" SELECT * FROM Quote ORDER BY id DESC ")
    suspend fun getAllQuotes():List<Quote>
+    // BUG FIXED - > the issue is i was not wrapping the list in any flow or live data causing into not observe the changes
+    // and made the simple idea of fetching data from db complicated by using resources with it
+    // resources are mostly used along remote api than room
 
     @Query("DELETE FROM quote")
     suspend fun deleteAll()

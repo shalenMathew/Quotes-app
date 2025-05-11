@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
@@ -31,6 +32,7 @@ import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.R
+import com.shalenmathew.quotesapp.presentation.theme.handWritten
 
 /**  THIS SECTION COMPRISES OF ALL DIFFERENT STYLES OF QUOTES */
 
@@ -108,7 +110,6 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
 }
 
 /** CODE SNIPPET STYLE */
-
 @Composable
 fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
     Box(
@@ -119,15 +120,15 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
         Card (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 20.dp)
+                .padding(horizontal = 15.dp, vertical = 50.dp)
                 .shadow(
                     elevation = 20.dp,
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(8.dp),
                     ambientColor = Color.Black.copy(alpha = 1f),
                     spotColor = Color.Black.copy(alpha = 1f)
                 )
             ,
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(5.dp),
             elevation = CardDefaults.cardElevation(5.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Black)
         ) {
@@ -150,24 +151,24 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
                 Text(
                     text = quote.quote,
                     color = Color.White,
-                    fontSize = 19.sp,
-                    lineHeight = 38.sp,
+                    fontSize = 15.sp,
+                    lineHeight = 30.sp,
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                 )
 
                 Text(
                     text = quote.author,
                     color = Color(0xFF00E0FF),
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp,)
                 )
 
                 Text(
                     text = "Quotes.app",
                     color = Color(0xFFFF48B0),
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier
-                        .padding(top = 38.dp, bottom = 12.dp)
+                        .padding(top = 20.dp, bottom = 8.dp)
                         .align(Alignment.CenterHorizontally)
                 )
             }
@@ -257,6 +258,76 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
             color = Color.Black
         )
     }
+}
+
+
+
+/** IGOR THEME STYLE */
+@Composable
+fun IgorScreen(modifier: Modifier, quote: Quote) {
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(Color(0xfff1aec3))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.igor_angels),
+            contentDescription = "Cherubs",
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .offset(x = (-45).dp, y = (-55).dp)
+                .size(170.dp),
+            contentScale = ContentScale.Crop
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.igor_flowers),
+            contentDescription = "Sunflowers",
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = (45).dp, y = (-60).dp)
+                .size(170.dp),
+            contentScale = ContentScale.Crop
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.igor_crocodiles),
+            contentDescription = "Crocodile",
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .offset(x = (-45).dp, y = 50.dp)
+                .size(180.dp),
+            contentScale = ContentScale.Crop
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.igor_statue),
+            contentDescription = "Statue Collage",
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = 55.dp, y = 30.dp)
+                .size(230.dp),
+            contentScale = ContentScale.Fit
+        )
+
+        Text(
+            text = quote.quote,
+            style = TextStyle(
+                fontSize = 24.sp,
+                color = Color.Black,
+                fontFamily = handWritten, // Replace with handwritten if available,
+                fontWeight = FontWeight.Bold
+            )
+            ,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(horizontal = 15.dp, vertical = 230.dp)
+        )
+    }
+
 }
 
 

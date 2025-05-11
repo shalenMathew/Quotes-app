@@ -51,3 +51,8 @@ val bratTheme = FontFamily(
     Font(R.font.arialnarrow,FontWeight.Medium),
 )
 
+val handWritten = FontFamily(
+    Font(R.font.hand_made_bold,FontWeight.Bold),
+    Font(R.font.hand_made_medium,FontWeight.Medium),
+)
+

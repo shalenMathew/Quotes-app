@@ -74,9 +74,15 @@ fun CaptureBitmap(quoteData: Quote, quoteStyleState: QuoteStyle, onCapture: (Ima
         QuoteStyle.bratTheme -> {
             BratScreen(modifier = modifier,quoteData)
         }
+
+        QuoteStyle.igorTheme -> {
+            IgorScreen(modifier = modifier,quoteData)
+        }
     }
 
 }
+
+
 
 
 private fun createBitmapFromPicture(picture: Picture): Bitmap{

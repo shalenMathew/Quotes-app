@@ -160,4 +160,14 @@ dependencies {
 
     implementation ("com.google.android.material:material:1.12.0")
 
+
+    // test
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.0")
+    // mockito
+    testImplementation("org.mockito:mockito-core:5.11.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+
+
+
 }

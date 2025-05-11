@@ -147,12 +147,7 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
 
     }
 
-
-
-
-
     if (showSheet) {
-
         ModalBottomSheet(
             onDismissRequest = {showSheet=false},
             sheetState = sheetState,
@@ -203,6 +198,57 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
 
                 }
 
+                /**  BRAT THEME  */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+                {
+
+                    Text(text = "brat Theme Style",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Image(painter = painterResource(R.drawable.sample_brat_theme),
+                            contentDescription = null,
+                            modifier = Modifier.size(200.dp)
+                                .clickable{
+                                    quoteStyleState = QuoteStyle.bratTheme
+                                    showSheet=false
+                                },
+                            contentScale = ContentScale.Fit)
+                    }
+
+                }
+
+                    /**  IGOR THEME */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+                {
+
+                    Text(text = "IGOR Theme Style",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Image(painter = painterResource(R.drawable.sample_igor),
+                            contentDescription = null,
+                            modifier = Modifier.size(200.dp)
+                                .clickable{
+                                    quoteStyleState = QuoteStyle.igorTheme
+                                    showSheet=false
+                                },
+                            contentScale = ContentScale.Fit)
+                    }
+
+                }
+
+
                 /**  SPOTIFY THEME  STYLE */
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
                 {
@@ -221,31 +267,6 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
                             modifier = Modifier.size(200.dp)
                                 .clickable{
                                     quoteStyleState = QuoteStyle.SpotifyTheme
-                                    showSheet=false
-                                },
-                            contentScale = ContentScale.Fit)
-                    }
-
-                }
-
-                    /**  BRAT THEME  */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-                {
-
-                    Text(text = "brat Theme Style",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Image(painter = painterResource(R.drawable.sample_brat_theme),
-                            contentDescription = null,
-                            modifier = Modifier.size(200.dp)
-                                .clickable{
-                                    quoteStyleState = QuoteStyle.bratTheme
                                     showSheet=false
                                 },
                             contentScale = ContentScale.Fit)
@@ -279,7 +300,6 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
             }
 
         }
-
     }
 
 

@@ -260,4 +260,14 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
 
 
 
+/** IGOR THEME STYLE */
+@Composable
+fun IgorScreen(modifier: Modifier, quote: Quote) {
+
+    Image(painter = painterResource(R.drawable.sample_igor_design), contentDescription = "", modifier = Modifier.wrapContentSize())
+
+}
+
+
+
 

@@ -223,6 +223,31 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
 
                 }
 
+                    /**  IGOR THEME */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+                {
+
+                    Text(text = "IGOR Theme Style",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Image(painter = painterResource(R.drawable.sample_igor),
+                            contentDescription = null,
+                            modifier = Modifier.size(200.dp)
+                                .clickable{
+                                    quoteStyleState = QuoteStyle.igorTheme
+                                    showSheet=false
+                                },
+                            contentScale = ContentScale.Fit)
+                    }
+
+                }
+
 
                 /**  SPOTIFY THEME  STYLE */
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))

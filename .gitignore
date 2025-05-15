@@ -27,6 +27,7 @@ lint/reports/
 hs_err_pid*
 replay_pid*
 
+
 # Kotlin/Java
 *.class
 *.jar

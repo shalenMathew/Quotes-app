@@ -83,7 +83,7 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
             }
 
 
-            Log.d("TAG", "Error in getQuote: ${e.message}")
+//            Log.d("TAG", "Error in getQuote: ${e.message}")
 
             emit(Resource.Error(errorMessage))
 

@@ -35,11 +35,7 @@ Who are trying to find simpler projects to begin their contribution journey
 
 ## Trailer 📽️
 
-
-
-https://github.com/user-attachments/assets/250c1560-48c7-48d6-a371-c32774071c35
-
-
+https://github.com/user-attachments/assets/10a34818-089b-4928-838a-df715063952c
 
 https://github.com/user-attachments/assets/38a15a1e-b324-4355-8574-49e83cf044cd
 

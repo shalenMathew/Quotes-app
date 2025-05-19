@@ -201,7 +201,6 @@ fun ShareScreen(
                                     .size(200.dp)
                                     .clickable{
                                         quoteStyleState = QuoteStyle.CodeSnippetTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
                                         showSheet=false
                                     },
                                 contentScale = ContentScale.Fit)
@@ -240,7 +239,6 @@ fun ShareScreen(
                                 modifier = Modifier.size(200.dp)
                                     .clickable {
                                         quoteStyleState = QuoteStyle.bratTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
                                         showSheet = false
                                     },
                                 contentScale = ContentScale.Fit
@@ -280,7 +278,6 @@ fun ShareScreen(
                                 modifier = Modifier.size(200.dp)
                                     .clickable {
                                         quoteStyleState = QuoteStyle.igorTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
                                         showSheet = false
                                     },
                                 contentScale = ContentScale.Fit
@@ -321,7 +318,6 @@ fun ShareScreen(
                                 modifier = Modifier.size(200.dp)
                                     .clickable {
                                         quoteStyleState = QuoteStyle.SpotifyTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
                                         showSheet = false
                                     },
                                 contentScale = ContentScale.Fit
@@ -361,7 +357,6 @@ fun ShareScreen(
                                 modifier = Modifier.size(200.dp)
                                     .clickable {
                                         quoteStyleState = QuoteStyle.DefaultTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
                                         showSheet = false
                                     },
                                 contentScale = ContentScale.Fit

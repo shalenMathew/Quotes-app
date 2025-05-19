@@ -33,6 +33,7 @@ import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
+import com.shalenmathew.quotesapp.presentation.theme.sugarPie
 
 /**  THIS SECTION COMPRISES OF ALL DIFFERENT STYLES OF QUOTES */
 
@@ -317,7 +318,7 @@ fun IgorScreen(modifier: Modifier, quote: Quote) {
             style = TextStyle(
                 fontSize = 24.sp,
                 color = Color.Black,
-                fontFamily = handWritten, // Replace with handwritten if available,
+                fontFamily = handWritten,
                 fontWeight = FontWeight.Bold
             )
             ,

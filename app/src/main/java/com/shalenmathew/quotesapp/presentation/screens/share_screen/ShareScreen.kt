@@ -19,11 +19,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,16 +42,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
+import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
+fun ShareScreen(
+    paddingValues: PaddingValues,
+    navHost: NavHostController,
+    viewModel: ShareQuoteViewModel= hiltViewModel()
+) {
 
     var imgBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     val context = LocalContext.current
@@ -58,7 +66,9 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
     val scrollState = rememberScrollState()
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
 
-
+    LaunchedEffect(Unit) {
+        quoteStyleState = viewModel.getDefaultQuoteStyle()
+    }
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
     Box(
@@ -184,16 +194,27 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
 
                     Row(modifier = Modifier.fillMaxWidth()
                         .wrapContentHeight()) {
-
-                        Image(painter = painterResource(R.drawable.sample_code_snippet),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(200.dp)
-                                .clickable{
-                                    quoteStyleState = QuoteStyle.CodeSnippetTheme
-                                    showSheet=false
-                                },
-                            contentScale = ContentScale.Fit)
+                        Box{
+                            Image(painter = painterResource(R.drawable.sample_code_snippet),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(200.dp)
+                                    .clickable{
+                                        quoteStyleState = QuoteStyle.CodeSnippetTheme
+                                        showSheet=false
+                                    },
+                                contentScale = ContentScale.Fit)
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.CodeSnippetTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.CodeSnippetTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
                     }
 
                 }
@@ -211,14 +232,28 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Image(painter = painterResource(R.drawable.sample_brat_theme),
-                            contentDescription = null,
-                            modifier = Modifier.size(200.dp)
-                                .clickable{
-                                    quoteStyleState = QuoteStyle.bratTheme
-                                    showSheet=false
-                                },
-                            contentScale = ContentScale.Fit)
+                        Box {
+                            Image(
+                                painter = painterResource(R.drawable.sample_brat_theme),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.bratTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.bratTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.bratTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
                     }
 
                 }
@@ -236,14 +271,28 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Image(painter = painterResource(R.drawable.sample_igor),
-                            contentDescription = null,
-                            modifier = Modifier.size(200.dp)
-                                .clickable{
-                                    quoteStyleState = QuoteStyle.igorTheme
-                                    showSheet=false
-                                },
-                            contentScale = ContentScale.Fit)
+                        Box {
+                            Image(
+                                painter = painterResource(R.drawable.sample_igor),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.igorTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.igorTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.igorTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
                     }
 
                 }
@@ -262,14 +311,28 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Image(painter = painterResource(R.drawable.sample_spotify_theme),
-                            contentDescription = null,
-                            modifier = Modifier.size(200.dp)
-                                .clickable{
-                                    quoteStyleState = QuoteStyle.SpotifyTheme
-                                    showSheet=false
-                                },
-                            contentScale = ContentScale.Fit)
+                        Box {
+                            Image(
+                                painter = painterResource(R.drawable.sample_spotify_theme),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.SpotifyTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.SpotifyTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.SpotifyTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
                     }
 
                 }
@@ -287,14 +350,28 @@ fun ShareScreen(paddingValues: PaddingValues, navHost: NavHostController) {
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Image(painter = painterResource(R.drawable.sample_default_style),
-                            contentDescription = null,
-                            modifier = Modifier.size(200.dp)
-                                .clickable{
-                                    quoteStyleState = QuoteStyle.DefaultTheme
-                                    showSheet=false
-                                },
-                            contentScale = ContentScale.Fit)
+                        Box {
+                            Image(
+                                painter = painterResource(R.drawable.sample_default_style),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.DefaultTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.DefaultTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.DefaultTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
             }

@@ -56,3 +56,8 @@ val handWritten = FontFamily(
     Font(R.font.hand_made_medium,FontWeight.Medium),
 )
 
+
+val sugarPie = FontFamily(
+    Font(R.font.suagr_pie,FontWeight.Medium),
+)
+

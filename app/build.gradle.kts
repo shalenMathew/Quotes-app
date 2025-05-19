@@ -170,4 +170,12 @@ dependencies {
 
 
 
+// Coroutines test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+
+
+
+
+
 }

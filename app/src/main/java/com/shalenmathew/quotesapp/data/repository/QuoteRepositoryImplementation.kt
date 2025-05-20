@@ -29,8 +29,6 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
             emit(Resource.Loading())
 
-            Log.d("TAG",Thread.currentThread().name)
-
             coroutineScope {
 
                 /// coroutine scope is a type of scope that allows you to launch multiple coroutines and await for their results
@@ -81,7 +79,6 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                     }
                 else -> "Something went wrong. Please try again."
             }
-
 
 //            Log.d("TAG", "Error in getQuote: ${e.message}")
 

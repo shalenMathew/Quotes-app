@@ -10,4 +10,5 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 
 sealed class FavQuoteEvent {
     data class Like(val quote: Quote):FavQuoteEvent()
+    data class onSearchQueryChanged(val query: String): FavQuoteEvent()
 }

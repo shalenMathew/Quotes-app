@@ -24,12 +24,12 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
         getFavQuote()
     }
 
-    private fun getFavQuote(){
+    private fun getFavQuote(query: String = _favQuoteState.value.query){
 
         _favQuoteState.value=_favQuoteState.value.copy(isLoading = true)
 
         viewModelScope.launch {
-            favQuoteUseCase.getFavQuote().collect(){it->
+            favQuoteUseCase.getFavQuote(query).collect(){it->
                 _favQuoteState.value=_favQuoteState.value.copy(dataList = it, isLoading = false)
             }
         }
@@ -54,6 +54,11 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
 
                 }
 
+            }
+
+            is FavQuoteEvent.onSearchQueryChanged -> {
+               _favQuoteState.value = _favQuoteState.value.copy(query = quoteEvent.query)
+                getFavQuote()
             }
         }
 

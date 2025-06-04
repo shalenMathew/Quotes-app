@@ -29,6 +29,8 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
             emit(Resource.Loading())
 
+            Log.d("TAG",Thread.currentThread().name)
+
             coroutineScope {
 
                 /// coroutine scope is a type of scope that allows you to launch multiple coroutines and await for their results
@@ -41,8 +43,9 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
 
                 currList.onEach {
                     if(!it.liked){
-                        db.getQuoteDao().deleteQuote(it)  // here u dont need to launch a coroutine as , launch is used to launch a
-                    // coroutine and flow alreday have a running coroutine under its hood ... so u dont need to launch another coroutine
+                        db.getQuoteDao().deleteQuote(it)  // here u dont need to launch a coroutine as ...
+                        // launch keyword is used to launch a coroutine and flow already have a running coroutine under its hood ...
+                        // so u don't need to launch another coroutine
                     }
                 }
 
@@ -76,9 +79,10 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                         429 -> "To many request to the server please check back in some time"
                         else -> {"Unknown error ${e.message()}"}
                     }
-                    }
+                }
                 else -> "Something went wrong. Please try again."
             }
+
 
 //            Log.d("TAG", "Error in getQuote: ${e.message}")
 

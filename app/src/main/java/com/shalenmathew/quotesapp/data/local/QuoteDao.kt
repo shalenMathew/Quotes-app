@@ -13,26 +13,32 @@ import kotlinx.coroutines.flow.Flow
 interface QuoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-   suspend fun insertQuoteList(quote: List<Quote>)
+    suspend fun insertQuoteList(quote: List<Quote>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLikedQuote(quote: Quote)
 
     @Delete
-   suspend fun deleteQuote(quote: Quote)
+    suspend fun deleteQuote(quote: Quote)
 
     @Query(" SELECT * FROM Quote WHERE liked==1 ORDER BY id DESC ")
-    fun getAllLikedQuotes(): Flow<List<Quote> > // i think the list is not updated as no one is observing the data like flow or live data
-    // list is static snapshot we need a observer like flow or live data
+    fun getAllLikedQuotes(): Flow<List<Quote> > // i think the list was not being updated as there was nothing that was observing the data, like flow or live data
+    // list is static snapshot we need a observer like flow or live data for our updates
 
 
     @Query(" SELECT * FROM Quote ORDER BY id DESC ")
-   suspend fun getAllQuotes():List<Quote>
-    // BUG FIXED - > the issue is i was not wrapping the list in any flow or live data causing into not observe the changes
-    // and made the simple idea of fetching data from db complicated by using resources with it
-    // resources are mostly used along remote api than room
+    suspend fun getAllQuotes():List<Quote>
+    // BUG FIXED - > the issue was i was not wrapping the list in any flow or live data causing it to not observe the changes
+    // and made the simple idea of fetching data from db...
+    // Resource<> are mostly used along with remote api than room
 
     @Query("DELETE FROM quote")
     suspend fun deleteAll()
+
+    @Query("""  SELECT * FROM Quote
+               WHERE LOWER(quote) LIKE '%' || LOWER(:query) || '%' 
+                 OR
+       LOWER(author) LIKE '%' || LOWER(:query) || '%' """)
+    fun searchForQuotes(query:String): Flow<List<Quote> >
 
 }

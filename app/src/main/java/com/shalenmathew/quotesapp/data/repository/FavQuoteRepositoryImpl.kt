@@ -7,8 +7,14 @@ import kotlinx.coroutines.flow.Flow
 
 class FavQuoteRepositoryImpl (private val db: QuoteDatabase):FavQuoteRepository {
 
-    override fun getAllLikedQuotes(): Flow<List<Quote>> {
-    return db.getQuoteDao().getAllLikedQuotes()
+    override fun getAllLikedQuotes(query: String): Flow<List<Quote>> {
+
+        return if (query.isNotBlank()){
+            return db.getQuoteDao().searchForQuotes(query)
+
+        }else{
+          return  db.getQuoteDao().getAllLikedQuotes()
+        }
     }
 
     override suspend fun saveLikedQuote(quote: Quote) {

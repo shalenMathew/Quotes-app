@@ -7,6 +7,7 @@ import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUs
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +19,10 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
 
     private val _favQuoteState = mutableStateOf(FavQuoteState())
     val favQuoteState = _favQuoteState
+
+
+
+//    var job: Job? = null
 
 
     init {
@@ -60,6 +65,18 @@ class FavQuoteViewModel@Inject constructor(private val favQuoteUseCase: FavQuote
                _favQuoteState.value = _favQuoteState.value.copy(query = quoteEvent.query)
                 getFavQuote()
             }
+
+            is FavQuoteEvent.onRefresh -> {
+
+//                job?.cancel()
+//
+//                job=viewModelScope.launch {
+//                    delay(3000)
+//                    getFavQuote()
+//                }
+
+            }
+
         }
 
     }

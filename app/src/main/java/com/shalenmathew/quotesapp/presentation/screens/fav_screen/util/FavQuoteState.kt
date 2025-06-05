@@ -7,5 +7,6 @@ data class FavQuoteState (
     val liked:Boolean=false,
     val error:String="",
     val isLoading: Boolean =false,
+    val isRefreshing: Boolean = false,
     val query:String = ""
 )

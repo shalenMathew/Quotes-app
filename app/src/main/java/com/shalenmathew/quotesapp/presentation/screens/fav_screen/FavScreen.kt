@@ -1,6 +1,7 @@
 package com.shalenmathew.quotesapp.presentation.screens.fav_screen
 
 import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -10,10 +11,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -47,11 +49,15 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
+import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.GlowingTriangle
+import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.RainbowRays
+import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.WhiteBeam
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.Grey
 import com.shalenmathew.quotesapp.presentation.viewmodel.FavQuoteViewModel
@@ -211,10 +217,44 @@ fun FavScreen(paddingValues: PaddingValues,
 
 
         }
+
+        CustomIndicator(quoteViewModel.favQuoteState.value.isRefreshing,pullRefreshState)
+
         }
 
     }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomIndicator(isRefreshing: Boolean, pullRefreshState: PullToRefreshState) {
+
+
+    val animatedOffset by animateDpAsState(
+        targetValue = when {
+            isRefreshing -> 200.dp
+            pullRefreshState.distanceFraction in 0f..1f -> (pullRefreshState.distanceFraction * 200).dp
+            pullRefreshState.distanceFraction > 1f -> (200 + (((pullRefreshState.distanceFraction - 1f) * .1f) * 200)).dp
+            else -> 0.dp
+        }, label = ""
+    )
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .offset(y = (-200).dp)
+            .offset { IntOffset(0, animatedOffset.roundToPx()) }
+    ) {
+
+        WhiteBeam(pullRefreshState, isRefreshing)
+        RainbowRays(isRefreshing,pullRefreshState)
+        GlowingTriangle(pullRefreshState, isRefreshing)
+
+        }
+
+
+}
 
 fun Modifier.animatedBorder
             (provideProgress: () -> Float,

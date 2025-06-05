@@ -43,7 +43,10 @@ import com.shalenmathew.quotesapp.presentation.viewmodel.FavQuoteViewModel
 
 
 @Composable
-fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel, navHost: NavHostController){
+fun FavQuoteItem(quote: Quote,
+                 quoteViewModel: FavQuoteViewModel,
+                 navHost: NavHostController,
+                 modifier: Modifier){
 
     val context = LocalContext.current
     val activity = context as ComponentActivity
@@ -56,7 +59,7 @@ fun FavQuoteItem(quote: Quote, quoteViewModel: FavQuoteViewModel, navHost: NavHo
     )
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 12.dp, vertical = 5.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(gradient)

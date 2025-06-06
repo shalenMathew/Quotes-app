@@ -22,7 +22,7 @@ interface QuoteDao {
     suspend fun deleteQuote(quote: Quote)
 
     @Query(" SELECT * FROM Quote WHERE liked==1 ORDER BY id DESC ")
-    fun getAllLikedQuotes(): Flow<List<Quote> > // i think the list was not being updated as there was nothing that was observing the data, like flow or live data
+    fun getAllLikedQuotes(): Flow<List<Quote>> // i think the list was not being updated as there was nothing that was observing the data, like flow or live data
     // list is static snapshot we need a observer like flow or live data for our updates
 
 

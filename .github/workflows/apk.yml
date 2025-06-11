@@ -3,6 +3,8 @@ name: Apk Build
 on:
 #  push:
 #    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
   workflow_run:
     workflows: ["Code Quality Checks"]   # Match the exact name from android-test.yml
     branches: ["master"]

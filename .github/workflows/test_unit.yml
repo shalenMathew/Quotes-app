@@ -16,6 +16,8 @@ concurrency:
 jobs:
   unit-test:
 
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.actor != 'github-actions[bot]')
+
     runs-on: ubuntu-latest
 
     steps:

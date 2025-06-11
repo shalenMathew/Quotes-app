@@ -5,6 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.shalenmathew.quotesapp.data.local.QuoteDao
 import com.shalenmathew.quotesapp.data.local.QuoteDatabase
 import com.shalenmathew.quotesapp.domain.model.Quote
+import junit.framework.ComparisonFailure
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -30,7 +31,7 @@ class QuotesDaoTest {
 
 
     @Test
-    fun test_insertQuotes() = runBlocking{
+    fun test_insertAndFetchQuotes() = runBlocking {
 
         val quote= Quote(1,"quote","author",false)
         quoteDao.insertQuoteList(listOf(quote))
@@ -38,6 +39,52 @@ class QuotesDaoTest {
         val result = quoteDao.getAllQuotes()
 
         assertEquals("quote",result[0].quote)
+
+    }
+
+    @Test
+    fun test_searchQuotesWithoutQuery() = runBlocking {
+
+        val quote= Quote(0,"life is good","future",false)
+
+        val quote2= Quote(1,"good is life","past",false)
+
+        quoteDao.insertQuoteList(listOf(quote,quote2))
+
+        val result = quoteDao.searchForQuotes("").first()
+
+        assertEquals("life is good",result[0].quote)
+
+    }
+
+
+    @Test
+    fun test_searchQuotesWithQuery() = runBlocking {
+
+        val quote= Quote(0,"life is good","future",false)
+
+        val quote2= Quote(1,"good is life","past",false)
+
+        quoteDao.insertQuoteList(listOf(quote,quote2))
+
+        val result = quoteDao.searchForQuotes("good is life").first()
+
+        assertEquals("good is life",result[0].quote)
+
+    }
+
+    @Test(expected = ComparisonFailure::class)
+    fun test_searchQuotesWithQueryException() = runBlocking {
+
+        val quote= Quote(0,"life is good","future",false)
+
+        val quote2= Quote(1,"good is life","past",false)
+
+        quoteDao.insertQuoteList(listOf(quote,quote2))
+
+        val result = quoteDao.searchForQuotes("good is life").first()
+
+        assertEquals("life is good",result[0].quote)
 
     }
 

@@ -1,8 +1,8 @@
-name: 🛠️ Code Quality Checks
+name: Code Quality Checks
 
 on:
-  push:
-    branches: [ "master" ]
+#  push:
+#    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 

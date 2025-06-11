@@ -1,6 +1,9 @@
 name: github-repo-stats
 
 on:
+  push:
+    branches: [ "master" ]
+  pull_request:
   schedule:
     # Run this once per day, towards the end of the day for keeping the most
     # recent data point most meaningful (hours are interpreted in UTC).

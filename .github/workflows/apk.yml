@@ -18,7 +18,6 @@ jobs:
 
   distribution:
     name: Build signed apk
-    needs: test
     runs-on: ubuntu-latest
 
     steps:

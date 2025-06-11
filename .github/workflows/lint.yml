@@ -1,4 +1,4 @@
-name: CI
+name: 🛠️ Code Quality Checks
 
 on:
   push:

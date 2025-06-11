@@ -46,25 +46,6 @@ android {
             }
         }
 
-//    flavorDimensions += "default"
-//
-//    productFlavors {
-//
-//        create("fdroid") {
-//            dimension = "default"
-//            applicationIdSuffix = ".fdroid"
-//            versionNameSuffix = "-fdroid"
-//            buildConfigField("Boolean", "ENABLE_ANALYTICS", "false")
-//        }
-//
-//        create("play") {
-//            dimension = "default"
-//            applicationIdSuffix = ".play"
-//            versionNameSuffix = "-play"
-//            buildConfigField("Boolean", "ENABLE_ANALYTICS", "true")
-//        }
-//    }
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -91,13 +72,11 @@ android {
         buildConfig = true
     }
 
-}
+    kapt {
+        correctErrorTypes = true
+    }
 
-// related to flavors
-//if (project.gradle.startParameter.taskNames.any { it.contains("play") }) {
-//    apply(plugin = "com.google.gms.google-services")
-//    apply(plugin = "com.google.firebase.crashlytics")
-//}
+}
 
 dependencies {
 
@@ -170,11 +149,11 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.11.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
     testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.11")
-
-
-
 // Coroutines test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+// this below kotlin imports are necessary for the assertEquals to work
+    testImplementation ("org.jetbrains.kotlin:kotlin-test")
+    testImplementation ("org.jetbrains.kotlin:kotlin-test-junit")
 
 
 

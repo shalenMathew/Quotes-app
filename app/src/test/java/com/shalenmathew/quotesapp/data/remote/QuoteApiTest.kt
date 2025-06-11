@@ -1,6 +1,5 @@
 package com.shalenmathew.quotesapp.data.remote
 
-import coil.network.HttpException
 import com.google.gson.GsonBuilder
 import com.shalenmathew.quotesapp.data.remote.dto.QuotesDto
 import kotlinx.coroutines.test.runTest
@@ -8,10 +7,12 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
+import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.test.Test
 import kotlin.test.assertEquals
+//import org.junit.Assert.assertEquals
+
 
 class QuoteApiTest {
 
@@ -48,9 +49,12 @@ class QuoteApiTest {
         val result = quoteApi.getQuotesList()
         server.takeRequest()
 
-        assertEquals(expected = quotesDto , actual = result)
+        assertEquals(expected =  quotesDto, actual =  result) // ok this is a kotlin specific assert fun where name params like
+//      assertEquals(expected =  , actual =  ) are are allowed to be declared , so its need special kotlin test dependency for its
+        // to work along by declaring named params 'expected' & 'actual' in the fun
 
-
+//        but  assertEquals( quotesDto , result ) -> but this the how normal assert work u dont declare the params name ...
+    //        decelerating params name is  very kotlin fashion and u need special dependency for that
     }
 
 

@@ -4,7 +4,10 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
+    branches: [ "master" ]
+
   workflow_dispatch:
+
 
 # ensures one run at a time, and cancel older runs in the queue if new commits r pushed
 concurrency:

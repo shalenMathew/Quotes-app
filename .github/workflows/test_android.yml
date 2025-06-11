@@ -19,10 +19,12 @@ concurrency:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
   #instrumentation-test is the name of the job
   instrumentation-test:
     #    needs: [unit-test]
+
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.actor != 'github-actions[bot]')
+
     runs-on: ubuntu-latest
     timeout-minutes: 75
 

@@ -283,7 +283,7 @@ jobs:
         with:
           gradlePath: app/build.gradle.kts
           versionCode: ${{ github.run_number }}
-          versionName: ${{ env.NEW_VERSION }}
+          versionName: "0.0"
 
       - name: Decode Keystore
         env:
@@ -313,4 +313,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: beta-apk
-          path: ${{ steps.sign_release.outputs.signedReleaseFile }}
+          path: app/build/outputs/apk/release/app-release.apk

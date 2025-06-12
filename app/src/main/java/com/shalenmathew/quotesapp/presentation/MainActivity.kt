@@ -17,8 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shalenmathew.quotesapp.presentation.navigation.AppNavigation
-import com.shalenmathew.quotesapp.presentation.screens.home_screen.bottom_nav.BottomNavAnimation
-import com.shalenmathew.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.BottomNavAnimation
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.theme.QuotesAppTheme
 import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh

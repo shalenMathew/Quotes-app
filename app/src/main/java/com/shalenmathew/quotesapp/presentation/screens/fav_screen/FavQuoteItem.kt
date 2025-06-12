@@ -34,7 +34,7 @@ import coil.compose.AsyncImage
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
-import com.shalenmathew.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.customBlack
 import com.shalenmathew.quotesapp.presentation.theme.customGrey

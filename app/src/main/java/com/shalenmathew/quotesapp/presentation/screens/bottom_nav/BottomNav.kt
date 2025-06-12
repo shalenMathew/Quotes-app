@@ -1,4 +1,4 @@
-package com.shalenmathew.quotesapp.presentation.screens.home_screen.bottom_nav
+package com.shalenmathew.quotesapp.presentation.screens.bottom_nav
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -190,7 +190,8 @@ fun FlipIcon(
     activeIcon: ImageVector,
     inactiveIcon: ImageVector,
     contentDescription: String,
-) {
+)
+{
     val animationRotation by animateFloatAsState(
         targetValue = if (isActive) 180f else 0f,
         animationSpec = spring(
@@ -214,7 +215,8 @@ fun FlipIcon(
 sealed class Screen(
     val route: String,
     val needBottomNav:Boolean
-) {
+)
+{
     object Home: Screen("Home",true)
     object Fav: Screen("Favourites",true)
     object Splash: Screen("Splash",false)
@@ -231,7 +233,8 @@ sealed class BottomNav(
     val route: String,
     val activeIcon: ImageVector,
     val inactiveIcon: ImageVector
-){
+)
+{
     object Home: BottomNav(Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home)
     object Fav: BottomNav(Screen.Fav.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
     object Settings: BottomNav(Screen.Settings.route, Icons.Filled.Person,Icons.Outlined.Person)

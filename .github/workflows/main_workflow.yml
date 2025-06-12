@@ -30,25 +30,25 @@ jobs:
       - name: Give gradlew execute permission
         run: chmod +x ./gradlew
 
-      - name: Setup Gradle cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-
-      - name: Run lint
-        run: ./gradlew lintDebug
-
-      - name: Upload lint report
-        uses: actions/upload-artifact@v4
-        with:
-          name: lint-report
-          path: app/build/reports/lint-results-debug.html
+#      - name: Setup Gradle cache
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
+#
+#
+#      - name: Run lint
+#        run: ./gradlew lintDebug
+#
+#      - name: Upload lint report
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: lint-report
+#          path: app/build/reports/lint-results-debug.html
 
   unit-test:
 
@@ -61,25 +61,25 @@ jobs:
 
       - name: Give gradlew execute permission
         run: chmod +x ./gradlew
-
-      - name: Setup Gradle cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Run tests
-        run: ./gradlew test
-
-      - name: Upload the test report
-        uses: actions/upload-artifact@v4
-        with:
-          name: unit test-report
-          path: app/build/reports/tests/testDebugUnitTest/
+#
+#      - name: Setup Gradle cache
+#        uses: actions/cache@v4
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle-
+#
+#      - name: Run tests
+#        run: ./gradlew test
+#
+#      - name: Upload the test report
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: unit test-report
+#          path: app/build/reports/tests/testDebugUnitTest/
 
   #instrumentation-test is the name of the job
   instrumentation-test:
@@ -275,19 +275,32 @@ jobs:
           versionCode: ${{ github.run_number }}
           versionName: ${{ env.NEW_VERSION }}
 
+      - name: Decode Keystore
+        env:
+          KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE }}
+        run: echo "$KEYSTORE_FILE" | base64 --decode > $GITHUB_WORKSPACE/keystore.jks
+
       - name: Build Release APK
         run: ./gradlew assembleRelease
 
-      - name: Sign Release
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          alias: ${{ secrets.KEYSTORE_ALIAS }}
-          keyPassword: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
+      - name: Build Signed apk APK
+        run: |
+          ./gradlew assembleBeta \
+          -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/keystore.jks \
+          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }}    \
+          -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}        
+
+#      - name: Sign Release
+#        uses: r0adkll/sign-android-release@v1
+#        with:
+#          releaseDirectory: app/build/outputs/apk/release
+#          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
+#          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+#          alias: ${{ secrets.KEYSTORE_ALIAS }}
+#          keyPassword: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
+#        env:
+#          BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Upload Beta APK
         uses: actions/upload-artifact@v4

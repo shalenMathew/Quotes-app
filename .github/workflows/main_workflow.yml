@@ -116,9 +116,9 @@ jobs:
           docker-images: false
 
 
-#      - name: Checkout the code
-#        uses: actions/checkout@v4
-#
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
 #      # enables hardware acceleration - resulting in significant reduced time in in emulator boot up : only in ubuntu os
 #      - name: Enable KVM group perms
 #        run: |
@@ -286,6 +286,8 @@ jobs:
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           alias: ${{ secrets.KEYSTORE_ALIAS }}
           keyPassword: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Upload Beta APK
         uses: actions/upload-artifact@v4

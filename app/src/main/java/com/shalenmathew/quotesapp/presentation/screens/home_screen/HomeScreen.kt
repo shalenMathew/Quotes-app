@@ -44,6 +44,7 @@ fun HomeScreen(paddingValues: PaddingValues,
     }
 
     LaunchedEffect(Unit) {
+        delay(1000)
         isVisible = true
     }
 

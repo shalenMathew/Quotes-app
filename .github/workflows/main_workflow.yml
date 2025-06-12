@@ -21,8 +21,7 @@ concurrency:
 jobs:
 
   lint:
-#    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.actor != 'github-actions[bot]')
-
+    name: Lint Checks
     runs-on: ubuntu-latest
 
     steps:
@@ -51,11 +50,7 @@ jobs:
           name: lint-report
           path: app/build/reports/lint-results-debug.html
 
-
   unit-test:
-
-#    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.actor != 'github-actions[bot]')
-
 
     name: Unit Test
     needs: [lint]
@@ -90,9 +85,6 @@ jobs:
   instrumentation-test:
 
     needs: [unit-test]
-
-#    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.actor != 'github-actions[bot]')
-
     runs-on: ubuntu-latest
     timeout-minutes: 75
 
@@ -253,6 +245,12 @@ jobs:
           distribution: 'temurin'
           java-version: 17
           cache: 'gradle'
+
+      - name: Version Bump
+        uses: chkfung/android-version-actions@v1.2.3
+        with:
+          gradlePath: app/build.gradle.kts
+          versionCode: ${{ github.run_number }}
 
       - name: Testing
         run: echo hi

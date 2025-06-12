@@ -285,7 +285,7 @@ jobs:
 
       - name: Build Signed apk APK
         run: |
-          ./gradlew assembleBeta \
+          ./gradlew assembleBeta --stacktrace \
           -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/keystore.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }}    \

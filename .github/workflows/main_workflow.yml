@@ -250,6 +250,16 @@ jobs:
       - name: Grant execute permissions for gradlew
         run: chmod +x gradlew
 
+      - name: Setup Gradle cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Calculate new versionName
         id: calc_version
         run: |
@@ -273,19 +283,16 @@ jobs:
         with:
           gradlePath: app/build.gradle.kts
           versionCode: ${{ github.run_number }}
-          versionName: ${{ env.NEW_VERSION }}
+          versionName: "0.0"
 
       - name: Decode Keystore
         env:
           KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE }}
         run: echo "$KEYSTORE_FILE" | base64 --decode > $GITHUB_WORKSPACE/keystore.jks
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
-
       - name: Build Signed apk APK
         run: |
-          ./gradlew assembleBeta --stacktrace \
+          ./gradlew assembleRelease --stacktrace \
           -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/keystore.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }}    \
@@ -306,4 +313,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: beta-apk
-          path: ${{ steps.sign_release.outputs.signedReleaseFile }}
+          path: app/build/outputs/apk/release/app-release.apk

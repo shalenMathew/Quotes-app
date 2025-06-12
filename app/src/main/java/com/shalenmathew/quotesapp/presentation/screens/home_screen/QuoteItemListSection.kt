@@ -39,7 +39,7 @@ import coil.compose.AsyncImage
 import com.aghajari.compose.lazyswipecards.LazySwipeCards
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.util.QuoteEvent
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.customBlack
@@ -143,12 +143,17 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
 
 
 @Composable
-fun QuoteItemListSection( quoteViewModel: QuoteViewModel,navHost: NavHostController) {
+fun QuoteItemListSection(
+    quoteViewModel: QuoteViewModel,
+    navHost: NavHostController,
+) {
 
     val state = quoteViewModel.quoteState.value
 
     if(state.isLoading)
     {
+
+
         Box(modifier = Modifier
             .fillMaxSize()
             .background(color = Color.Transparent)
@@ -186,6 +191,7 @@ fun QuoteItemListSection( quoteViewModel: QuoteViewModel,navHost: NavHostControl
     }
     else
     {
+
             LazySwipeCards(cardColor = Color.Transparent,
                 cardShadowElevation = 0.dp,
                 translateSize = 8.dp,

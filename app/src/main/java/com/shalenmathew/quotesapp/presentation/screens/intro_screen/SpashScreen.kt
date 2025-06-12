@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
-import com.shalenmathew.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import kotlinx.coroutines.delay
 

@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.FavScreen
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.HomeScreen
-import com.shalenmathew.quotesapp.presentation.screens.home_screen.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.screens.intro_screen.SplashScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.SettingsScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.ShareScreen

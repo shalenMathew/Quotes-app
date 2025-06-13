@@ -1,4 +1,4 @@
-name: Main WorkFlow
+name: 🚨 Main WorkFlow
 
 #ditched the idea of creating seperate files for diff workflows it might be scalable and more clan but for apk to run after
 #  all the workflows are completed is just to complicated instead we can just put every workflow under one job and use need
@@ -140,7 +140,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      #adding a specific jdk version in runner for predictblity & certainty inside runner
+      #adding a specific jdk version in runner for predictability & certainty inside runner
       - name: Configure JDK
         uses: actions/setup-java@v4
         with:
@@ -287,7 +287,7 @@ jobs:
         with:
           gradlePath: app/build.gradle.kts
           versionCode: ${{ github.run_number }}
-          versionName: "0.0"
+          versionName: "-1"
 
       - name: Decode Keystore
         env:
@@ -301,19 +301,6 @@ jobs:
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }}    \
           -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}        
-
-
-#      - name: Sign Release
-#        uses: r0adkll/sign-android-release@v1
-#        with:
-#          releaseDirectory: app/build/outputs/apk/release
-#          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
-#          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-#          alias: ${{ secrets.KEYSTORE_ALIAS }}
-#          keyPassword: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
-#        env:
-#          BUILD_TOOLS_VERSION: "34.0.0"
-
 
       - name: Upload Beta APK
         uses: actions/upload-artifact@v4

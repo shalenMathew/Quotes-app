@@ -1,0 +1,44 @@
+name: 📦 Send APK via Discord on Release
+on:
+  pull_request:
+    branches: [ "master" ]
+
+#  release:
+#    types: [published]
+
+  workflow_dispatch:
+
+
+concurrency:
+  group: blank-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+
+  distributeApk:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Download release asset (APK)
+        uses: Itsblue/download-release-assets-action@v4
+        with:
+          file: '*.apk'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: apk-download
+
+
+      - name: List downloaded files (for debugging)
+        run: |
+          echo "Files in apk-download:"
+          ls -R apk-download
+          
+      - name: Send APK to Discord
+        uses: tsickert/discord-webhook-action@v7
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: |
+              New release **${{ github.release.tag_name }}** is live!
+          filename: apk-download/*.apk
+          wait: true

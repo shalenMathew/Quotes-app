@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
 
 
-concurrency:
-  group: blank-${{ github.ref }}
-  cancel-in-progress: true
+#concurrency:
+#  group: blank-${{ github.ref }}
+#  cancel-in-progress: true
 
 
 jobs:

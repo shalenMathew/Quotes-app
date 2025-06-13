@@ -302,19 +302,6 @@ jobs:
           -Pandroid.injected.signing.key.alias=${{ secrets.KEYSTORE_ALIAS }}    \
           -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}        
 
-
-#      - name: Sign Release
-#        uses: r0adkll/sign-android-release@v1
-#        with:
-#          releaseDirectory: app/build/outputs/apk/release
-#          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
-#          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-#          alias: ${{ secrets.KEYSTORE_ALIAS }}
-#          keyPassword: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
-#        env:
-#          BUILD_TOOLS_VERSION: "34.0.0"
-
-
       - name: Upload Beta APK
         uses: actions/upload-artifact@v4
         with:

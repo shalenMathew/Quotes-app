@@ -262,6 +262,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
 
+
       - name: Calculate new versionName
         id: calc_version
         run: |
@@ -279,6 +280,7 @@ jobs:
 
 
 
+
       - name: Debug versionName
         run: echo "Will bump to $NEW_VERSION"
 
@@ -287,7 +289,7 @@ jobs:
         with:
           gradlePath: app/build.gradle.kts
           versionCode: ${{ github.run_number }}
-          versionName: "-1"
+          versionName: "0.0"
 
       - name: Decode Keystore
         env:

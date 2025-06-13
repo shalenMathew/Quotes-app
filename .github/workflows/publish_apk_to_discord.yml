@@ -1,17 +1,12 @@
 name: 📦 Send APK via Discord on Release
 on:
-  pull_request:
-    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
 
-#  release:
-#    types: [published]
+  release:
+    types: [published]
 
   workflow_dispatch:
-
-
-#concurrency:
-#  group: blank-${{ github.ref }}
-#  cancel-in-progress: true
 
 
 jobs:
@@ -46,10 +41,9 @@ jobs:
         uses: tsickert/discord-webhook@v7.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          embed-title: "🚀 New release **${{ env.APK_FILE }}** is live!"
+          embed-title: "🚀 New release : **${{ env.APK_FILE }}** is live!"
           embed-description: |
             👉 [Click to download the APK](${{ env.DOWNLOAD_LINK }})
-          embed-author-icon-url: "https://github.com/shalenMathew/Quotes-app/blob/master/images/quotes_logo.png?raw=true"
           embed-image-url: "https://github.com/shalenMathew/Quotes-app/blob/master/images/quotes_logo.png?raw=true"
           wait: true
 

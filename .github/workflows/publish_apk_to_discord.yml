@@ -21,12 +21,13 @@ jobs:
 
     steps:
 
-      - name: Download release asset (APK)
-        uses: Itsblue/download-release-assets-action@v4
+      - name: Download the latest APK asset
+        uses: robinraju/release-downloader@v1
         with:
-          file: '*.apk'
+          latest: true
+          fileName: '*.apk'
+          out-file-path: 'apk-download'
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: "./assets"
 
 
       - name: List downloaded files (for debugging)

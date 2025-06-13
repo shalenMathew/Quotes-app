@@ -34,12 +34,23 @@ jobs:
         run: |
           echo "Files in apk-download:"
           ls -R apk-download
-          
+
+      - name: Determine downloaded APK
+        run: |
+         FILE=$(ls apk-download/*.apk | head -n1)
+         echo "APK_FILE=$FILE" >> $GITHUB_ENV   
+
+
+      - name: Determine downloaded APK
+        run: |
+          FILE=$(ls apk-download/*.apk | head -n1)
+          echo "APK_FILE=$FILE" >> $GITHUB_ENV           
+
       - name: Send APK to Discord
         uses: tsickert/discord-webhook@v7.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           content: |
               New release **${{ github.release.tag_name }}** is live!
-          filename: apk-download/*.apk
+          filename: ${{ env.APK_FILE }}
           wait: true

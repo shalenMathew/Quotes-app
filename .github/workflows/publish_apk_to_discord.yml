@@ -35,12 +35,6 @@ jobs:
           echo "Files in apk-download:"
           ls -R apk-download
 
-      - name: Determine downloaded APK
-        run: |
-         FILE=$(ls apk-download/*.apk | head -n1)
-         echo "APK_FILE=$FILE" >> $GITHUB_ENV   
-
-
       - name: Determine APK file and set download URL
         run: |
           FILE=$(ls apk-download/*.apk | head -n1)

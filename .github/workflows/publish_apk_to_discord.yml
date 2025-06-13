@@ -35,7 +35,7 @@ jobs:
           ls -R apk-download
           
       - name: Send APK to Discord
-        uses: tsickert/discord-webhook-action@v7
+        uses: tsickert/discord-webhook@v7.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           content: |

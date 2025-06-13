@@ -58,6 +58,7 @@ jobs:
           embed-title: "🚀 New release **${{ env.APK_FILE }}** is live!"
           embed-description: |
             👉 [Click to download the APK](${{ env.DOWNLOAD_LINK }})
+          avatar-url: "https://github.com/shalenMathew/Quotes-app/blob/master/images/quotes_logo.png?raw=true"
           embed-image-url: "https://github.com/shalenMathew/Quotes-app/blob/master/images/quotes_logo.png?raw=true"
           wait: true
 

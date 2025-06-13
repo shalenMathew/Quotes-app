@@ -41,17 +41,19 @@ jobs:
          echo "APK_FILE=$FILE" >> $GITHUB_ENV   
 
 
-      - name: Determine downloaded APK
+      - name: Determine APK file and set download URL
         run: |
           FILE=$(ls apk-download/*.apk | head -n1)
-          echo "APK_FILE=$FILE" >> $GITHUB_ENV           
+          BASENAME=${FILE##*/}
+          echo "APK_FILE=$BASENAME" >> $GITHUB_ENV
+          echo "DOWNLOAD_LINK=https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/$BASENAME" >> $GITHUB_ENV           
 
-      - name: Send latest release link to Discord
+      - name: Send release link to Discord
         uses: tsickert/discord-webhook@v7.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           content: |
-            🚀 A new release is live!
-            👉 [Click here to download the latest APK](https://github.com/shalenMathew/Quotes-app/releases/latest/download/${{ env.APK_FILE }})
+            🚀 New release **${{ github.ref_name }}** is live!
+            👉 [Download the APK](${{ env.DOWNLOAD_LINK }})
           wait: true
 

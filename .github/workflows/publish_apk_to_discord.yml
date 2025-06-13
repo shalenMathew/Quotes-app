@@ -46,7 +46,7 @@ jobs:
           FILE=$(ls apk-download/*.apk | head -n1)
           BASENAME=${FILE##*/}
           echo "APK_FILE=$BASENAME" >> $GITHUB_ENV
-          echo "DOWNLOAD_LINK=https://github.com/${{ github.repository }}/releases/download/$BASENAME" >> $GITHUB_ENV           
+          echo "DOWNLOAD_LINK=https://github.com/${{ github.repository }}/releases/latest/download/$BASENAME" >> $GITHUB_ENV           
 
       - name: Send release link to Discord
         uses: tsickert/discord-webhook@v7.0.0

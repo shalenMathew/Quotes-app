@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -77,30 +78,38 @@ fun SettingsScreen(paddingValues: PaddingValues) {
             Spacer(Modifier.weight(1f))
 
             if (BuildConfig.DEBUG) {
-                Text(
-                    text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(horizontal = 12.dp)
-//                        .align(Alignment.BottomCenter)
-                    ,
-                    fontSize = 12.sp,
-                    color = Color.White,
-                    fontFamily = Poppins,
-                    fontWeight = FontWeight.Medium
-                )
+
+                Box(modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
+                    contentAlignment = Alignment.Center)
+                {
+                    Text(
+                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
+                        fontSize = 12.sp,
+                        color = Color.White,
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                }
+
             } else {
-                Text(
-                    text = "made with \uD83E\uDD75 by Shalen Mathew", modifier = Modifier
-                        .wrapContentSize()
-                        .padding(horizontal = 12.dp)
-//                        .align(Alignment.BottomCenter)
-                    ,
-                    fontSize = 12.sp,
-                    color = Color.White,
-                    fontFamily = Poppins,
-                    fontWeight = FontWeight.Medium
-                )
+
+                Box(modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
+                    contentAlignment = Alignment.Center)
+                {
+                    Text(
+                        text = "made with \uD83E\uDD75 by Shalen Mathew",
+                        fontSize = 12.sp,
+                        color = Color.White,
+                        fontFamily = Poppins,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                }
             }
 
         }

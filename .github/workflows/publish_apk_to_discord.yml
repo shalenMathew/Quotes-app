@@ -1,10 +1,10 @@
 name: 📦 Send APK via Discord on Release
 on:
-#  pull_request:
-#    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
-  release:
-    types: [published]
+#  release:
+#    types: [published]
 
   workflow_dispatch:
 

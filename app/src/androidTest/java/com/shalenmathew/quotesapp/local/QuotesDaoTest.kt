@@ -45,13 +45,14 @@ class QuotesDaoTest {
     @Test
     fun test_searchQuotesWithoutQuery() = runBlocking {
 
-        val quote= Quote(0,"life is good","future",false)
+        val quote= Quote(0,"life is good","future",true)
 
-        val quote2= Quote(1,"good is life","past",false)
+        val quote2= Quote(1,"good is life","past",true)
 
         quoteDao.insertQuoteList(listOf(quote,quote2))
 
-        val result = quoteDao.searchForQuotes("").first()
+        val result = quoteDao.searchForQuotes("").first() // if no query is passesd then the list will be in the order of quotes
+        // inserted
 
         assertEquals("life is good",result[0].quote)
 
@@ -59,22 +60,22 @@ class QuotesDaoTest {
 
 
     @Test
-    fun test_searchQuotesWithQuery() = runBlocking {
+    fun test_searchQuotesForLikedQuotes() = runBlocking {
 
-        val quote= Quote(0,"life is good","future",false)
+        val quote= Quote(0,"life is good","future",true)
 
-        val quote2= Quote(1,"good is life","past",false)
+        val quote2= Quote(1,"good is life","past",true)
 
         quoteDao.insertQuoteList(listOf(quote,quote2))
 
-        val result = quoteDao.searchForQuotes("good is life").first()
+        val result = quoteDao.searchForQuotes("good is life").first()  // search only return list of liked quotes
 
-        assertEquals("good is life",result[0].quote)
+        assertEquals("good is life",result[0].quote) /// the first index will have the most appropriate result
 
     }
 
-    @Test(expected = ComparisonFailure::class)
-    fun test_searchQuotesWithQueryException() = runBlocking {
+    @Test
+    fun test_searchQuotesForNotLikedQuotes() = runBlocking {
 
         val quote= Quote(0,"life is good","future",false)
 
@@ -84,7 +85,7 @@ class QuotesDaoTest {
 
         val result = quoteDao.searchForQuotes("good is life").first()
 
-        assertEquals("life is good",result[0].quote)
+        assertEquals(0,result.size)
 
     }
 

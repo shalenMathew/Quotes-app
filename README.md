@@ -59,8 +59,13 @@ https://github.com/user-attachments/assets/38a15a1e-b324-4355-8574-49e83cf044cd
 - 🔔 daily inspiration via notifications
 
 
-## Contribution 🤝
+## Contribution/Issues 🤝
 - If your new to open source and want to play around with contribution you can do it here or u can raise issue if you want to make any improvements or fix any bugs
+
+  ### Contribution Guide :
+ - Raise ur PR against the development branch
+ - just add a small desc to get an idea whats the issue/pr is really about
+ - THATS IT !!!
   
 - Tip for beginners : Try to fix small bugs and dont get overwhelmed by the source code , take your time... Start by making small fixes or making small changes 👍
 

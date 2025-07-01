@@ -21,6 +21,9 @@ interface QuoteDao {
     @Delete
     suspend fun deleteQuote(quote: Quote)
 
+    @Query("DELETE FROM quote")
+    suspend fun deleteAll()
+
     @Query(" SELECT * FROM Quote WHERE liked==1 ORDER BY id DESC ")
     fun getAllLikedQuotes(): Flow<List<Quote>> // i think the list was not being updated as there was nothing that was observing the data, like flow or live data
     // list is static snapshot we need a observer like flow or live data for our updates
@@ -32,13 +35,15 @@ interface QuoteDao {
     // and made the simple idea of fetching data from db...
     // Resource<> are mostly used along with remote api than room
 
-    @Query("DELETE FROM quote")
-    suspend fun deleteAll()
 
-    @Query("""  SELECT * FROM Quote
-               WHERE LOWER(quote) LIKE '%' || LOWER(:query) || '%' 
-                 OR
-       LOWER(author) LIKE '%' || LOWER(:query) || '%' """)
+    @Query("""
+  SELECT * FROM Quote
+  WHERE liked == 1
+    AND (
+      LOWER(quote) LIKE '%' || LOWER(:query) || '%'
+      OR LOWER(author) LIKE '%' || LOWER(:query) || '%'
+    )
+""")
     fun searchForQuotes(query:String): Flow<List<Quote> >
 
 }

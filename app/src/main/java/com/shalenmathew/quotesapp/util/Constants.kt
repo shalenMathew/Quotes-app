@@ -11,4 +11,5 @@ object Constants {
 
     val WORK_MANAGER_STATUS_NOTIFY =  "WorkManagerStatusNotify"
     const val SHARED_PREFERENCES_NAME = "quotes_app_preferences"
+
 }

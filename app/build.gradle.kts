@@ -111,24 +111,24 @@ dependencies {
 //    kapt("androidx.hilt:hilt-compiler:1.2.0")
 
     kapt("androidx.hilt:hilt-compiler:1.2.0")
-    kapt("com.google.dagger:hilt-compiler:2.54")
+    kapt("com.google.dagger:hilt-compiler:2.56.2")
 
 //    kapt ("com.google.dagger:hilt-android-compiler:2.54")
 //    kapt ("com.google.dagger:hilt-compiler:2.54")
 
 
     //Room Database
-    implementation ("androidx.room:room-runtime:2.7.0")
-    ksp ("androidx.room:room-compiler:2.7.0")
-    implementation ("androidx.room:room-ktx:2.7.0")
+    implementation ("androidx.room:room-runtime:2.7.2")
+    ksp ("androidx.room:room-compiler:2.7.2")
+    implementation ("androidx.room:room-ktx:2.7.2")
 
 
     //Retrofit2
-    implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
-    implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
-    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
+    implementation ("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation ("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation ("com.squareup.okhttp3:okhttp:5.0.0")
+    implementation ("com.squareup.retrofit2:converter-scalars:3.0.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0")
 
 
     // Glance Widget
@@ -136,21 +136,21 @@ dependencies {
 
 
     // work manager
-    implementation ("androidx.work:work-runtime-ktx:2.10.0")
+    implementation ("androidx.work:work-runtime-ktx:2.10.2")
 
 
     implementation ("com.google.android.material:material:1.12.0")
 
 
     // test
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0")
-    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.0")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.8.3")
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:1.8.3")
     // mockito
-    testImplementation("org.mockito:mockito-core:5.11.0")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.11")
+    testImplementation("org.mockito:mockito-core:5.18.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0-alpha.17")
 // Coroutines test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 // this below kotlin imports are necessary for the assertEquals to work
     testImplementation ("org.jetbrains.kotlin:kotlin-test")
     testImplementation ("org.jetbrains.kotlin:kotlin-test-junit")

@@ -235,7 +235,7 @@ jobs:
   distribution:
 
     needs: [instrumentation-test]
-    name: Build signed apk
+    name: Build Debug apk
     runs-on: ubuntu-latest
 
     steps:

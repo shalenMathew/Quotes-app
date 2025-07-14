@@ -34,8 +34,10 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
+import com.shalenmathew.quotesapp.presentation.theme.Grey
 import com.shalenmathew.quotesapp.presentation.theme.customBlack
 import com.shalenmathew.quotesapp.presentation.theme.customGrey
+import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 import com.shalenmathew.quotesapp.presentation.viewmodel.FavQuoteViewModel
 
 

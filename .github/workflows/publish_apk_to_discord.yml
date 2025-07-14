@@ -41,9 +41,10 @@ jobs:
         uses: tsickert/discord-webhook@v7.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          embed-title: "✅ New release : **${{ env.APK_FILE }}** is live!"
+#          embed-title: "✅ New release : **${{ env.APK_FILE }}** is live!"
+          embed-title: "✅ New release : A new version of Quotes App is live!"
           embed-description: |
-              [Click to download the APK](${{ env.DOWNLOAD_LINK }})
+              [CLICK TO FUPDATE UR APP](${{ env.DOWNLOAD_LINK }})
           embed-image-url: "https://github.com/shalenMathew/Quotes-app/blob/master/images/quotes_logo.png?raw=true"
           wait: true
 

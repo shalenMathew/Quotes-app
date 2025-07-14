@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import androidx.core.net.toUri
+import com.shalenmathew.quotesapp.presentation.theme.customGrey
+import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 
 @Composable
 fun CardSection(index: Int) {
@@ -56,7 +58,8 @@ fun CardSection(index: Int) {
                     context.startActivity(intent)
                 }
                 .clip(shape)
-                .background(Color(0xFF1C1C1E))
+//                .background(Color(0xFF1C1C1E))
+                .background(customGrey2)
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween

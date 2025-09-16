@@ -1,6 +1,7 @@
-# Quotes App 💭
+# Quotes.app 💭
 
-<img width="1024" height="500" alt="Quotes" src="https://github.com/user-attachments/assets/924c5701-ad89-45c0-bdc0-f0c8529113d3" />
+<img width="1024" height="500" alt="Quotes" src="https://github.com/user-attachments/assets/4e01e512-295f-4ea5-8a65-4a76961a7235" />
+
 
 ### Quotes App is built to demonstrate the use of Modern Android development tools.The app follows latest android principles and components
 

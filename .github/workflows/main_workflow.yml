@@ -1,7 +1,7 @@
 name: 🚨 Main WorkFlow
 
 #ditched the idea of creating seperate files for diff workflows it might be scalable and more clan but for apk to run after
-#  all the workflows are completed is just to complicated instead we can just put every workflow under one job and use need
+#  all the workflows are completed is just to complicated instead we can just put every workflow under one job and use 'need'
 #  instead
 
 on:

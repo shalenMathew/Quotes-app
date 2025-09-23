@@ -187,56 +187,56 @@ fun CircleDot(color: Color) {
 }
 
 /** SPOTIFY THEME STYLE */
-@Composable
-fun SolidColorQuoteCard(modifier: Modifier,quote: Quote) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Green)
-
-    ) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = quote.author,
-                fontSize = 18.sp,
-                color = Color.Black,
-                fontFamily = Poppins,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 15.dp, top = 60.dp,start = 18.dp, end = 18.dp)
-            )
-
-            Text(
-                text = quote.quote,
-                fontSize = 18.sp,
-                color = Color.Black,
-                fontFamily = Poppins,
-                fontWeight = FontWeight.Bold,
-                lineHeight = 30.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 30.dp, start = 18.dp, end = 18.dp)
-            )
-
-            Text(
-                text = "Quotes.app",
-                color =Color.Black,
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .padding(top = 30.dp, bottom = 12.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-
-        }
-
-    }
-}
+//@Composable
+//fun SolidColorQuoteCard(modifier: Modifier,quote: Quote) {
+//    Box(
+//        modifier = modifier
+//            .fillMaxWidth()
+//            .background(Green)
+//
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .align(Alignment.Center)
+//                .fillMaxWidth(),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Text(
+//                text = quote.author,
+//                fontSize = 18.sp,
+//                color = Color.Black,
+//                fontFamily = Poppins,
+//                fontWeight = FontWeight.Medium,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(bottom = 15.dp, top = 60.dp,start = 18.dp, end = 18.dp)
+//            )
+//
+//            Text(
+//                text = quote.quote,
+//                fontSize = 18.sp,
+//                color = Color.Black,
+//                fontFamily = Poppins,
+//                fontWeight = FontWeight.Bold,
+//                lineHeight = 30.sp,
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier.fillMaxWidth()
+//                    .padding(bottom = 30.dp, start = 18.dp, end = 18.dp)
+//            )
+//
+//            Text(
+//                text = "Quotes.app",
+//                color =Color.Black,
+//                fontSize = 16.sp,
+//                modifier = Modifier
+//                    .padding(top = 30.dp, bottom = 12.dp)
+//                    .align(Alignment.CenterHorizontally)
+//            )
+//
+//        }
+//
+//    }
+//}
 
 
 /** brat THEME STYLE */

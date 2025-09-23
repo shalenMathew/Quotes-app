@@ -299,43 +299,43 @@ fun ShareScreen(
 
 
                 /**  SPOTIFY THEME  STYLE */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-                {
-
-                    Text(text = "Spotify Theme Style",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box {
-                            Image(
-                                painter = painterResource(R.drawable.sample_spotify_theme),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.SpotifyTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = quoteStyleState == QuoteStyle.SpotifyTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        quoteStyleState = QuoteStyle.SpotifyTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
-                                    }
-                                }
-                            )
-                        }
-                    }
-
-                }
+//                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+//                {
+//
+//                    Text(text = "Spotify Theme Style",
+//                        fontSize = 20.sp,
+//                        color = Color.Black,
+//                        modifier = Modifier.padding(bottom = 10.dp),
+//                        fontFamily = GIFont,
+//                        fontWeight = FontWeight.Medium
+//                    )
+//
+//                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+//                        Box {
+//                            Image(
+//                                painter = painterResource(R.drawable.sample_spotify_theme),
+//                                contentDescription = null,
+//                                modifier = Modifier.size(200.dp)
+//                                    .clickable {
+//                                        quoteStyleState = QuoteStyle.SpotifyTheme
+//                                        showSheet = false
+//                                    },
+//                                contentScale = ContentScale.Fit
+//                            )
+//                            Checkbox(
+//                                modifier = Modifier.align(Alignment.BottomEnd),
+//                                checked = quoteStyleState == QuoteStyle.SpotifyTheme,
+//                                onCheckedChange = { isChecked ->
+//                                    if (isChecked) {
+//                                        quoteStyleState = QuoteStyle.SpotifyTheme
+//                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+//                                    }
+//                                }
+//                            )
+//                        }
+//                    }
+//
+//                }
 
                 /**  DEFAULT STYLE*/
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))

@@ -68,9 +68,9 @@ fun CaptureBitmap(quoteData: Quote, quoteStyleState: QuoteStyle, onCapture: (Ima
         QuoteStyle.CodeSnippetTheme -> {
             CodeSnippetStyleQuoteCard(modifier = modifier,quoteData)
         }
-        QuoteStyle.SpotifyTheme -> {
-            SolidColorQuoteCard(modifier = modifier,quoteData)
-        }
+//        QuoteStyle.SpotifyTheme -> {
+//            SolidColorQuoteCard(modifier = modifier,quoteData)
+//        }
         QuoteStyle.bratTheme -> {
             BratScreen(modifier = modifier,quoteData)
         }

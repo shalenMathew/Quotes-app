@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import androidx.core.net.toUri
-import com.shalenmathew.quotesapp.presentation.theme.customGrey
 import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 
 @Composable
@@ -102,6 +101,7 @@ val cardsRow = listOf<CardRow>(
     CardRow(icon = R.drawable.ic_link, name = "LinkTree", url = "https://linktr.ee/shalenmathew"),
     CardRow(icon = R.drawable.ic_coffee, name = "buy me a coffee", url = "https://buymeacoffee.com/shalenmathew"),
     CardRow(icon = R.drawable.ic_coffee_beans, name = "ko-fi", url = "https://ko-fi.com/shalenmathew"),
+    CardRow(icon = R.drawable.ic_about, name = "About Libraries", url = "navigate"),
 )
 
 data class CardRow(val icon: Int,val name: String, val url: String)

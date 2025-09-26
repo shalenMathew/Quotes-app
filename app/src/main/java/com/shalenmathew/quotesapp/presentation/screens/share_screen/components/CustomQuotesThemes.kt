@@ -358,7 +358,7 @@ fun LiquidGlassScreen(
                     vertical = verticalPadding
                 )
                 .wrapContentHeight()
-                .heightIn(min = 400.dp) // ✅ Minimum height maintained
+                .heightIn(min = 400.dp)
                 .onSizeChanged { size ->
                     contentHeight = with(density) {
                         size.height.toDp()

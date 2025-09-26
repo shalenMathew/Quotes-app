@@ -69,6 +69,7 @@ fun ShareScreen(
     LaunchedEffect(Unit) {
         quoteStyleState = viewModel.getDefaultQuoteStyle()
     }
+
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
     Box(
@@ -104,7 +105,8 @@ fun ShareScreen(
                 .background(color = Color.Black)
                 .align(Alignment.BottomEnd),
             contentAlignment = Alignment.BottomEnd
-        ) {
+        )
+        {
 
             Row(
                 modifier = Modifier

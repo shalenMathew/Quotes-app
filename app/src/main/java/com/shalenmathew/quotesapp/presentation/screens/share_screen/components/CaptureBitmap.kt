@@ -39,7 +39,7 @@ import kotlin.coroutines.resume
 
 
 /** older way to capture bitmap */
-
+//
 //@Composable
 //fun CaptureBitmap(quoteData: Quote, quoteStyleState: QuoteStyle, onCapture: (ImageBitmap) -> Unit)
 //{
@@ -95,7 +95,7 @@ import kotlin.coroutines.resume
 //                    canvas.nativeCanvas.drawPicture(picture)
 //                }
 //            } catch (e: IllegalStateException) {
-//                // ✅ Handle Picture errors
+//                //  Handle Picture errors
 //                e.printStackTrace()
 //                isRecording = false
 //                this@onDrawWithContent.drawContent()
@@ -130,9 +130,10 @@ import kotlin.coroutines.resume
 //    }
 //
 //}
-
-
-//private fun createBitmapFromPicture(picture: Picture): Bitmap{
+//
+//
+//private fun createBitmapFromPicture(picture: Picture): Bitmap
+//{
 //
 //    val bitmap = createBitmap(picture.width, picture.height, Bitmap.Config.ARGB_8888)
 //
@@ -153,45 +154,46 @@ fun CaptureBitmap(
     val context = LocalContext.current
     val view = LocalView.current
     val coroutineScope = rememberCoroutineScope()
-    var shouldCapture by remember { mutableStateOf(false) }
-
+    var capturedImg by remember { mutableStateOf<ImageBitmap?>(null) }
 
     LaunchedEffect(quoteStyleState) {
-        shouldCapture = true
+
+        coroutineScope.launch(Dispatchers.Main) {
+            try {
+
+                delay(16)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     Box(
-        modifier = Modifier
-            .onGloballyPositioned { coordinates ->
-                if (shouldCapture) {
-                    shouldCapture = false
-                    coroutineScope.launch(Dispatchers.Main) {
-                        try {
-                            // Wait for Haze to finish rendering
-                            delay(200)
+        modifier = Modifier.onGloballyPositioned { coordinates ->
 
-                            val bounds = coordinates.boundsInRoot()
-                            val bitmap = captureView(
-                                context as Activity,
-                                view,
-                                bounds.left.toInt(),
-                                bounds.top.toInt(),
-                                bounds.width.toInt(),
-                                bounds.height.toInt()
-                            )
+            coroutineScope.launch(Dispatchers.Main) {
+                try {
+                    val bounds = coordinates.boundsInRoot()
+                    val bitmap = captureView(
+                        context as Activity,
+                        view,
+                        bounds.left.toInt(),
+                        bounds.top.toInt(),
+                        bounds.width.toInt(),
+                        bounds.height.toInt()
+                    )
 
-                            bitmap?.let {
-                                onCapture(it.asImageBitmap())
-                            }
-
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                    bitmap?.let {
+                        capturedImg = it.asImageBitmap()
+                        onCapture(capturedImg!!)
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
+        }
     ) {
-        //  Render your actual quote styles WITH Haze effects
         when(quoteStyleState) {
             is QuoteStyle.DefaultTheme -> {
                 DefaultQuoteCard(modifier = Modifier, quoteData)
@@ -211,6 +213,8 @@ fun CaptureBitmap(
         }
     }
 }
+
+
 
 
 private suspend fun captureView(

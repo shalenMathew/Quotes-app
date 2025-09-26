@@ -68,6 +68,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.compose.ui.zIndex
+import com.mikepenz.hypnoticcanvas.shaderBackground
+import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
@@ -285,10 +287,13 @@ fun LiquidGlassScreen(
  * of displaying the text */
 
     /** box with blur effect  */
+
+    val col1: Color = Color(0xFF0022BB)
+    val col2: Color = Color(0xFFf093fb)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-
             .wrapContentHeight()
             .haze(
                 hazeState,
@@ -296,34 +301,25 @@ fun LiquidGlassScreen(
                 tint = Color.Black.copy(alpha = .1f),
                 blurRadius = 20.dp,
             )
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF667eea),
-                        Color(0xFF764ba2),
-                        Orange,
-                        Color(0xFFf093fb)
+            .shaderBackground(
+                MeshGradient(
+                    colors = generateGradientColors(
+                        col1,
+                        col2,
+                    ).toTypedArray()
+                ),
+                fallback = {
+                    Brush.horizontalGradient(
+                        generateGradientColors(
+                            col1,
+                            col2,
+                        )
                     )
-                )
+                }
             )
+
     )
     {
-
-        repeat(3) { index ->
-            Box(
-                modifier = Modifier
-                    .size((80 + index * 20).dp)
-                    .offset(
-                        x = (50 + index * 80).dp,
-                        y = (50 + index * 40).dp
-                    )
-                    .background(
-                        Color.White.copy(alpha = 0.2f),
-                        RoundedCornerShape((10 + index * 5).dp)
-                    )
-            )
-        }
-
 
         Box(
             modifier = modifier
@@ -423,6 +419,28 @@ fun LiquidGlassScreen(
     }
 }
 
+
+
+fun generateGradientColors(color1: Color, color2: Color, steps: Int = 6): List<Color> {
+    val colors = buildList {
+        for (i in 0 until steps) {
+            val t = i / (steps - 1).toFloat()
+            val interpolatedColor = lerp(color1, color2, t)
+            add(interpolatedColor)
+        }
+    }
+
+    return colors
+}
+
+fun lerp(color1: Color, color2: Color, t: Float): Color {
+    val r = (color1.red * (1 - t) + color2.red * t).coerceIn(0f, 1f)
+    val g = (color1.green * (1 - t) + color2.green * t).coerceIn(0f, 1f)
+    val b = (color1.blue * (1 - t) + color2.blue * t).coerceIn(0f, 1f)
+    val a = (color1.alpha * (1 - t) + color2.alpha * t).coerceIn(0f, 1f)
+
+    return Color(r, g, b, a)
+}
 
 /** IGOR THEME STYLE */
 @Composable

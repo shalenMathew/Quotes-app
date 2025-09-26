@@ -149,6 +149,7 @@ import kotlin.coroutines.resume
 fun CaptureBitmap(
     quoteData: Quote,
     quoteStyleState: QuoteStyle,
+    triggerCapture: Boolean,
     onCapture: (ImageBitmap) -> Unit
 ) {
     val context = LocalContext.current
@@ -161,7 +162,10 @@ fun CaptureBitmap(
         coroutineScope.launch(Dispatchers.Main) {
             try {
 
-                delay(16)
+                if (triggerCapture) {
+
+                    delay(50)
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -172,24 +176,25 @@ fun CaptureBitmap(
     Box(
         modifier = Modifier.onGloballyPositioned { coordinates ->
 
-            coroutineScope.launch(Dispatchers.Main) {
-                try {
-                    val bounds = coordinates.boundsInRoot()
-                    val bitmap = captureView(
-                        context as Activity,
-                        view,
-                        bounds.left.toInt(),
-                        bounds.top.toInt(),
-                        bounds.width.toInt(),
-                        bounds.height.toInt()
-                    )
+            if (triggerCapture) {
+                coroutineScope.launch(Dispatchers.Main) {
+                    try {
+                        val bounds = coordinates.boundsInRoot()
+                        val bitmap = captureView(
+                            context as Activity,
+                            view,
+                            bounds.left.toInt(),
+                            bounds.top.toInt(),
+                            bounds.width.toInt(),
+                            bounds.height.toInt()
+                        )
 
-                    bitmap?.let {
-                        capturedImg = it.asImageBitmap()
-                        onCapture(capturedImg!!)
+                        bitmap?.let {
+                            onCapture(it.asImageBitmap())
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
         }

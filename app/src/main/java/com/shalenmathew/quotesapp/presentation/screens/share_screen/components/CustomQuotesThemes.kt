@@ -1,39 +1,84 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.toRect
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Text
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.times
+import androidx.compose.ui.zIndex
+import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
-import com.shalenmathew.quotesapp.presentation.theme.Green
-import com.shalenmathew.quotesapp.presentation.theme.Poppins
+import com.shalenmathew.quotesapp.presentation.theme.Orange
 import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
-import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
-import com.shalenmathew.quotesapp.presentation.theme.sugarPie
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 
 /**  THIS SECTION COMPRISES OF ALL DIFFERENT STYLES OF QUOTES */
 
@@ -186,57 +231,6 @@ fun CircleDot(color: Color) {
     )
 }
 
-/** SPOTIFY THEME STYLE */
-@Composable
-fun SolidColorQuoteCard(modifier: Modifier,quote: Quote) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Green)
-
-    ) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = quote.author,
-                fontSize = 18.sp,
-                color = Color.Black,
-                fontFamily = Poppins,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 15.dp, top = 60.dp,start = 18.dp, end = 18.dp)
-            )
-
-            Text(
-                text = quote.quote,
-                fontSize = 18.sp,
-                color = Color.Black,
-                fontFamily = Poppins,
-                fontWeight = FontWeight.Bold,
-                lineHeight = 30.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-                    .padding(bottom = 30.dp, start = 18.dp, end = 18.dp)
-            )
-
-            Text(
-                text = "Quotes.app",
-                color =Color.Black,
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .padding(top = 30.dp, bottom = 12.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-
-        }
-
-    }
-}
 
 
 /** brat THEME STYLE */
@@ -261,6 +255,173 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
     }
 }
 
+
+//@Preview
+@Composable
+fun LiquidGlassScreen(
+    modifier: Modifier,
+    quote: Quote
+)
+{
+
+    val hazeState = remember { HazeState() }
+
+    var contentHeight by remember { mutableStateOf(400.dp) }
+    val density = LocalDensity.current
+
+
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
+    val horizontalPadding = screenWidth * 0.04f // 4% of screen width
+    val verticalPadding = screenHeight * 0.08f   // 8% of screen height
+    val cardHorizontalPadding = screenWidth * 0.06f // 6% of screen width
+    val textPadding = screenWidth * 0.04f // 4% of screen width
+
+
+/** we need to maintain two box where votrh boxes are above the other one and their properties are
+ * exactly the same just one box will apply the blur effect other will take care
+ * of displaying the text */
+
+    /** box with blur effect  */
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+
+            .wrapContentHeight()
+            .haze(
+                hazeState,
+                backgroundColor = MaterialTheme.colorScheme.background,
+                tint = Color.Black.copy(alpha = .1f),
+                blurRadius = 20.dp,
+            )
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF667eea),
+                        Color(0xFF764ba2),
+                        Orange,
+                        Color(0xFFf093fb)
+                    )
+                )
+            )
+    )
+    {
+
+        repeat(3) { index ->
+            Box(
+                modifier = Modifier
+                    .size((80 + index * 20).dp)
+                    .offset(
+                        x = (50 + index * 80).dp,
+                        y = (50 + index * 40).dp
+                    )
+                    .background(
+                        Color.White.copy(alpha = 0.2f),
+                        RoundedCornerShape((10 + index * 5).dp)
+                    )
+            )
+        }
+
+
+        Box(
+            modifier = modifier
+                .padding(
+                    horizontal = cardHorizontalPadding,
+                    vertical = verticalPadding
+                )
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .height(contentHeight)
+                .hazeChild(state = hazeState, shape = RoundedCornerShape(20.dp))
+        )
+
+    }
+
+
+
+    /** box with text  */
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+//            .padding(horizontalPadding)
+            .wrapContentHeight()
+
+
+    )
+    {
+        Box(
+            modifier = Modifier
+                .padding(
+                    horizontal = cardHorizontalPadding,
+                    vertical = verticalPadding
+                )
+                .wrapContentHeight()
+                .heightIn(min = 400.dp)
+                .onSizeChanged { size ->
+                    contentHeight = with(density) {
+                        size.height.toDp()
+                    }
+                }
+                .border(
+                    width = Dp.Hairline,
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 1f),
+                            Color.White.copy(alpha = .3f)
+                        )
+                    ),
+                    shape = RoundedCornerShape(20.dp)
+                )
+
+        )
+        {
+
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding( textPadding, end = textPadding,
+                        bottom = 40.dp)
+                    .align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = quote.quote,
+                    fontSize = 20.sp,
+                    lineHeight = 35.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    text = quote.author,
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    modifier = Modifier
+                        .padding(top = 30.dp),
+                    fontFamily = FontFamily(Font(R.font.glaciaiindifference_itallic)),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Text(
+                text = "Quotes.app",
+                fontSize = 16.sp,
+                lineHeight = 32.sp,
+                color = Color.White,
+                fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 5.dp),
+                textAlign = TextAlign.Center
+            )
+
+        }
+    }
+}
 
 
 /** IGOR THEME STYLE */

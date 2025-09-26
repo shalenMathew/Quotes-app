@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import androidx.core.net.toUri
+import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 
 @Composable
 fun CardSection(index: Int) {
@@ -56,7 +57,8 @@ fun CardSection(index: Int) {
                     context.startActivity(intent)
                 }
                 .clip(shape)
-                .background(Color(0xFF1C1C1E))
+//                .background(Color(0xFF1C1C1E))
+                .background(customGrey2)
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -99,6 +101,7 @@ val cardsRow = listOf<CardRow>(
     CardRow(icon = R.drawable.ic_link, name = "LinkTree", url = "https://linktr.ee/shalenmathew"),
     CardRow(icon = R.drawable.ic_coffee, name = "buy me a coffee", url = "https://buymeacoffee.com/shalenmathew"),
     CardRow(icon = R.drawable.ic_coffee_beans, name = "ko-fi", url = "https://ko-fi.com/shalenmathew"),
+    CardRow(icon = R.drawable.ic_about, name = "About Libraries", url = "navigate"),
 )
 
 data class CardRow(val icon: Int,val name: String, val url: String)

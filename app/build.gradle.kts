@@ -156,5 +156,13 @@ dependencies {
     testImplementation ("org.jetbrains.kotlin:kotlin-test-junit")
 
 
+    // glassmorphic
+    implementation("dev.chrisbanes.haze:haze-jetpack-compose:0.4.1")
+
+    // hypnotic canvas
+    implementation("com.mikepenz.hypnoticcanvas:hypnoticcanvas:0.4.1")
+
+
+
 
 }

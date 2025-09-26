@@ -14,6 +14,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
         val quoteStyleString = when (quoteStyle) {
             is QuoteStyle.DefaultTheme -> "DefaultTheme"
             is QuoteStyle.CodeSnippetTheme -> "CodeSnippetTheme"
+            is QuoteStyle.LiquidGlassTheme -> "LiquidGlassTheme"
 //            is QuoteStyle.SpotifyTheme -> "SpotifyTheme"
             is QuoteStyle.bratTheme -> "bratTheme"
             is QuoteStyle.igorTheme -> "igorTheme"
@@ -29,6 +30,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
 //            "SpotifyTheme" -> QuoteStyle.SpotifyTheme
             "bratTheme" -> QuoteStyle.bratTheme
             "igorTheme" -> QuoteStyle.igorTheme
+            "LiquidGlassTheme" -> QuoteStyle.LiquidGlassTheme
             else -> QuoteStyle.DefaultTheme
         }
     }

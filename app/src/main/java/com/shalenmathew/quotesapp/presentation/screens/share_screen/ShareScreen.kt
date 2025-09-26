@@ -86,7 +86,7 @@ fun ShareScreen(
 
             if (quote != null) {
                 CaptureBitmap(quoteData = quote,quoteStyleState) { capturedBitmap ->
-                    // saving the captured bitmap
+
                     imgBitmap = capturedBitmap
                 }
             } else {
@@ -172,7 +172,9 @@ fun ShareScreen(
                 ,horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text(text = "Custom Quotes Style",
+                // HACKTOBER FEST
+
+                Text(text = "Customize Your Quotes",
                     fontSize = 25.sp,
                     fontFamily = GIFont,
                     fontWeight = FontWeight.Bold,
@@ -184,7 +186,7 @@ fun ShareScreen(
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
                 {
 
-                    Text(text = "Code Snippet Style",
+                    Text(text = "Code Snippet",
                         fontSize = 20.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 5.dp),
@@ -223,7 +225,7 @@ fun ShareScreen(
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
                 {
 
-                    Text(text = "brat Theme Style",
+                    Text(text = "brat Theme",
                         fontSize = 20.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 10.dp),
@@ -262,7 +264,7 @@ fun ShareScreen(
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
                 {
 
-                    Text(text = "IGOR Theme Style",
+                    Text(text = "IGOR Theme",
                         fontSize = 20.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 10.dp),
@@ -297,51 +299,11 @@ fun ShareScreen(
 
                 }
 
-
-                /**  SPOTIFY THEME  STYLE */
-//                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-//                {
-//
-//                    Text(text = "Spotify Theme Style",
-//                        fontSize = 20.sp,
-//                        color = Color.Black,
-//                        modifier = Modifier.padding(bottom = 10.dp),
-//                        fontFamily = GIFont,
-//                        fontWeight = FontWeight.Medium
-//                    )
-//
-//                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-//                        Box {
-//                            Image(
-//                                painter = painterResource(R.drawable.sample_spotify_theme),
-//                                contentDescription = null,
-//                                modifier = Modifier.size(200.dp)
-//                                    .clickable {
-//                                        quoteStyleState = QuoteStyle.SpotifyTheme
-//                                        showSheet = false
-//                                    },
-//                                contentScale = ContentScale.Fit
-//                            )
-//                            Checkbox(
-//                                modifier = Modifier.align(Alignment.BottomEnd),
-//                                checked = quoteStyleState == QuoteStyle.SpotifyTheme,
-//                                onCheckedChange = { isChecked ->
-//                                    if (isChecked) {
-//                                        quoteStyleState = QuoteStyle.SpotifyTheme
-//                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
-//                                    }
-//                                }
-//                            )
-//                        }
-//                    }
-//
-//                }
-
                 /**  DEFAULT STYLE*/
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
                 {
 
-                    Text(text = "Default Style",
+                    Text(text = "Default Theme",
                         fontSize = 20.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 10.dp),
@@ -374,6 +336,44 @@ fun ShareScreen(
                         }
                     }
                 }
+                /**  LIQUID GLASS */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+                {
+
+                    Text(text = "Liquid Glass",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box {
+                            Image(
+                                painter = painterResource(R.drawable.sample_default_style),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.LiquidGlassTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.LiquidGlassTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.LiquidGlassTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+
             }
 
         }

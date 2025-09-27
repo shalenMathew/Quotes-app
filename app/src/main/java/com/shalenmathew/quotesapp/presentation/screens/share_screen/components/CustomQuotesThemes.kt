@@ -1,16 +1,13 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -19,38 +16,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.RoundRect
-import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.PathMeasure
-import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
@@ -61,19 +43,14 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.times
-import androidx.compose.ui.zIndex
 import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
-import com.shalenmathew.quotesapp.presentation.theme.Orange
 import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
@@ -168,7 +145,7 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
         Card (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 50.dp)
+                .padding(horizontal = 40.dp, vertical = 50.dp)
                 .shadow(
                     elevation = 20.dp,
                     shape = RoundedCornerShape(8.dp),
@@ -199,24 +176,24 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
                 Text(
                     text = quote.quote,
                     color = Color.White,
-                    fontSize = 15.sp,
+                    fontSize = 13.sp,
                     lineHeight = 30.sp,
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+                    modifier = Modifier.padding(start = 18.dp, end = 18.dp)
                 )
 
                 Text(
                     text = quote.author,
                     color = Color(0xFF00E0FF),
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp,)
+                    fontSize = 13.sp,
+                    modifier = Modifier.padding(top = 15.dp, start = 18.dp, end = 18.dp, bottom = 6.dp)
                 )
 
                 Text(
                     text = "Quotes.app",
                     color = Color(0xFFFF48B0),
-                    fontSize = 14.sp,
+                    fontSize = 10.sp,
                     modifier = Modifier
-                        .padding(top = 20.dp, bottom = 8.dp)
+                        .padding(top = 20.dp, bottom = 4.dp)
                         .align(Alignment.CenterHorizontally)
                 )
             }
@@ -277,7 +254,7 @@ fun LiquidGlassScreen(
     val screenWidth = configuration.screenWidthDp.dp
 
     val horizontalPadding = screenWidth * 0.04f // 4% of screen width
-    val verticalPadding = screenHeight * 0.08f   // 8% of screen height
+    val verticalPadding = screenHeight * 0.04f   // 8% of screen height
     val cardHorizontalPadding = screenWidth * 0.06f // 6% of screen width
     val textPadding = screenWidth * 0.04f // 4% of screen width
 
@@ -286,11 +263,13 @@ fun LiquidGlassScreen(
  * exactly the same just one box will apply the blur effect other will take care
  * of displaying the text */
 
-    /** box with blur effect  */
+
 
     val col1: Color = Color(0xFF0022BB)
     val col2: Color = Color(0xFFf093fb)
 
+
+    /** box with blur effect  */
     Box(
         modifier = modifier
             .fillMaxWidth()

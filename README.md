@@ -24,6 +24,12 @@
 ### This project will be best for you if ur someone who are looking to learn more about android development or
 ### Who are trying to find simpler projects to begin their contribution journey
 
+## Trailer 📽️
+
+![Adobe Express - 445277230-10a34818-089b-4928-838a-df715063952c (1)](https://github.com/user-attachments/assets/75d46afb-3a3f-47bd-808b-d570af9a5531)
+
+
+![Adobe Express - 416798702-38a15a1e-b324-4355-8574-49e83cf044cd](https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534)
 
 ## Screenshots 📱
 
@@ -32,14 +38,6 @@
 | ![ps3](https://github.com/user-attachments/assets/7bff2bac-7f71-43c4-9a5e-0b820bef81c8)  | ![ps4](https://github.com/user-attachments/assets/d1c42711-d1b1-406c-bb20-0faaf3ccf97b)  |
 | ![ps5](https://github.com/user-attachments/assets/4adceb39-b558-41d1-9a07-d3a8c5e37345)  | ![ps6](https://github.com/user-attachments/assets/fe16e863-6f2e-4d64-a753-6beda8a0a0b1)  | 
 | ![ps1](https://github.com/user-attachments/assets/03aaf7fc-5b3a-416b-9fe8-af6bc3747d95)  |   | 
-
-
-## Trailer 📽️
-
-![Adobe Express - 445277230-10a34818-089b-4928-838a-df715063952c](https://github.com/user-attachments/assets/fe71bd54-1bee-4082-8de3-4ca6a3d9d77b)
-
-![Adobe Express - 416798702-38a15a1e-b324-4355-8574-49e83cf044cd](https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534)
-
 
 
 ## Built With 🛠

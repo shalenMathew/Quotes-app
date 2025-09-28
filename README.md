@@ -19,7 +19,7 @@
 
 ## Socials
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">](https://discord.gg/QpDJh3rT4q)
-> [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Twitter/twitter1.svg">]([https://x.com/quotesdotapp](https://x.com/shalenmathew))
+> [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Twitter/twitter1.svg">](https://x.com/shalenmathew)
 
 ### This project will be best for you if ur someone who are looking to learn more about android development or
 ### Who are trying to find simpler projects to begin their contribution journey

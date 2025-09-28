@@ -6,7 +6,6 @@
 ### Quotes App is built to demonstrate the use of Modern Android development tools.
 ### The app follows latest android principles and components
 
-**This a minimalistic quotes app.**
 
 
 

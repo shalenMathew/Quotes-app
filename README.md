@@ -3,7 +3,8 @@
 <img width="1024" height="500" alt="Quotes" src="https://github.com/user-attachments/assets/4e01e512-295f-4ea5-8a65-4a76961a7235" />
 
 
-### Quotes App is built to demonstrate the use of Modern Android development tools.The app follows latest android principles and components
+### Quotes App is built to demonstrate the use of Modern Android development tools.
+### The app follows latest android principles and components
 
 **This a minimalistic quotes app.**
 
@@ -21,9 +22,8 @@
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">](https://discord.gg/QpDJh3rT4q)
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Twitter/twitter1.svg">](https://x.com/quotesdotapp)
 
-This project will be best for you if ur someone who are looking to learn more about android development or
-
-Who are trying to find simpler projects to begin their contribution journey
+### This project will be best for you if ur someone who are looking to learn more about android development or
+### Who are trying to find simpler projects to begin their contribution journey
 
 
 ## Screenshots 📱

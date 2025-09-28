@@ -68,6 +68,16 @@
   
 - Tip for beginners : Try to fix small bugs and dont get overwhelmed by the source code , take your time... Start by making small fixes or making small changes 👍
 
+  ## Star History
+
+<a href="https://www.star-history.com/#shalenMathew/Quotes-app&Timeline">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=shalenMathew/Quotes-app&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=shalenMathew/Quotes-app&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=shalenMathew/Quotes-app&type=Timeline" />
+ </picture>
+</a>
+
 ## Contact 📧
 Connect me using shalenmj@gmail.com
 

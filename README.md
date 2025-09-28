@@ -36,10 +36,9 @@
 
 ## Trailer 📽️
 
-https://github.com/user-attachments/assets/10a34818-089b-4928-838a-df715063952c
+![Adobe Express - 445277230-10a34818-089b-4928-838a-df715063952c](https://github.com/user-attachments/assets/fe71bd54-1bee-4082-8de3-4ca6a3d9d77b)
 
-https://github.com/user-attachments/assets/38a15a1e-b324-4355-8574-49e83cf044cd
-
+![Adobe Express - 416798702-38a15a1e-b324-4355-8574-49e83cf044cd](https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534)
 
 
 

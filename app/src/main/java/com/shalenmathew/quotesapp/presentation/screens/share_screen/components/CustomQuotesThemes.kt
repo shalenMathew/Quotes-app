@@ -265,7 +265,7 @@ fun LiquidGlassScreen(
 
 
 
-    val col1: Color = Color(0xFF0022BB)
+    val col1: Color = Color(0xFF0030CC)
     val col2: Color = Color(0xFFf093fb)
 
 

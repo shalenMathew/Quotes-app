@@ -3,6 +3,7 @@ package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +23,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -139,6 +143,33 @@ fun ShareScreen(
                     .padding(horizontal = 50.dp, vertical = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
+
+                AnimatedVisibility(
+                    visible = true
+                ) {
+                    Row {
+                        IconButton(
+                            onClick = {
+
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = Color.Red
+                            ),
+//                            shape = MaterialTheme.shapes.extraLarge,
+                            content = {}
+                        )
+
+                        IconButton(
+                            onClick = {
+
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = Color.White
+                            ),
+                            content = {}
+                        )
+                    }
+                }
 
                 Image(
                     painter = painterResource(R.drawable.custom), contentDescription = null,

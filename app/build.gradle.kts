@@ -162,6 +162,9 @@ dependencies {
     // hypnotic canvas
     implementation("com.mikepenz.hypnoticcanvas:hypnoticcanvas:0.4.1")
 
+    //color picker
+    implementation("com.github.skydoves:colorpicker-compose:1.1.2")
+
 
 
 }

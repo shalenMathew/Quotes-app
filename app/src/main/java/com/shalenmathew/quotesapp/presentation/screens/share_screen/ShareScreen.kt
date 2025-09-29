@@ -3,6 +3,7 @@ package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,9 +19,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -32,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
@@ -49,6 +55,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,10 +72,28 @@ fun ShareScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scrollState = rememberScrollState()
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
+    var triggerCapture by remember { mutableStateOf(false) }
+    var pendingAction by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         quoteStyleState = viewModel.getDefaultQuoteStyle()
     }
+
+    LaunchedEffect(imgBitmap, pendingAction) {
+        imgBitmap?.let { bitmap ->
+            when (pendingAction) {
+                "download" -> {
+                    saveImgInGallery(context, bitmap.asAndroidBitmap())
+                    pendingAction = null
+                }
+                "share" -> {
+                    shareImg(context, bitmap.asAndroidBitmap())
+                    pendingAction = null
+                }
+            }
+        }
+    }
+
 
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
@@ -86,9 +111,13 @@ fun ShareScreen(
 //            Spacer(modifier = Modifier.weight(1f))
 
             if (quote != null) {
-                CaptureBitmap(quoteData = quote,quoteStyleState) { capturedBitmap ->
+                CaptureBitmap(quoteData = quote,
+                    quoteStyleState,
+                    triggerCapture = triggerCapture
+                ) { capturedBitmap ->
 
                     imgBitmap = capturedBitmap
+                    triggerCapture = false
                 }
             } else {
                 Log.d("TAG", "ShareScreen: quote is null")
@@ -115,6 +144,33 @@ fun ShareScreen(
                 horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
 
+                AnimatedVisibility(
+                    visible = true
+                ) {
+                    Row {
+                        IconButton(
+                            onClick = {
+
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = Color.Red
+                            ),
+//                            shape = MaterialTheme.shapes.extraLarge,
+                            content = {}
+                        )
+
+                        IconButton(
+                            onClick = {
+
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = Color.White
+                            ),
+                            content = {}
+                        )
+                    }
+                }
+
                 Image(
                     painter = painterResource(R.drawable.custom), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
@@ -127,15 +183,8 @@ fun ShareScreen(
                     painter = painterResource(R.drawable.downloads), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.size(28.dp).clickable {
-
-                        imgBitmap?.let {
-                            saveImgInGallery(context, it.asAndroidBitmap())
-                        } ?: run {
-                            Toast.makeText(context, "No image to save", Toast.LENGTH_SHORT)
-                                .show()
-                            Log.d("TAG", "ShareScreen: imgBitmap is null")
-                        }
-
+                        pendingAction = "download"
+                        triggerCapture = true
                     })
 
                 Image(
@@ -143,12 +192,8 @@ fun ShareScreen(
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.size(28.dp)
                         .clickable {
-                            imgBitmap?.let {
-                                shareImg(context, it.asAndroidBitmap())
-                            } ?: run {
-                                Toast.makeText(context, "No image to share", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
+                            pendingAction = "share"
+                            triggerCapture = true
                         }
 
                 )
@@ -198,16 +243,19 @@ fun ShareScreen(
 
                     Row(modifier = Modifier.fillMaxWidth()
                         .wrapContentHeight()) {
-                        Box{
-                            Image(painter = painterResource(R.drawable.sample_code_snippet),
+
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+
+                            Image(
+                                painter = painterResource(R.drawable.sample_code_snippet),
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .size(200.dp)
-                                    .clickable{
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
                                         quoteStyleState = QuoteStyle.CodeSnippetTheme
-                                        showSheet=false
+                                        showSheet = false
                                     },
-                                contentScale = ContentScale.Fit)
+                                contentScale = ContentScale.Fit
+                            )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),
                                 checked = quoteStyleState == QuoteStyle.CodeSnippetTheme,
@@ -236,7 +284,7 @@ fun ShareScreen(
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
                             Image(
                                 painter = painterResource(R.drawable.sample_brat_theme),
                                 contentDescription = null,
@@ -275,7 +323,7 @@ fun ShareScreen(
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
                             Image(
                                 painter = painterResource(R.drawable.sample_igor),
                                 contentDescription = null,
@@ -314,7 +362,7 @@ fun ShareScreen(
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
                             Image(
                                 painter = painterResource(R.drawable.sample_default_style),
                                 contentDescription = null,
@@ -351,9 +399,9 @@ fun ShareScreen(
                     )
 
                     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
                             Image(
-                                painter = painterResource(R.drawable.sample_default_style),
+                                painter = painterResource(R.drawable.sample_liquid_glass),
                                 contentDescription = null,
                                 modifier = Modifier.size(200.dp)
                                     .clickable {

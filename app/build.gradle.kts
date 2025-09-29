@@ -11,13 +11,13 @@ plugins {
 
 android {
     namespace = "com.shalenmathew.quotesapp"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.shalenmathew.quotesapp"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 30
+        targetSdk = 36
+        versionCode = 31
         versionName = "3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

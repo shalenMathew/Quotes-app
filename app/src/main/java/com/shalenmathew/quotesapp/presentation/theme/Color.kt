@@ -23,3 +23,11 @@ val Red = Color(0xFFFF2D2D)
 val bratGreen = Color(0xFF8bcf00)
 
 val bottomNavItem = Color(0xFF282828)
+
+// Neon Theme Colors
+val neonBlue = Color(0xFF00FFFF)
+val neonPink = Color(0xFFFF00FF)
+val neonGreen = Color(0xFF00FF00)
+val neonPurple = Color(0xFF8A2BE2)
+val darkNeon = Color(0xFF0A0A0A)
+val neonCyan = Color(0xFF00E5FF)

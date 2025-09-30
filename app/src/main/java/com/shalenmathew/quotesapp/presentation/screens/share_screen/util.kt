@@ -129,6 +129,7 @@ sealed class QuoteStyle(){
 //    object SpotifyTheme: QuoteStyle()
     object bratTheme : QuoteStyle()
     object igorTheme : QuoteStyle()
+    object NeonTheme : QuoteStyle()
 
 }
 

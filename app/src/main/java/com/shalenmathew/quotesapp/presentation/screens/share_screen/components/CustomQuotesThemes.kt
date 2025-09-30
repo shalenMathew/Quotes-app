@@ -55,6 +55,10 @@ import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
+import com.shalenmathew.quotesapp.presentation.theme.neonBlue
+import com.shalenmathew.quotesapp.presentation.theme.neonPink
+import com.shalenmathew.quotesapp.presentation.theme.neonCyan
+import com.shalenmathew.quotesapp.presentation.theme.darkNeon
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
@@ -487,6 +491,123 @@ fun IgorScreen(modifier: Modifier, quote: Quote) {
         )
     }
 
+}
+
+/** NEON THEME STYLE */
+@Composable
+fun NeonThemeScreen(modifier: Modifier, quote: Quote) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(
+                brush = Brush.radialGradient(
+                    colors = listOf(darkNeon, Color.Black),
+                    center = Offset.Unspecified,
+                    radius = 1200f
+                )
+            )
+            .border(
+                width = 2.dp,
+                brush = Brush.horizontalGradient(
+                    colors = listOf(neonBlue, neonPink, neonCyan)
+                ),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(4.dp)
+    ) {
+        // Animated gradient border effect
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.9f),
+                            darkNeon.copy(alpha = 0.8f)
+                        ),
+                        center = Offset.Unspecified,
+                        radius = 1000f
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Quote text with neon glow effect
+                Text(
+                    text = quote.quote,
+                    fontSize = 20.sp,
+                    lineHeight = 36.sp,
+                    color = neonCyan,
+                    fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+
+                // Author with neon pink color
+                Text(
+                    text = quote.author,
+                    fontSize = 18.sp,
+                    color = neonPink,
+                    fontFamily = FontFamily(Font(R.font.glaciaiindifference_itallic)),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+
+            // App name at bottom with neon blue
+            Text(
+                text = "Quotes.app",
+                fontSize = 16.sp,
+                color = neonBlue,
+                fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 8.dp),
+                textAlign = TextAlign.Center
+            )
+
+            // Decorative neon elements
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .background(neonBlue, CircleShape)
+                    .align(Alignment.TopStart)
+                    .offset(x = 8.dp, y = 8.dp)
+            )
+            
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .background(neonPink, CircleShape)
+                    .align(Alignment.TopEnd)
+                    .offset(x = (-8).dp, y = 12.dp)
+            )
+            
+            Box(
+                modifier = Modifier
+                    .size(10.dp)
+                    .background(neonCyan, CircleShape)
+                    .align(Alignment.BottomStart)
+                    .offset(x = 12.dp, y = (-8).dp)
+            )
+            
+            Box(
+                modifier = Modifier
+                    .size(7.dp)
+                    .background(neonPink, CircleShape)
+                    .align(Alignment.BottomEnd)
+                    .offset(x = (-12).dp, y = (-12).dp)
+            )
+        }
+    }
 }
 
 

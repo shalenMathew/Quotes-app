@@ -66,16 +66,13 @@ class MainActivity : ComponentActivity() {
                     val currentBackStackEntry by navHost.currentBackStackEntryAsState()
                     val currentDestination = currentBackStackEntry?.destination?.route
 
-                 val currentScreen = Screen.values.firstOrNull{ it->
-                        it.route==currentDestination
-                    }
+                    // Find the current screen, with fallback to Home if not found
+                    val currentScreen = Screen.values.firstOrNull { it.route == currentDestination } 
+                        ?: Screen.Home // Fallback to Home screen to prevent bottom bar from disappearing
 
-                    currentScreen?.let {
-                        if (it.needBottomNav){
-                            BottomNavAnimation(navHost)
-                        }
-                    }?:run {
-                        Log.d("TAG","currentScreen = $currentScreen")
+                    // Only show bottom navigation for screens that need it
+                    if (currentScreen.needBottomNav) {
+                        BottomNavAnimation(navHost)
                     }
 
                 })

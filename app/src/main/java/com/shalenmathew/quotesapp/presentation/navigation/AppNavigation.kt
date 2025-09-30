@@ -15,7 +15,10 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.ShareScreen
 @Composable
 fun AppNavigation(navHost: NavHostController,paddingValues: PaddingValues){
 
-    NavHost(navController = navHost, startDestination = Screen.Splash.route){
+    NavHost(
+        navController = navHost, 
+        startDestination = Screen.Splash.route
+    ){
         composable(Screen.Splash.route){ SplashScreen(navHost) }
         composable(Screen.Home.route){  HomeScreen(paddingValues = paddingValues, navHost = navHost) }
         composable(Screen.Fav.route){ FavScreen(paddingValues = paddingValues, navHost = navHost) }

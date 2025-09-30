@@ -69,8 +69,8 @@ fun BottomNavAnimation(
     // for scenarios when user clicks back press
     LaunchedEffect(navBackStackEntry) {
         val currentDes = navBackStackEntry?.destination?.route
-        selectedScreen = tabItem.indexOfFirst { currentDes==it.route }
-        if (selectedScreen<0) selectedScreen=0
+        val foundIndex = tabItem.indexOfFirst { currentDes == it.route }
+        selectedScreen = if (foundIndex >= 0) foundIndex else 0
     }
 
     Box(

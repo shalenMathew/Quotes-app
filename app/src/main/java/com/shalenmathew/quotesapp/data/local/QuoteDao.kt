@@ -35,6 +35,10 @@ interface QuoteDao {
     // and made the simple idea of fetching data from db...
     // Resource<> are mostly used along with remote api than room
 
+    @Query(" SELECT * FROM Quote ORDER BY id DESC ")
+    fun getAllQuotesFlow(): Flow<List<Quote>>
+    // Flow version to observe database changes
+
 
     @Query("""
   SELECT * FROM Quote

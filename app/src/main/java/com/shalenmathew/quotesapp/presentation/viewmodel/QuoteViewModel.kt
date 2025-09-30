@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.ObserveQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.util.QuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.util.QuoteState
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class QuoteViewModel @Inject constructor(
     private val quoteUseCase: QuoteUseCase,
+    private val observeQuotes: ObserveQuotes,
     @ApplicationContext private  val context: Context
 ):ViewModel()
 {
@@ -28,6 +30,7 @@ class QuoteViewModel @Inject constructor(
 
     init {
         getQuote()
+        observeDatabaseChanges()
     }
 
     private fun getQuote(){
@@ -61,6 +64,17 @@ class QuoteViewModel @Inject constructor(
                }
            }
        }
+    }
+
+    private fun observeDatabaseChanges() {
+        viewModelScope.launch {
+            observeQuotes().collect { quotes ->
+                // Update the dataList with the latest quotes from database
+                // This ensures the UI stays synchronized when quotes are liked/unliked from other screens
+                val currentState = _quoteState.value
+                _quoteState.value = currentState.copy(dataList = quotes.toMutableList())
+            }
+        }
     }
 
     fun onEvent(quoteEvent: QuoteEvent){

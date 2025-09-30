@@ -96,5 +96,8 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
         db.getQuoteDao().insertLikedQuote(quote)
     }
 
+    override fun getAllQuotes(): Flow<List<Quote>> {
+        return db.getQuoteDao().getAllQuotesFlow()
+    }
 
 }

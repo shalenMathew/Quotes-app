@@ -5,11 +5,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
 import com.shalenmathew.quotesapp.BuildConfig
+import com.shalenmathew.quotesapp.data.local.AnimationPreferencesImpl
 import com.shalenmathew.quotesapp.data.local.DefaultQuoteStylePreferencesImpl
 import com.shalenmathew.quotesapp.data.local.QuoteDatabase
 import com.shalenmathew.quotesapp.data.remote.QuoteApi
 import com.shalenmathew.quotesapp.data.repository.FavQuoteRepositoryImpl
 import com.shalenmathew.quotesapp.data.repository.QuoteRepositoryImplementation
+import com.shalenmathew.quotesapp.domain.repository.AnimationPreferences
 import com.shalenmathew.quotesapp.domain.repository.DefaultQuoteStylePreferences
 import com.shalenmathew.quotesapp.domain.repository.FavQuoteRepository
 import com.shalenmathew.quotesapp.domain.repository.QuoteRepository
@@ -119,5 +121,11 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
     @Provides
     fun providesDefaultQuoteStylePreferences(sharedPreferences: SharedPreferences): DefaultQuoteStylePreferences {
         return DefaultQuoteStylePreferencesImpl(sharedPreferences)
+    }
+
+    @Singleton
+    @Provides
+    fun providesAnimationPreferences(): AnimationPreferences {
+        return AnimationPreferencesImpl()
     }
 }

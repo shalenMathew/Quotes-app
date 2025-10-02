@@ -177,6 +177,10 @@ fun FavScreen(paddingValues: PaddingValues,
                     )
                     .onFocusChanged { focusState ->
                         clickedSearch = focusState.isFocused
+                        // Trigger haptic feedback when search bar is focused
+                        if (focusState.isFocused) {
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
                     }
                     .animatedBorder({ progress }, White, Color.Black),
                 maxLines = 1,
@@ -237,8 +241,11 @@ fun FavScreen(paddingValues: PaddingValues,
 fun WhiteCancelIcon(onClick: () -> Unit) {
 
     val focusManager = LocalFocusManager.current
+    val hapticFeedback = LocalHapticFeedback.current
 
     IconButton(onClick = {
+        // Trigger haptic feedback when cancel icon is clicked
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
         focusManager.clearFocus(true)
         onClick()
     }) {

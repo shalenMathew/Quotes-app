@@ -125,7 +125,7 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
 
     @Singleton
     @Provides
-    fun providesAnimationPreferences(sharedPreferences: SharedPreferences): AnimationPreferences {
-        return AnimationPreferencesImpl(sharedPreferences)
+    fun providesAnimationPreferences(): AnimationPreferences {
+        return AnimationPreferencesImpl()
     }
 }

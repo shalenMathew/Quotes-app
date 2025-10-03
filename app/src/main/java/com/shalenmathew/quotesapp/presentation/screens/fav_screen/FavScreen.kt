@@ -54,6 +54,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -115,6 +117,7 @@ fun FavScreen(paddingValues: PaddingValues,
 
     // vibration on pull
     val hapticFeedback = LocalHapticFeedback.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(key1 = willRefresh) {
         when{
             willRefresh->{
@@ -196,7 +199,12 @@ fun FavScreen(paddingValues: PaddingValues,
                 ),
                 trailingIcon = { WhiteCancelIcon(onClick = {
                     clickedSearch = false
-                }) }
+                }) },
+                imeAction = ImeAction.Search,
+                onSearch = {
+                    // Hide keyboard when search is triggered
+                    keyboardController?.hide()
+                }
             )
 
 

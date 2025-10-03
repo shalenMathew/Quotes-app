@@ -193,8 +193,7 @@ fun FavScreen(paddingValues: PaddingValues,
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
-                        tint = if (clickedSearch) White else Color.Gray
+                        contentDescription = "Search"
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(

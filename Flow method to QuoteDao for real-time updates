@@ -1,0 +1,520 @@
+[33mcommit aa3ef32712295f58415d1ca02eb1838c4ee57a58[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfix-like-unlike-state-sync[m[33m, [m[1;31morigin/fix-like-unlike-state-sync[m[33m)[m
+Author: sahil kapase <sahilkapase97@gmal.com>
+Date:   Wed Oct 1 00:24:05 2025 +0530
+
+    Fix like/unlike state synchronization between Home and Favourites tabs
+    
+    - Add database observation to QuoteViewModel to stay synchronized
+    - Create ObserveQuotes use case to monitor database changes
+    - Add getAllQuotesFlow method to QuoteDao for real-time updates
+    - Ensure UI reflects correct like state when quotes are modified from other screens
+    - Fixes issue where Home tab showed incorrect like state after unliking from Favourites
+
+[33mcommit 51b2a5e3b4b8f25cc04f8a027b87b24f5d144879[m[33m ([m[1;31morigin/fix-bottom-nav-disappearing-106[m[33m, [m[1;32mfix-bottom-nav-disappearing-106[m[33m)[m
+Author: sahil kapase <sahilkapase97@gmal.com>
+Date:   Wed Oct 1 00:15:58 2025 +0530
+
+    Fix bottom navigation bar disappearing during screen transitions (fixes #106)
+
+[33mcommit ad8c3dc320f6503c1f0433954bfd931fb76c6e71[m[33m ([m[1;32missue-107[m[33m)[m
+Author: sahil kapase <sahilkapase97@gmal.com>
+Date:   Wed Oct 1 00:11:52 2025 +0530
+
+    Fix bottom navigation bar disappearing during screen transitions (fixes #106)
+
+[33mcommit a1d87fdd4999aa2bba4c779022ad971a04622900[m[33m ([m[1;31morigin/issue-107[m[33m)[m
+Author: sahil kapase <sahilkapase97@gmal.com>
+Date:   Tue Sep 30 23:07:33 2025 +0530
+
+    successfully created and implemented a new Neon Theme
+
+[33mcommit 4093f35eaa525ec523108dbd908b4eb9cf99ef75[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Sep 30 16:49:05 2025 +0530
+
+    Update README.md
+
+[33mcommit d4d535bed4a6640ad790ae93463874915646300d[m
+Merge: 69fa97f e6504f2
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Mon Sep 29 19:22:33 2025 +0530
+
+    Merge pull request #102 from shalenMathew/development
+    
+    version bump
+
+[33mcommit e6504f28e8960bb3a56ac94c4a106b7725197bbe[m
+Author: ADMIN <shalenmj@gmail.com>
+Date:   Mon Sep 29 19:20:02 2025 +0530
+
+    version bump
+
+[33mcommit 69fa97fbd19c48f6e0d127883815c6b43752a71c[m
+Merge: 0b14ef4 49dd992
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Mon Sep 29 19:05:08 2025 +0530
+
+    Merge pull request #101 from shalenMathew/development
+    
+    feat updates
+
+[33mcommit 49dd99260a2e54a64504eb081740a66618e54091[m
+Author: ADMIN <shalenmj@gmail.com>
+Date:   Mon Sep 29 18:51:31 2025 +0530
+
+    feat: Working on custom Gradient picker
+
+[33mcommit 0b14ef4a095b17ae506cc2e5b2f2b2993e378226[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 19:05:12 2025 +0530
+
+    Update README.md
+
+[33mcommit 75bd5793c52b3bf4d54a62cc7d475f634e91e72e[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 17:05:27 2025 +0530
+
+    Update README.md
+
+[33mcommit 54a0bd758343bccc7649f18c21b3d5d7b112d2f7[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 14:42:30 2025 +0530
+
+    Update README.md
+
+[33mcommit 0364f137651118a375c7e8de5ba3f41801237c3e[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 14:27:07 2025 +0530
+
+    Update README.md
+
+[33mcommit 0a4899cad1977adc4494fbf436d0eb006bcd51e2[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 13:36:08 2025 +0530
+
+    Update README.md
+
+[33mcommit 8308b4254eecc07f0c345599b2873b6f6321c02d[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 13:33:51 2025 +0530
+
+    Update README.md
+
+[33mcommit 499ca256151614a23f777cfbc5896e0c88ce5415[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 13:31:53 2025 +0530
+
+    Update README.md
+
+[33mcommit b0820abbaa115fa54c4378ea99415e7560d16437[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 13:28:49 2025 +0530
+
+    Update README.md
+
+[33mcommit e00c9e4a1b4df7786acd39152ff7efff50b460d4[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 13:15:33 2025 +0530
+
+    Update README.md
+
+[33mcommit 5dca0708c5d5bc6c637d8707967d3f3077becc4f[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 13:08:55 2025 +0530
+
+    Update README.md
+
+[33mcommit 9ad1c9133e074c86dbb3a30d0503620822ce35d9[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Sun Sep 28 13:08:27 2025 +0530
+
+    Update README.md
+
+[33mcommit 7ca7a7cd2a8562e84ee07cc637f9b2582db58568[m
+Author: ADMIN <shalenmj@gmail.com>
+Date:   Sat Sep 27 11:40:18 2025 +0530
+
+    fixes : changed the and updated code snipped style
+
+[33mcommit 27efc7e1d5dd7219f79bce61cdbc83e8c7a489d6[m
+Author: ADMIN <shalenmj@gmail.com>
+Date:   Fri Sep 26 18:15:44 2025 +0530
+
+    fixes : fixed & changed major issue on how bitmap was saved
+
+[33mcommit c6772ebf4420bf5eadd2cf8da99cb3aa25a3da64[m
+Merge: a75982b d3717f6
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Sep 26 16:15:18 2025 +0530
+
+    Merge pull request #100 from shalenMathew/development
+    
+    fixes + updates
+
+[33mcommit d3717f695daf4b6f54ca63789f1efa5a07258c5a[m
+Author: ADMIN <shalenmj@gmail.com>
+Date:   Fri Sep 26 16:13:29 2025 +0530
+
+    fixes : fixed CaptureBimap bug updated the fun logic
+
+[33mcommit 3113b6b3ef2c9ea5f2597ea7667df2ac86d06543[m
+Author: ADMIN <shalenmj@gmail.com>
+Date:   Fri Sep 26 13:13:47 2025 +0530
+
+    feat : added Liquid Glass theme + added new way to capture bitmap
+
+[33mcommit 24401d28a09995527b4b07068a887d8cf92846bb[m
+Author: ADMIN <shalenmj@gmail.com>
+Date:   Tue Sep 23 13:34:46 2025 +0530
+
+    removed spotify theme
+
+[33mcommit a75982b50c795a4f29077a1c0f7f88b1d795f74a[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Sep 16 22:56:35 2025 +0530
+
+    Update README.md
+
+[33mcommit 256d37efe9117ab6ae7ab8139c30e5830a5afa3e[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Sep 16 15:17:21 2025 +0530
+
+    Update README.md
+
+[33mcommit 21ab990e873e747599e69b20a80e1ce32f95da50[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Sep 16 15:14:23 2025 +0530
+
+    Update README.md
+
+[33mcommit c2facc12aa2fd753bc28502756f33b53c47e64c9[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Sep 16 15:12:43 2025 +0530
+
+    Update README.md
+
+[33mcommit 76091c4d088af151045b923bd158dfe9fef1bbdd[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Mon Jul 14 14:06:43 2025 +0530
+
+    fixes
+
+[33mcommit 779ed93fe5abc3d6baf9b803496642b5ee8724bf[m
+Merge: 5a2fc5d 8873cea
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jul 11 12:45:10 2025 +0530
+
+    Merge pull request #99 from shalenMathew/development
+    
+    version bump
+
+[33mcommit 8873ceae13b89dc8543db46a1ab8fe13a39859db[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jul 11 12:44:12 2025 +0530
+
+    version bump
+
+[33mcommit 5a2fc5d67b2df06e76a93eefb6b1fa9af129fc80[m
+Merge: 069ae18 1333a54
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Jul 8 18:43:43 2025 +0530
+
+    Merge pull request #98 from shalenMathew/development
+    
+    revert agp update
+
+[33mcommit 1333a5425d58b6f283c0f4eb3f804b5aedaf835e[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 18:40:51 2025 +0530
+
+    Revert "- agp update"
+
+[33mcommit d5302bbac6265ffb120e9900ced312b374667671[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 18:29:05 2025 +0530
+
+    Revert "- agp update"
+    
+    This reverts commit 7637499d
+
+[33mcommit 6e0be133c6f910b9e61b0c4a6838b6894479fe94[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 18:26:35 2025 +0530
+
+    - fixing build failure on dependency update
+
+[33mcommit 069ae187559f92e1ac110639d564c45b16cb7347[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 17:44:07 2025 +0530
+
+    - fixes
+
+[33mcommit 8453efd4efe2bd645d64b87b210677e5a0ae99ea[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 17:42:54 2025 +0530
+
+    - fixes
+
+[33mcommit 54bc444b6cc84ae9309b959266d994442fadcde8[m
+Merge: 8c3ab32 8ee56ff
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Jul 8 17:39:30 2025 +0530
+
+    Merge pull request #97 from shalenMathew/development
+    
+    - checksum
+
+[33mcommit 8ee56ffd9aabb8a8d6e941ed149d8ad4c4e0e78f[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 17:33:59 2025 +0530
+
+    - checksum
+
+[33mcommit 8c3ab3205a2026de652137b37ce80703aeac8297[m
+Merge: 154667b f7d0d9c
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Jul 8 17:17:51 2025 +0530
+
+    Merge pull request #96 from shalenMathew/development
+    
+    updates
+
+[33mcommit f7d0d9c1096b252d31af094df9865080a05268a9[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 17:13:52 2025 +0530
+
+    - checksum
+
+[33mcommit 7637499d6353be4bf89d8ebed803cb90b35caf3f[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 8 16:57:30 2025 +0530
+
+    - agp update
+
+[33mcommit a3052d726298ee7cbaa368fd5219ee5d21e35dbf[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Wed Jul 2 01:43:35 2025 +0530
+
+    - fixes
+
+[33mcommit 154667b54e3f075d950c9f43239ebcf349bb1f84[m
+Merge: c33aa77 5f00d5a
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Wed Jul 2 01:33:48 2025 +0530
+
+    Merge pull request #95 from shalenMathew/development
+    
+    - fixes
+
+[33mcommit 5f00d5abeb9e77e8bdb13d409791fb677cf1ce68[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Wed Jul 2 01:32:57 2025 +0530
+
+    - fixes
+
+[33mcommit c33aa77e1e2bc3c7302a110989a240f5c81f4e38[m
+Merge: 5a72f57 b768696
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Wed Jul 2 01:26:17 2025 +0530
+
+    Merge pull request #94 from shalenMathew/development
+    
+    - androidTest
+
+[33mcommit b768696e9526948ef63fd1a2ad19c6e3472a1e50[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Wed Jul 2 01:25:27 2025 +0530
+
+    - androidTest/fixed failed test
+
+[33mcommit 5a72f574da7a17495e9550a816d6ab9820a41268[m
+Merge: 86b4675 e77a6b4
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Wed Jul 2 00:45:15 2025 +0530
+
+    Merge pull request #93 from shalenMathew/development
+    
+    Development
+
+[33mcommit e77a6b4c1732db7eec24daa84e320ca1ac984a9f[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Wed Jul 2 00:44:43 2025 +0530
+
+    - gh actions/fixes
+
+[33mcommit 51e6b507a80b2b0ed412116f7a15397009f1f846[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Wed Jul 2 00:17:42 2025 +0530
+
+    - gh actions/fixes
+
+[33mcommit 4779350c1a7987e1a8bba0918cdaf590898ad7b3[m
+Merge: ffee1ff a7fa2bb
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Tue Jul 1 23:36:28 2025 +0530
+
+    Merge remote-tracking branch 'origin/development' into development
+
+[33mcommit a7fa2bb1e4ca4087683048bf2890dcc2e2ab2376[m
+Merge: 456a70c 5cea287
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Jul 1 23:34:41 2025 +0530
+
+    Merge pull request #92 from percy-g2/development
+    
+    Align heart/fav icon size with send/share icon
+
+[33mcommit 5cea287788eb91fe1e30af61e746c63b27527ad7[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Jul 1 17:40:26 2025 +0530
+
+    Update README.md
+    
+    (cherry picked from commit 86b467565162c3229d5cb39b690118aeda436459)
+
+[33mcommit b529d89bb4dc20f21e9e2a4fcfd4fa4cffa774aa[m
+Author: percy-g2 <gahlotpercy@gmail.com>
+Date:   Tue Jul 1 18:07:00 2025 +0530
+
+    Align heart/fav icon size with send/share icon
+
+[33mcommit 86b467565162c3229d5cb39b690118aeda436459[m
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Tue Jul 1 17:40:26 2025 +0530
+
+    Update README.md
+
+[33mcommit ffee1ff26e61f0d2e50698556c28c5aa9578229a[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Thu Jun 19 15:42:57 2025 +0530
+
+    - fixes/ fixed query bug
+
+[33mcommit 456a70c890717377d503501fc89ef13f8074b59e[m
+Merge: b165685 ea762a8
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 18:24:02 2025 +0530
+
+    Merge pull request #90 from shalenMathew/development
+    
+    Merge pull request #89 from shalenMathew/master
+
+[33mcommit ea762a813e37a19557216e6bdca1c897335c2d12[m
+Merge: acf1116 b165685
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 18:23:23 2025 +0530
+
+    Merge pull request #89 from shalenMathew/master
+    
+    merging master with development
+
+[33mcommit b165685765d8665481610b62aec6ec35f68ed3cc[m
+Merge: e001771 acf1116
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 18:18:57 2025 +0530
+
+    Merge pull request #88 from shalenMathew/development
+    
+    - gh actions/apk-2-discord
+
+[33mcommit acf111698be35aee7b505fe66288694155bd9eb0[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 18:18:25 2025 +0530
+
+    - gh actions/apk-2-discord : final commit
+
+[33mcommit 4bdef7a10c148fd16f663ace5f9fea55938212e2[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 18:14:49 2025 +0530
+
+    - gh actions/apk-2-discord : completed
+
+[33mcommit e0017713c5e62ea6b38e206bc0d91ff3062bfe91[m
+Merge: e05cef3 4daced4
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 18:09:20 2025 +0530
+
+    Merge pull request #87 from shalenMathew/development
+    
+    - gh actions/apk-2-discord : completed
+
+[33mcommit 4daced44f9bd8de1cdcf3fd78b1cd0abf5a67b54[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 18:06:48 2025 +0530
+
+    - gh actions/apk-2-discord : completed
+
+[33mcommit 06814fa06108a5b5308d55eba0d01f277f7cbf92[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 17:55:10 2025 +0530
+
+    - gh actions/apk-2-discord : completed
+
+[33mcommit e05cef3f0d5852a114517e14f5f5ff0b82a8f0a3[m
+Merge: c478188 2b2d914
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 17:54:42 2025 +0530
+
+    Merge pull request #86 from shalenMathew/development
+    
+    - gh actions/apk-2-discord : completed
+
+[33mcommit 2b2d9144bb4eaccd51cdc082250409bcf7d4be53[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 17:52:38 2025 +0530
+
+    - gh actions/apk-2-discord : completed
+
+[33mcommit c47818865d139b631a7963a647d1f1e1240334bc[m
+Merge: dcedb56 55ee6bb
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 17:39:44 2025 +0530
+
+    Merge pull request #85 from shalenMathew/development
+    
+    - gh actions/publish_apk_to_discord workflow : testing
+
+[33mcommit 55ee6bb608a2fe15476792ac13b2edd288f3e525[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 17:38:09 2025 +0530
+
+    - gh actions/publish_apk_to_discord workflow : testing
+
+[33mcommit dcedb56e6ac570f648e500afa55ac2878b8d4a2b[m
+Merge: 6e39a3b 1136c03
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 17:37:01 2025 +0530
+
+    Merge pull request #84 from shalenMathew/development
+    
+    - gh actions/publish_apk_to_discord workflow : testing
+
+[33mcommit 1136c0302c4bf175dba0795bbcaadb39ca8e4682[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 17:36:01 2025 +0530
+
+    - gh actions/publish_apk_to_discord workflow : testing
+
+[33mcommit 6e39a3be44f1dc5e73c54b8f92b5b91b1e52b86a[m
+Merge: 947b844 581b6a2
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 17:33:58 2025 +0530
+
+    Merge pull request #83 from shalenMathew/development
+    
+    - gh actions/publish_apk_to_discord workflow : testing
+
+[33mcommit 581b6a2d76d1bc223ad1842872f4269ab7177044[m
+Author: shalenmj <shalenmj@gmail.ocm>
+Date:   Fri Jun 13 17:33:12 2025 +0530
+
+    - gh actions/publish_apk_to_discord workflow : testing
+
+[33mcommit 947b8445780fc1fe946cf1e2f1d133c7c57b1d07[m
+Merge: 05ceea8 d3a1973
+Author: Shalen Mathew <119736953+shalenMathew@users.noreply.github.com>
+Date:   Fri Jun 13 17:31:29 2025 +0530
+
+    Merge pull request #82 from shalenMathew/development
+    
+    Development

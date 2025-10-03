@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,9 +24,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -38,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
@@ -46,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -55,7 +58,6 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
-import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -424,11 +426,119 @@ fun ShareScreen(
                     }
                 }
 
-            }
+                /* REMINDER THEME */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
+                {
 
+                    Text(text = "Reminder theme",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth()
+                        .wrapContentHeight()) {
+
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+
+                            ReminderStyleCover(
+                                modifier = Modifier.size(200.dp).background(Color.Blue)
+                                .clickable {
+                                    quoteStyleState = QuoteStyle.ReminderTheme
+                                    showSheet = false
+                                },
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.ReminderTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.ReminderTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
-
-
-
 }
+
+@Composable
+fun ReminderStyleCover (
+    modifier: Modifier = Modifier.size(200.dp),
+    quote: Quote = Quote(quote = "Pausing for a moment to look to inspiring leaders", author = "Unknown", liked = true),
+    bgColor: Color = Color.LightGray,
+    textColor: Color = Color(0xFF4B6AD1),
+    cardBgColor : Color = Color(0xFFE3EDFD)
+){
+    Box(
+
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight(.8f)
+            .background(bgColor)
+            .wrapContentSize(Alignment.Center) ,
+        contentAlignment = Alignment.Center
+    ){
+
+        Column(modifier = Modifier
+            .fillMaxWidth(.8f)
+            .wrapContentHeight()
+            .shadow(elevation = 20.dp, shape = RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(20.dp))
+            .background(cardBgColor)
+        ) {
+
+            Text(
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 5.dp, horizontal = 2.dp),
+                text = "Reminder" ,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 5.dp, horizontal = 5.dp),
+                text = quote.quote ,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 15.sp
+            )
+
+            Text(text =" ~${ quote.author }",
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 1.dp, horizontal = 5.dp),
+                color = textColor,
+                textAlign = TextAlign.End,
+                fontSize = 15.sp,
+            )
+            HorizontalDivider()
+
+            Text(text = "Okay" ,
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 5.dp),
+                color = textColor,
+                textAlign = TextAlign.Center,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+

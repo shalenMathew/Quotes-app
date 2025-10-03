@@ -215,6 +215,10 @@ fun CaptureBitmap(
             QuoteStyle.LiquidGlassTheme -> {
                 LiquidGlassScreen(modifier = Modifier, quoteData)
             }
+
+            QuoteStyle.ReminderTheme -> {
+                ReminderStyle(modifier = Modifier, quoteData)
+            }
         }
     }
 }

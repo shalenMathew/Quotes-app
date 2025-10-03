@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +55,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -115,6 +120,7 @@ fun FavScreen(paddingValues: PaddingValues,
 
     // vibration on pull
     val hapticFeedback = LocalHapticFeedback.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(key1 = willRefresh) {
         when{
             willRefresh->{
@@ -177,11 +183,21 @@ fun FavScreen(paddingValues: PaddingValues,
                     )
                     .onFocusChanged { focusState ->
                         clickedSearch = focusState.isFocused
+                        // Trigger haptic feedback when search bar is focused
+                        if (focusState.isFocused) {
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
                     }
                     .animatedBorder({ progress }, White, Color.Black),
                 maxLines = 1,
                 shape = MaterialTheme.shapes.extraLarge,
-                placeholder = { Text(text = "Search...") },
+                placeholder = { Text(text = "Search your favorite quotes...") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search"
+                    )
+                },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Grey,
@@ -189,10 +205,28 @@ fun FavScreen(paddingValues: PaddingValues,
                     unfocusedPlaceholderColor = Color.Gray,
                     disabledPlaceholderColor = Color.Yellow,
                     focusedTextColor = White,
+                    focusedLeadingIconColor = White,
+                    unfocusedLeadingIconColor = Color.Gray,
                 ),
-                trailingIcon = { WhiteCancelIcon(onClick = {
-                    clickedSearch = false
-                }) }
+                trailingIcon = { 
+                    if (state.query.isNotEmpty()) {
+                        WhiteCancelIcon(onClick = {
+                            // Clear search query and focus
+                            quoteViewModel.onEvent(FavQuoteEvent.onSearchQueryChanged(""))
+                            clickedSearch = false
+                            keyboardController?.hide()
+                        })
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        // Hide keyboard when search is triggered
+                        keyboardController?.hide()
+                    }
+                )
             )
 
 
@@ -237,8 +271,11 @@ fun FavScreen(paddingValues: PaddingValues,
 fun WhiteCancelIcon(onClick: () -> Unit) {
 
     val focusManager = LocalFocusManager.current
+    val hapticFeedback = LocalHapticFeedback.current
 
     IconButton(onClick = {
+        // Trigger haptic feedback when cancel icon is clicked
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
         focusManager.clearFocus(true)
         onClick()
     }) {

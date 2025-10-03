@@ -11,4 +11,6 @@ interface QuoteRepository {
 
      suspend  fun saveLikedQuote(quote: Quote)
 
+    fun getAllLikedQuotes(): Flow<List<Quote>>
+
 }

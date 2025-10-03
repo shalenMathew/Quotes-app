@@ -28,6 +28,7 @@ class QuoteViewModel @Inject constructor(
 
     init {
         getQuote()
+        observeLikedQuotes()
     }
 
     private fun getQuote(){
@@ -61,6 +62,21 @@ class QuoteViewModel @Inject constructor(
                }
            }
        }
+    }
+
+    private fun observeLikedQuotes() {
+        viewModelScope.launch {
+            quoteUseCase.getLikedQuotes().collect { likedQuotes ->
+                // Update the like status of quotes in the current state
+                _quoteState.value = _quoteState.value.copy(
+                    dataList = _quoteState.value.dataList.map { quote ->
+                        // Check if this quote is in the liked quotes list
+                        val isLiked = likedQuotes.any { likedQuote -> likedQuote.id == quote.id }
+                        quote.copy(liked = isLiked)
+                    }.toMutableList()
+                )
+            }
+        }
     }
 
     fun onEvent(quoteEvent: QuoteEvent){

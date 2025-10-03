@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -188,7 +189,14 @@ fun FavScreen(paddingValues: PaddingValues,
                     .animatedBorder({ progress }, White, Color.Black),
                 maxLines = 1,
                 shape = MaterialTheme.shapes.extraLarge,
-                placeholder = { Text(text = "Search...") },
+                placeholder = { Text(text = "Search your favorite quotes...") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = if (clickedSearch) White else Color.Gray
+                    )
+                },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Transparent,
                     unfocusedBorderColor = Grey,
@@ -196,10 +204,19 @@ fun FavScreen(paddingValues: PaddingValues,
                     unfocusedPlaceholderColor = Color.Gray,
                     disabledPlaceholderColor = Color.Yellow,
                     focusedTextColor = White,
+                    focusedLeadingIconColor = White,
+                    unfocusedLeadingIconColor = Color.Gray,
                 ),
-                trailingIcon = { WhiteCancelIcon(onClick = {
-                    clickedSearch = false
-                }) },
+                trailingIcon = { 
+                    if (state.query.isNotEmpty()) {
+                        WhiteCancelIcon(onClick = {
+                            // Clear search query and focus
+                            quoteViewModel.onEvent(FavQuoteEvent.onSearchQueryChanged(""))
+                            clickedSearch = false
+                            keyboardController?.hide()
+                        })
+                    }
+                },
                 imeAction = ImeAction.Search,
                 onSearch = {
                     // Hide keyboard when search is triggered

@@ -55,6 +55,12 @@ import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
+import com.shalenmathew.quotesapp.presentation.theme.darkNeon
+import com.shalenmathew.quotesapp.presentation.theme.neonBlue
+import com.shalenmathew.quotesapp.presentation.theme.neonPink
+import com.shalenmathew.quotesapp.presentation.theme.neonGreen
+import com.shalenmathew.quotesapp.presentation.theme.neonPurple
+import com.shalenmathew.quotesapp.presentation.theme.neonCyan
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
@@ -487,6 +493,72 @@ fun IgorScreen(modifier: Modifier, quote: Quote) {
         )
     }
 
+}
+
+
+/** NEON THEME STYLE */
+@Composable
+fun NeonThemeScreen(modifier: Modifier, quote: Quote) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(darkNeon)
+            .padding(12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(neonPurple, neonBlue, neonPink),
+                        start = Offset.Zero,
+                        end = Offset(500f, 500f)
+                    ),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .padding(2.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .background(darkNeon, shape = RoundedCornerShape(18.dp))
+                    .border(1.dp, neonGreen, RoundedCornerShape(18.dp))
+                    .padding(horizontal = 16.dp, vertical = 80.dp)
+            ) {
+                Column(
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text(
+                        text = quote.quote,
+                        color = neonCyan,
+                        fontSize = 20.sp,
+                        lineHeight = 34.sp,
+                        modifier = Modifier.align(Alignment.Start)
+                    )
+                    Text(
+                        text = quote.author,
+                        color = neonPink,
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .padding(top = 24.dp)
+                            .align(Alignment.Start)
+                    )
+                }
+
+                Text(
+                    text = "Quotes.app",
+                    color = neonGreen,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 8.dp)
+                )
+            }
+        }
+    }
 }
 
 

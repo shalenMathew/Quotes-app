@@ -215,6 +215,9 @@ fun CaptureBitmap(
             QuoteStyle.LiquidGlassTheme -> {
                 LiquidGlassScreen(modifier = Modifier, quoteData)
             }
+            QuoteStyle.NeonTheme -> {
+                NeonThemeScreen(modifier = Modifier, quoteData)
+            }
         }
     }
 }

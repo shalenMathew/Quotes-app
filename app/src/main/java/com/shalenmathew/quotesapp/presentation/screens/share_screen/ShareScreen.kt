@@ -271,6 +271,43 @@ fun ShareScreen(
 
                 }
 
+                /**  NEON THEME */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+                {
+                    Text(text = "Neon Theme",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            // Use CodeSnippet preview as placeholder; real preview is drawn in app
+                            Image(
+                                painter = painterResource(R.drawable.sample_default_style),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.NeonTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.NeonTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.NeonTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+
                 /**  BRAT THEME  */
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
                 {

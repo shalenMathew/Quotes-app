@@ -57,6 +57,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -216,11 +218,15 @@ fun FavScreen(paddingValues: PaddingValues,
                         })
                     }
                 },
-                imeAction = ImeAction.Search,
-                onSearch = {
-                    // Hide keyboard when search is triggered
-                    keyboardController?.hide()
-                }
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        // Hide keyboard when search is triggered
+                        keyboardController?.hide()
+                    }
+                )
             )
 
 

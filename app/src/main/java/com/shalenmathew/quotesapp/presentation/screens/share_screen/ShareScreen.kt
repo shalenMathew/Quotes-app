@@ -221,7 +221,6 @@ fun ShareScreen(
                 ,horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // HACKTOBER FEST
 
                 Text(text = "Customize Your Quotes",
                     fontSize = 25.sp,
@@ -438,17 +437,43 @@ fun ShareScreen(
                         fontWeight = FontWeight.Medium
                     )
 
-                    Row(modifier = Modifier.fillMaxWidth()
-                        .wrapContentHeight()) {
+//                    Row(modifier = Modifier.fillMaxWidth()
+//                        .wrapContentHeight())
+//                    {
+//
+//                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+//
+//                            ReminderStyleCover(
+//                                modifier = Modifier.size(200.dp).background(Color.Blue)
+//                                .clickable {
+//                                    quoteStyleState = QuoteStyle.ReminderTheme
+//                                    showSheet = false
+//                                },
+//                            )
+//                            Checkbox(
+//                                modifier = Modifier.align(Alignment.BottomEnd),
+//                                checked = quoteStyleState == QuoteStyle.ReminderTheme,
+//                                onCheckedChange = { isChecked ->
+//                                    if (isChecked) {
+//                                        quoteStyleState = QuoteStyle.ReminderTheme
+//                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+//                                    }
+//                                }
+//                            )
+//                        }
+//                    }
 
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                         Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-
-                            ReminderStyleCover(
-                                modifier = Modifier.size(200.dp).background(Color.Blue)
-                                .clickable {
-                                    quoteStyleState = QuoteStyle.ReminderTheme
-                                    showSheet = false
-                                },
+                            Image(
+                                painter = painterResource(R.drawable.sample_reminder_2),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.ReminderTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Crop
                             )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),

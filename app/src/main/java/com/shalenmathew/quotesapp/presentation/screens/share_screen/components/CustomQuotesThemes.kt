@@ -147,7 +147,7 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(Violet)
+            .background( Color.LightGray)
     ) {
         Card (
             modifier = Modifier

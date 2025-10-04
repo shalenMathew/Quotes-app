@@ -130,6 +130,8 @@ sealed class QuoteStyle(){
     object bratTheme : QuoteStyle()
     object igorTheme : QuoteStyle()
 
+    object ReminderTheme : QuoteStyle()
+
 }
 
 @Composable

@@ -517,15 +517,6 @@ fun ReminderStyleCover (
                 fontSize = 15.sp
             )
 
-            Text(text =" ~${ quote.author }",
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 1.dp, horizontal = 5.dp),
-                color = textColor,
-                textAlign = TextAlign.End,
-                fontSize = 15.sp,
-            )
             HorizontalDivider()
 
             Text(text = "Okay" ,

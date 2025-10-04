@@ -509,18 +509,7 @@ fun ReminderStyle (
     textColor: Color = Color(0xFF4B6AD1),
     cardBgColor : Color = Color(0xFFE3EDFD)
 ) {
-    Column {
 
-        Text(
-            text = "Quote.App",
-            modifier = Modifier
-                .fillMaxWidth().background(cardBgColor)
-                .padding(vertical = 15.dp),
-            color = textColor,
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
 
         Box(
             modifier = modifier
@@ -561,15 +550,6 @@ fun ReminderStyle (
                     fontSize = 15.sp
                 )
 
-                Text(
-                    text = " ~${quote.author}",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp, horizontal = 20.dp),
-                    color = textColor,
-                    textAlign = TextAlign.End,
-                    fontSize = 15.sp
-                )
                 HorizontalDivider()
 
                 Text(
@@ -584,9 +564,6 @@ fun ReminderStyle (
                 )
             }
         }
-
-
-    }
 
 }
 

@@ -55,6 +55,8 @@ import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.darken
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.lighten
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
 import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
@@ -217,8 +219,6 @@ fun CircleDot(color: Color) {
     )
 }
 
-
-
 /** brat THEME STYLE */
 @Composable
 fun BratScreen(modifier: Modifier,quote: Quote) {
@@ -246,9 +246,15 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
 @Composable
 fun LiquidGlassScreen(
     modifier: Modifier,
-    quote: Quote
+    quote: Quote,
+    color1: Color,
+    color2: Color
 )
 {
+//
+//    val gradLight = color1.lighten(2f)
+//    val gradDark = color2.darken(2f)
+
 
     val hazeState = remember { HazeState() }
 
@@ -272,8 +278,8 @@ fun LiquidGlassScreen(
 
 
 
-    val col1: Color = Color(0xFF0030CC)
-    val col2: Color = Color(0xFFf093fb)
+//    val col1: Color = Color(0xFF0030CC)
+//    val col2: Color = Color(0xFFf093fb)
 
 
     /** box with blur effect  */
@@ -290,15 +296,15 @@ fun LiquidGlassScreen(
             .shaderBackground(
                 MeshGradient(
                     colors = generateGradientColors(
-                        col1,
-                        col2,
+                        color1,
+                        color2
                     ).toTypedArray()
                 ),
                 fallback = {
                     Brush.horizontalGradient(
                         generateGradientColors(
-                            col1,
-                            col2,
+                          color1,
+                            color2
                         )
                     )
                 }
@@ -407,8 +413,6 @@ fun LiquidGlassScreen(
     }
 }
 
-
-
 fun generateGradientColors(color1: Color, color2: Color, steps: Int = 6): List<Color> {
     val colors = buildList {
         for (i in 0 until steps) {
@@ -497,8 +501,6 @@ fun IgorScreen(modifier: Modifier, quote: Quote) {
     }
 
 }
-
-
 
 @Preview(showSystemUi = true)
 @Composable

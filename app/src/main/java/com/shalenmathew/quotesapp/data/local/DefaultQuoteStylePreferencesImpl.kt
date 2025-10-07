@@ -12,13 +12,12 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
 
     override fun saveDefaultQuoteStyle(quoteStyle: QuoteStyle) {
         val quoteStyleString = when (quoteStyle) {
-            is QuoteStyle.DefaultTheme -> "DefaultTheme"
-            is QuoteStyle.CodeSnippetTheme -> "CodeSnippetTheme"
-            is QuoteStyle.LiquidGlassTheme -> "LiquidGlassTheme"
-//            is QuoteStyle.SpotifyTheme -> "SpotifyTheme"
-            is QuoteStyle.bratTheme -> "bratTheme"
-            is QuoteStyle.igorTheme -> "igorTheme"
-            QuoteStyle.ReminderTheme -> "ReminderTheme"
+            QuoteStyle.DEFAULT_THEME -> "DefaultTheme"
+            QuoteStyle.CODE_SNIPPET_THEME -> "CodeSnippetTheme"
+            QuoteStyle.LIQUID_GLASS_THEME -> "LiquidGlassTheme"
+            QuoteStyle.BRAT_THEME -> "bratTheme"
+            QuoteStyle.IGOR_THEME -> "igorTheme"
+            QuoteStyle.REMINDER_THEME -> "ReminderTheme"
         }
         sharedPreferences.edit {
             putString(QUOTE_STYLE_KEY, quoteStyleString)
@@ -27,13 +26,13 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
 
     override fun getDefaultQuoteStyle(): QuoteStyle {
         return when (sharedPreferences.getString(QUOTE_STYLE_KEY, "DefaultTheme")) {
-            "CodeSnippetTheme" -> QuoteStyle.CodeSnippetTheme
+            "CodeSnippetTheme" -> QuoteStyle.CODE_SNIPPET_THEME
 //            "SpotifyTheme" -> QuoteStyle.SpotifyTheme
-            "bratTheme" -> QuoteStyle.bratTheme
-            "igorTheme" -> QuoteStyle.igorTheme
-            "LiquidGlassTheme" -> QuoteStyle.LiquidGlassTheme
-            "ReminderTheme" -> QuoteStyle.ReminderTheme
-            else -> QuoteStyle.DefaultTheme
+            "bratTheme" -> QuoteStyle.BRAT_THEME
+            "igorTheme" -> QuoteStyle.IGOR_THEME
+            "LiquidGlassTheme" -> QuoteStyle.LIQUID_GLASS_THEME
+            "ReminderTheme" -> QuoteStyle.REMINDER_THEME
+            else -> QuoteStyle.DEFAULT_THEME
         }
     }
 

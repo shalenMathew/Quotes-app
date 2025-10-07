@@ -71,7 +71,7 @@ import dev.chrisbanes.haze.hazeChild
  /** DEFAULT STYLE */
 //@Preview
 @Composable
-fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
+fun DefaultQuoteCard(modifier: Modifier = Modifier, quote: Quote) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -145,7 +145,7 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
 
 /** CODE SNIPPET STYLE */
 @Composable
-fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
+fun CodeSnippetStyleQuoteCard(modifier: Modifier = Modifier, quote: Quote) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -221,7 +221,7 @@ fun CircleDot(color: Color) {
 
 /** brat THEME STYLE */
 @Composable
-fun BratScreen(modifier: Modifier,quote: Quote) {
+fun BratScreen(modifier: Modifier = Modifier, quote: Quote) {
 
     Box(
         modifier = modifier
@@ -245,7 +245,7 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
 //@Preview
 @Composable
 fun LiquidGlassScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     quote: Quote,
     color1: Color,
     color2: Color
@@ -436,7 +436,7 @@ fun lerp(color1: Color, color2: Color, t: Float): Color {
 
 /** IGOR THEME STYLE */
 @Composable
-fun IgorScreen(modifier: Modifier, quote: Quote) {
+fun IgorScreen(modifier: Modifier = Modifier, quote: Quote) {
 
     Box(
         modifier = modifier

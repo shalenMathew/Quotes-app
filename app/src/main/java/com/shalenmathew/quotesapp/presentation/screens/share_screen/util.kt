@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,7 @@ import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.shalenmathew.quotesapp.R
 import java.io.File
 
 /**  this util scope  limited to share screen */
@@ -121,19 +123,13 @@ fun shareImg(context: Context , bitmap: Bitmap){
 
 }
 
-sealed class QuoteStyle()
-{
-
-    object DefaultTheme : QuoteStyle()
-    object CodeSnippetTheme : QuoteStyle()
-
-    object LiquidGlassTheme : QuoteStyle()
-//    object SpotifyTheme: QuoteStyle()
-    object bratTheme : QuoteStyle()
-    object igorTheme : QuoteStyle()
-
-    object ReminderTheme : QuoteStyle()
-
+enum class QuoteStyle(val title: String, @DrawableRes val image: Int) {
+    CODE_SNIPPET_THEME(title = "Code Snippet", image = R.drawable.sample_code_snippet),
+    BRAT_THEME(title = "brat Theme", image = R.drawable.sample_brat_theme),
+    IGOR_THEME(title = "IGOR Theme", image = R.drawable.sample_igor),
+    DEFAULT_THEME(title = "Default Theme", image = R.drawable.sample_default_style),
+    LIQUID_GLASS_THEME(title = "Liquid Glass", image = R.drawable.sample_liquid_glass),
+    REMINDER_THEME(title = "Reminder theme", image = R.drawable.sample_reminder_2),
 }
 
 @Composable

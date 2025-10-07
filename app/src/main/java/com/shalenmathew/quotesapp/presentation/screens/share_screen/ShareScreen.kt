@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -101,8 +102,7 @@ fun ShareScreen(
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
     Column (
-        modifier = Modifier
-            .statusBarsPadding()
+        modifier = Modifier.padding(paddingValues)
             .background(color = Color.Black)
             .fillMaxSize(),
     ) {

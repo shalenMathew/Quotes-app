@@ -566,7 +566,6 @@ fun ReminderStyle (
                 )
             }
         }
-
 }
 
 

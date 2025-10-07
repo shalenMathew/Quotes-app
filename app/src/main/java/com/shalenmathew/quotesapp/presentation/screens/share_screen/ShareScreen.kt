@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -109,18 +111,16 @@ fun ShareScreen(
 
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
-    Box(
-        modifier = Modifier
-            .padding(paddingValues = paddingValues)
+    Column (
+        modifier = Modifier.padding(paddingValues)
             .background(color = Color.Black)
             .fillMaxSize(),
     ) {
 
         Box(modifier = Modifier
-            .wrapContentSize()
-            .align(Alignment.Center)) {
-
-//            Spacer(modifier = Modifier.weight(1f))
+            .weight(.9f),
+            contentAlignment = Alignment.Center
+        ) {
 
             if (quote != null) {
 //                CaptureBitmap(quoteData = quote,
@@ -160,15 +160,12 @@ fun ShareScreen(
                 Toast.makeText(context, "quote is null", Toast.LENGTH_SHORT).show()
             }
 
-//            Spacer(modifier = Modifier.weight(1f))
-
         }
 
         Box(
             modifier = Modifier.fillMaxWidth()
-                .wrapContentHeight()
-                .background(color = Color.Black)
-                .align(Alignment.BottomEnd),
+                .weight(.1f)
+                .background(color = Color.Black),
             contentAlignment = Alignment.BottomEnd
         )
         {
@@ -179,7 +176,6 @@ fun ShareScreen(
                     .padding(horizontal = 50.dp, vertical = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
-
                 AnimatedVisibility(
                     visible = quoteStyleState == QuoteStyle.LiquidGlassTheme
                 ) {

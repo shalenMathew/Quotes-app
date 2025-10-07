@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -39,7 +40,7 @@ import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import java.io.File
 
-/**  util limited to share screen */
+/**  this util scope  limited to share screen */
 fun saveImgInGallery(context: Context , bitmap: Bitmap) {
 
     val fileName = "quote_${System.currentTimeMillis()}.png"
@@ -120,7 +121,8 @@ fun shareImg(context: Context , bitmap: Bitmap){
 
 }
 
-sealed class QuoteStyle(){
+sealed class QuoteStyle()
+{
 
     object DefaultTheme : QuoteStyle()
     object CodeSnippetTheme : QuoteStyle()
@@ -208,4 +210,19 @@ fun CustomPickerDialog(
             shape = MaterialTheme.shapes.extraLarge
         ) { content() }
     }
+}
+
+
+fun Color.lighten(factor: Float = 1.3f): Color {
+    val hsv = FloatArray(3)
+    android.graphics.Color.colorToHSV(this.toArgb(), hsv)
+    hsv[2] = (hsv[2] * factor).coerceIn(0f, 1f)  // Increase brightness
+    return Color(android.graphics.Color.HSVToColor(hsv))
+}
+
+fun Color.darken(factor: Float = 0.7f): Color {
+    val hsv = FloatArray(3)
+    android.graphics.Color.colorToHSV(this.toArgb(), hsv)
+    hsv[2] = (hsv[2] * factor).coerceIn(0f, 1f)  // Decrease brightness
+    return Color(android.graphics.Color.HSVToColor(hsv))
 }

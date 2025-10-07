@@ -1,21 +1,215 @@
-name: ⭐ github-repo-stats
+name: "Enhanced github-repo-stats"
 
 on:
   schedule:
-    # Run this once per day, towards the end of the day for keeping the most
-    # recent data point most meaningful (hours are interpreted in UTC).
-    - cron: "0 23 * * *"
-  workflow_dispatch: # Allow for running this manually.
+    - cron: "0 23 * * *"    # daily at 23:00 UTC
+  workflow_dispatch:         # allow manual runs
 
 jobs:
-  j1:
-    name: github-repo-stats
+  generate-stats:
+    name: Generate enhanced repo stats
     runs-on: ubuntu-latest
+
+    env:
+      REPO_OWNER: ${{ github.repository_owner }}
+      REPO_NAME: ${{ github.event.repository.name || github.repository.split('/')[1] }}
+      OUTPUT_FILE: repo-stats.md
+      TOKEN: ${{ secrets.GHRS_GITHUB_API_TOKEN }}   # required; you may use GITHUB_TOKEN but traffic endpoints may need more scope
+
     steps:
-      - name: run-ghrs
-        # Use latest release.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run basic github-repo-stats (latest release)
         uses: jgehrcke/github-repo-stats@RELEASE
         with:
-          ghtoken: ${{ secrets.ghrs_github_api_token }}
+          ghtoken: ${{ secrets.GHRS_GITHUB_API_TOKEN }}
+          # optional inputs supported by the action can be passed here per its README
+          # e.g. format: md, output: "ghrs.md" (see action docs)
 
+      - name: Install GitHub CLI (gh) & jq
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+          # gh is preinstalled on runners in many images; ensure version available
+          if ! command -v gh >/dev/null 2>&1; then
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
+              sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+            sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+              | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt update
+            sudo apt install -y gh
+          fi
+          gh --version
+        shell: bash
+
+      - name: Authenticate gh (use PAT or GITHUB_TOKEN)
+        run: |
+          # prefer using the secret token; fallback to GITHUB_TOKEN if secret not set
+          if [ -n "${{ secrets.GHRS_GITHUB_API_TOKEN }}" ]; then
+            echo "${{ secrets.GHRS_GITHUB_API_TOKEN }}" | gh auth login --with-token
+          else
+            echo "${{ github.token }}" | gh auth login --with-token
+          fi
+        shell: bash
+
+      - name: Gather extra repo metrics via GitHub API
+        id: metrics
+        run: |
+          OWNER="${REPO_OWNER}"
+          REPO="${REPO_NAME}"
+          echo "Collecting metrics for $OWNER/$REPO"
+
+          # repo metadata
+          repo_json=$(gh api repos/$OWNER/$REPO)
+          stars=$(echo "$repo_json" | jq -r '.stargazers_count // 0')
+          forks=$(echo "$repo_json" | jq -r '.forks_count // 0')
+          watchers=$(echo "$repo_json" | jq -r '.subscribers_count // 0')
+          open_issues=$(echo "$repo_json" | jq -r '.open_issues_count // 0')
+          created_at=$(echo "$repo_json" | jq -r '.created_at')
+          pushed_at=$(echo "$repo_json" | jq -r '.pushed_at')
+
+          # languages
+          languages_json=$(gh api repos/$OWNER/$REPO/languages)
+
+          # contributors (first 500)
+          contributors_json=$(gh api repos/$OWNER/$REPO/contributors --paginate -q '.[] | {login: .login, contributions: .contributions}' 2>/dev/null || echo "[]")
+          contributor_count=$(echo "$contributors_json" | jq -s 'length')
+
+          # commit activity (last year weekly)
+          commit_activity=$(gh api repos/$OWNER/$REPO/stats/commit_activity || echo "[]")
+          total_commits_last_year=$(echo "$commit_activity" | jq '[.[].total] | add // 0')
+
+          # traffic: views & clones (may need repo scope)
+          views_json=$(gh api repos/$OWNER/$REPO/traffic/views || echo '{}')
+          clones_json=$(gh api repos/$OWNER/$REPO/traffic/clones || echo '{}')
+
+          views_count=$(echo "$views_json" | jq -r '.count // 0')
+          views_uniques=$(echo "$views_json" | jq -r '.uniques // 0')
+          clones_count=$(echo "$clones_json" | jq -r '.count // 0')
+          clones_uniques=$(echo "$clones_json" | jq -r '.uniques // 0')
+
+          # issues and PRs summary
+          open_prs=$(gh api search/issues -f q="repo:$OWNER/$REPO is:pr is:open" -f per_page=1 | jq -r '.total_count // 0')
+          closed_prs=$(gh api search/issues -f q="repo:$OWNER/$REPO is:pr is:closed" -f per_page=1 | jq -r '.total_count // 0')
+          open_issues_only=$(gh api search/issues -f q="repo:$OWNER/$REPO is:issue is:open" -f per_page=1 | jq -r '.total_count // 0')
+          closed_issues_only=$(gh api search/issues -f q="repo:$OWNER/$REPO is:issue is:closed" -f per_page=1 | jq -r '.total_count // 0')
+
+          # print debug to logs
+          echo "stars=${stars}"
+          echo "forks=${forks}"
+          echo "watchers=${watchers}"
+          echo "open_issues=${open_issues}"
+          echo "contributors=${contributor_count}"
+          echo "commits_last_year=${total_commits_last_year}"
+          echo "views=${views_count} (unique: ${views_uniques})"
+          echo "clones=${clones_count} (unique: ${clones_uniques})"
+
+          # Persist JSON outputs as action outputs (base64 to avoid newlines issues)
+          echo "::set-output name=repo_json::$(printf '%s' "$repo_json" | base64 -w0)"
+          echo "::set-output name=languages_json::$(printf '%s' "$languages_json" | base64 -w0)"
+          echo "::set-output name=contributors_json::$(printf '%s' "$contributors_json" | base64 -w0)"
+          echo "::set-output name=commit_activity::$(printf '%s' "$commit_activity" | base64 -w0)"
+          echo "::set-output name=views_json::$(printf '%s' "$views_json" | base64 -w0)"
+          echo "::set-output name=clones_json::$(printf '%s' "$clones_json" | base64 -w0)"
+          echo "::set-output name=stars::${stars}"
+          echo "::set-output name=forks::${forks}"
+          echo "::set-output name=watchers::${watchers}"
+          echo "::set-output name=contributors_count::${contributor_count}"
+          echo "::set-output name=commits_last_year::${total_commits_last_year}"
+          echo "::set-output name=views_count::${views_count}"
+          echo "::set-output name=clones_count::${clones_count}"
+          echo "::set-output name=open_prs::${open_prs}"
+          echo "::set-output name=closed_prs::${closed_prs}"
+          echo "::set-output name=open_issues_only::${open_issues_only}"
+          echo "::set-output name=closed_issues_only::${closed_issues_only}"
+
+        shell: bash
+
+      - name: Build Markdown report
+        id: build_report
+        run: |
+          OWNER=${REPO_OWNER}
+          REPO=${REPO_NAME}
+          OUT=${OUTPUT_FILE}
+          mkdir -p stats
+          cat > $OUT <<'MD'
+  # Repository stats report
+  _Generated: '"$(date -u +"%Y-%m-%d %H:%M:%SZ")"'_
+
+  ## Overview
+  MD
+
+          # decode repo JSON and extract nice fields
+          repo_json=$(echo "${{ steps.metrics.outputs.repo_json }}" | base64 --decode)
+          stars=${{ steps.metrics.outputs.stars }}
+          forks=${{ steps.metrics.outputs.forks }}
+          watchers=${{ steps.metrics.outputs.watchers }}
+          contributors=${{ steps.metrics.outputs.contributors_count }}
+          commits_last_year=${{ steps.metrics.outputs.commits_last_year }}
+          views_count=${{ steps.metrics.outputs.views_count }}
+          clones_count=${{ steps.metrics.outputs.clones_count }}
+          open_prs=${{ steps.metrics.outputs.open_prs }}
+          closed_prs=${{ steps.metrics.outputs.closed_prs }}
+          open_issues=${{ steps.metrics.outputs.open_issues_only }}
+          closed_issues=${{ steps.metrics.outputs.closed_issues_only }}
+
+          cat >> $OUT <<EOF
+  - **Repository:** ${OWNER}/${REPO}
+  - **Stars:** ${stars}
+  - **Forks:** ${forks}
+  - **Watchers:** ${watchers}
+  - **Contributors:** ${contributors}
+  - **Commits (last 52 weeks):** ${commits_last_year}
+  - **Views (period):** ${views_count}
+  - **Clones (period):** ${clones_count}
+  - **Open PRs:** ${open_prs}
+  - **Closed PRs:** ${closed_prs}
+  - **Open issues:** ${open_issues}
+  - **Closed issues:** ${closed_issues}
+  EOF
+
+          # languages table
+          echo "## Languages" >> $OUT
+          echo '```text' >> $OUT
+          echo "${{ steps.metrics.outputs.languages_json }}" | base64 --decode | jq -r 'to_entries[] | " - \(.key): \(.value) bytes"' >> $OUT 2>/dev/null || echo " (no languages data)" >> $OUT
+          echo '```' >> $OUT
+
+          # top contributors (if available)
+          echo "## Top contributors (by commit count, first page)" >> $OUT
+          echo '```text' >> $OUT
+          echo "${{ steps.metrics.outputs.contributors_json }}" | base64 --decode | jq -r '. | .[] | "- \(.login): \(.contributions) commits"' | head -n 20 >> $OUT 2>/dev/null || echo " (no contributors data)" >> $OUT
+          echo '```' >> $OUT
+
+          # Save to stats dir for artifact
+          mkdir -p stats
+          mv $OUT stats/$OUT
+          echo "Wrote stats/stats/$OUT"
+
+        shell: bash
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-stats-report
+          path: stats/${OUTPUT_FILE}
+
+      # Optional: commit the report back to the repository (uncomment if you want this)
+      - name: Commit report back to repo (optional)
+        if: ${{ env.COMMIT_REPORT == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GHRS_GITHUB_API_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b repo-stats-update || true
+          mkdir -p stats
+          mv stats/${OUTPUT_FILE} stats/${OUTPUT_FILE}
+          git add stats/${OUTPUT_FILE}
+          git commit -m "chore(stats): update repo stats [skip ci]" || echo "No changes to commit"
+          # push using the token
+          git push "https://${GH_TOKEN}@github.com/${{ github.repository }}.git" --set-upstream origin repo-stats-update --force
 

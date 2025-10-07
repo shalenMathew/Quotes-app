@@ -59,6 +59,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -83,6 +86,11 @@ fun FavScreen(paddingValues: PaddingValues,
 
     val state = quoteViewModel.favQuoteState.value
 
+    val tabItems = listOf<TabItem>(
+        TabItem("Fav"),
+        TabItem("Custom")
+    )
+
     // fields related to search box
     var clickedSearch by remember {
         mutableStateOf(false)
@@ -98,6 +106,10 @@ fun FavScreen(paddingValues: PaddingValues,
         derivedStateOf {
             pullRefreshState.distanceFraction > 1f
         }
+    }
+
+    var selectedTabIndex by remember {
+        mutableIntStateOf(0)
     }
 
 
@@ -229,33 +241,46 @@ fun FavScreen(paddingValues: PaddingValues,
                 )
             )
 
+            TabRow( selectedTabIndex =selectedTabIndex ) {
 
-            if(state.dataList.isNotEmpty()){
+                tabItems.forEachIndexed { index, tabItem ->
+                    Tab(selected = index == selectedTabIndex,
+                        onClick = {
+                            selectedTabIndex = index
 
-                LazyColumn(modifier=Modifier.fillMaxSize()) {
-                    itemsIndexed(state.dataList) {  index, quoteItem ->
-                        FavQuoteItem(quoteItem, quoteViewModel,navHost, modifier =  Modifier
-                            .zIndex((state.dataList.size- index).toFloat())
-                            .graphicsLayer {
-                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
-                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
-                                    .roundToPx()
-                                    .toFloat()
-                            })
-
-                    }
+                        },
+                        text = { Text(text = tabItem.tabTitle) })
                 }
 
-
-            }else{
-
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                    Text("Looks empty...",
-                        color = White,
-                        fontFamily = GIFont,
-                    )
-                }
             }
+
+//            if(state.dataList.isNotEmpty()){
+//
+//                LazyColumn(modifier=Modifier.fillMaxSize()) {
+//                    itemsIndexed(state.dataList) {  index, quoteItem ->
+//                        FavQuoteItem(quoteItem, quoteViewModel,navHost, modifier =  Modifier
+//                            .zIndex((state.dataList.size- index).toFloat())
+//                            .graphicsLayer {
+//                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
+//                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
+//                                    .roundToPx()
+//                                    .toFloat()
+//                            })
+//
+//                    }
+//                }
+//
+//
+//            }
+//            else{
+//
+//                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+//                    Text("Looks empty...",
+//                        color = White,
+//                        fontFamily = GIFont,
+//                    )
+//                }
+//            }
 
 
         }
@@ -387,3 +412,5 @@ fun Modifier.animatedBorder
         drawIndicator(provideProgress(), pmCcw)
     }
 }
+
+data class TabItem(val tabTitle : String)

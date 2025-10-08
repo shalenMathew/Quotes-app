@@ -199,10 +199,18 @@ fun CaptureBitmap(
                 IgorScreen(modifier = Modifier, quoteData)
             }
             QuoteStyle.LiquidGlassTheme -> {
-                LiquidGlassScreen(modifier = Modifier, quoteData)
+                LiquidGlassScreen(
+                    modifier = Modifier, 
+                    quote = quoteData,
+                    color1 = Color(0xFFf093fb),
+                    color2 = Color(0xFF0022BB)
+                )
             }
             QuoteStyle.NeonTheme -> {
                 NeonThemeScreen(modifier = Modifier, quoteData)
+            }
+            QuoteStyle.ReminderTheme -> {
+                ReminderStyle(modifier = Modifier, quote = quoteData)
             }
             else -> { }
         }

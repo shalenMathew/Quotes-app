@@ -555,6 +555,8 @@ fun NeonThemeScreen(modifier: Modifier, quote: Quote) {
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 8.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center
                 )
             }
         }

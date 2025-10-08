@@ -218,6 +218,7 @@ fun CaptureBitmap(
             QuoteStyle.NeonTheme -> {
                 NeonThemeScreen(modifier = Modifier, quoteData)
             }
+            else -> { }
         }
     }
 }

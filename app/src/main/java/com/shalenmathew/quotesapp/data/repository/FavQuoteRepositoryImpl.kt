@@ -10,10 +10,10 @@ class FavQuoteRepositoryImpl (private val db: QuoteDatabase):FavQuoteRepository 
     override fun getAllLikedQuotes(query: String): Flow<List<Quote>> {
 
         return if (query.isNotBlank()){
-            return db.getQuoteDao().searchForQuotes(query)
+            db.getQuoteDao().searchForQuotes(query)
 
         }else{
-          return  db.getQuoteDao().getAllLikedQuotes()
+            db.getQuoteDao().getAllLikedQuotes()
         }
     }
 

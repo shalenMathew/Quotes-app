@@ -18,6 +18,7 @@ import com.shalenmathew.quotesapp.domain.repository.QuoteRepository
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.GetFavQuote
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
@@ -43,8 +44,8 @@ object AppModule {
 
     @Singleton
     @Provides
-fun providesQuoteUsecase(getQuote: GetQuote, likedQuote: LikedQuote): QuoteUseCase {
-return QuoteUseCase(getQuote = getQuote, likedQuote =likedQuote )
+fun providesQuoteUsecase(getQuote: GetQuote, likedQuote: LikedQuote, getLikedQuotes: GetLikedQuotes): QuoteUseCase {
+return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes = getLikedQuotes)
 }
 
     @Singleton

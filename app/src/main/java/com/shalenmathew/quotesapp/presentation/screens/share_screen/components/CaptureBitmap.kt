@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.PixelCopy
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,14 +17,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.draw
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -147,38 +152,22 @@ import kotlin.coroutines.resume
 
 @Composable
 fun CaptureBitmap(
-    quoteData: Quote,
-    quoteStyleState: QuoteStyle,
     triggerCapture: Boolean,
-    onCapture: (ImageBitmap) -> Unit
+    onCapture: (ImageBitmap) -> Unit,
+    content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     val view = LocalView.current
     val coroutineScope = rememberCoroutineScope()
-    var capturedImg by remember { mutableStateOf<ImageBitmap?>(null) }
-
-    LaunchedEffect(quoteStyleState) {
-
-        coroutineScope.launch(Dispatchers.Main) {
-            try {
-
-                if (triggerCapture) {
-
-                    delay(50)
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
 
     Box(
         modifier = Modifier.onGloballyPositioned { coordinates ->
-
             if (triggerCapture) {
                 coroutineScope.launch(Dispatchers.Main) {
                     try {
+
+                        delay(100)
+
                         val bounds = coordinates.boundsInRoot()
                         val bitmap = captureView(
                             context as Activity,
@@ -188,10 +177,7 @@ fun CaptureBitmap(
                             bounds.width.toInt(),
                             bounds.height.toInt()
                         )
-
-                        bitmap?.let {
-                            onCapture(it.asImageBitmap())
-                        }
+                        bitmap?.let { onCapture(it.asImageBitmap()) }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -199,28 +185,89 @@ fun CaptureBitmap(
             }
         }
     ) {
-        when(quoteStyleState) {
-            is QuoteStyle.DefaultTheme -> {
-                DefaultQuoteCard(modifier = Modifier, quoteData)
-            }
-            QuoteStyle.CodeSnippetTheme -> {
-                CodeSnippetStyleQuoteCard(modifier = Modifier, quoteData)
-            }
-            QuoteStyle.bratTheme -> {
-                BratScreen(modifier = Modifier, quoteData)
-            }
-            QuoteStyle.igorTheme -> {
-                IgorScreen(modifier = Modifier, quoteData)
-            }
-            QuoteStyle.LiquidGlassTheme -> {
-                LiquidGlassScreen(modifier = Modifier, quoteData)
-            }
-            QuoteStyle.NeonTheme -> {
-                NeonThemeScreen(modifier = Modifier, quoteData)
-            }
-        }
+        content()
     }
 }
+
+
+
+//@Composable
+//fun CaptureBitmap(
+//    quoteData: Quote,
+//    quoteStyleState: QuoteStyle,
+//    triggerCapture: Boolean,
+//    onCapture: (ImageBitmap) -> Unit
+//) {
+//    val context = LocalContext.current
+//    val view = LocalView.current
+//    val coroutineScope = rememberCoroutineScope()
+//    var capturedImg by remember { mutableStateOf<ImageBitmap?>(null) }
+//
+//    LaunchedEffect(quoteStyleState) {
+//
+//        coroutineScope.launch(Dispatchers.Main) {
+//            try {
+//
+//                if (triggerCapture) {
+//
+//                    delay(50)
+//                }
+//
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//    }
+//
+//    Box(
+//        modifier = Modifier.onGloballyPositioned { coordinates ->
+//
+//            if (triggerCapture) {
+//                coroutineScope.launch(Dispatchers.Main) {
+//                    try {
+//                        val bounds = coordinates.boundsInRoot()
+//                        val bitmap = captureView(
+//                            context as Activity,
+//                            view,
+//                            bounds.left.toInt(),
+//                            bounds.top.toInt(),
+//                            bounds.width.toInt(),
+//                            bounds.height.toInt()
+//                        )
+//
+//                        bitmap?.let {
+//                            onCapture(it.asImageBitmap())
+//                        }
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                    }
+//                }
+//            }
+//        }
+//    ) {
+//        when(quoteStyleState) {
+//            is QuoteStyle.DefaultTheme -> {
+//                DefaultQuoteCard(modifier = Modifier, quoteData)
+//            }
+//            QuoteStyle.CodeSnippetTheme -> {
+//                CodeSnippetStyleQuoteCard(modifier = Modifier, quoteData)
+//            }
+//            QuoteStyle.bratTheme -> {
+//                BratScreen(modifier = Modifier, quoteData)
+//            }
+//            QuoteStyle.igorTheme -> {
+//                IgorScreen(modifier = Modifier, quoteData)
+//            }
+//            QuoteStyle.LiquidGlassTheme -> {
+//                LiquidGlassScreen(modifier = Modifier, quoteData)
+//            }
+//
+//            QuoteStyle.ReminderTheme -> {
+//                ReminderStyle(modifier = Modifier, quoteData)
+//            }
+//        }
+//    }
+//}
 
 
 

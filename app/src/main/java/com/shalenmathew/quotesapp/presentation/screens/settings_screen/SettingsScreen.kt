@@ -85,7 +85,8 @@ fun SettingsScreen(paddingValues: PaddingValues) {
                     contentAlignment = Alignment.Center)
                 {
                     Text(
-                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
+//                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
+                        text = "made with ❤\uFE0F by Shalen Mathew (debug.mode)",
                         fontSize = 12.sp,
                         color = Color.White,
                         fontFamily = Poppins,
@@ -102,7 +103,8 @@ fun SettingsScreen(paddingValues: PaddingValues) {
                     contentAlignment = Alignment.Center)
                 {
                     Text(
-                        text = "made with \uD83E\uDD75 by Shalen Mathew",
+//                        text = "made with \uD83E\uDD75 by Shalen Mathew",
+                        text = "made with ❤\uFE0F by Shalen Mathew",
                         fontSize = 12.sp,
                         color = Color.White,
                         fontFamily = Poppins,

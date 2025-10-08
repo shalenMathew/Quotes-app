@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -16,10 +17,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -43,6 +47,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +55,8 @@ import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.darken
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.lighten
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
 import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
@@ -93,7 +100,7 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
                 painter = painterResource(id = R.drawable.quotation),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding( horizontal = 15.dp,vertical = 20.dp)
+                    .padding(horizontal = 15.dp, vertical = 20.dp)
                     .size(25.dp)
                     .align(Alignment.TopStart),
                 contentScale = ContentScale.Crop
@@ -112,7 +119,9 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
                     lineHeight = 38.sp,
                     color = Color.White,
                     fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
-                    modifier = Modifier.padding(top = 12.dp).align(Alignment.Start)
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .align(Alignment.Start)
                 )
 
                 Text(
@@ -146,7 +155,7 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(Violet)
+            .background( Color.LightGray)
     ) {
         Card (
             modifier = Modifier
@@ -216,8 +225,6 @@ fun CircleDot(color: Color) {
     )
 }
 
-
-
 /** brat THEME STYLE */
 @Composable
 fun BratScreen(modifier: Modifier,quote: Quote) {
@@ -245,9 +252,15 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
 @Composable
 fun LiquidGlassScreen(
     modifier: Modifier,
-    quote: Quote
+    quote: Quote,
+    color1: Color,
+    color2: Color
 )
 {
+//
+//    val gradLight = color1.lighten(2f)
+//    val gradDark = color2.darken(2f)
+
 
     val hazeState = remember { HazeState() }
 
@@ -271,8 +284,8 @@ fun LiquidGlassScreen(
 
 
 
-    val col1: Color = Color(0xFF0030CC)
-    val col2: Color = Color(0xFFf093fb)
+//    val col1: Color = Color(0xFF0030CC)
+//    val col2: Color = Color(0xFFf093fb)
 
 
     /** box with blur effect  */
@@ -289,15 +302,15 @@ fun LiquidGlassScreen(
             .shaderBackground(
                 MeshGradient(
                     colors = generateGradientColors(
-                        col1,
-                        col2,
+                        color1,
+                        color2
                     ).toTypedArray()
                 ),
                 fallback = {
                     Brush.horizontalGradient(
                         generateGradientColors(
-                            col1,
-                            col2,
+                          color1,
+                            color2
                         )
                     )
                 }
@@ -363,8 +376,10 @@ fun LiquidGlassScreen(
                 modifier = Modifier
                     .wrapContentHeight()
                     .fillMaxWidth()
-                    .padding( textPadding, end = textPadding,
-                        bottom = 40.dp)
+                    .padding(
+                        textPadding, end = textPadding,
+                        bottom = 40.dp
+                    )
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -403,8 +418,6 @@ fun LiquidGlassScreen(
         }
     }
 }
-
-
 
 fun generateGradientColors(color1: Color, color2: Color, steps: Int = 6): List<Color> {
     val colors = buildList {
@@ -495,6 +508,71 @@ fun IgorScreen(modifier: Modifier, quote: Quote) {
 
 }
 
+@Preview(showSystemUi = true)
+@Composable
+fun ReminderStyle (
+    modifier: Modifier = Modifier,
+    quote: Quote = Quote(quote = "Pausing for a moment to look to inspiring leaders", author = "Unknown", liked = true),
+    bgColor: Color = Color.LightGray,
+    textColor: Color = Color(0xFF4B6AD1),
+    cardBgColor : Color = Color(0xFFE3EDFD)
+) {
+
+
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight(.8f)
+                .background(bgColor)
+                .wrapContentSize(Alignment.Center),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(.8f)
+                    .wrapContentHeight()
+                    .shadow(elevation = 20.dp, shape = RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(cardBgColor)
+
+            ) {
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 15.dp, horizontal = 20.dp),
+                    text = "Reminder",
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = quote.quote,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp, horizontal = 20.dp),
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 15.sp
+                )
+
+                HorizontalDivider()
+
+                Text(
+                    text = "Okay",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 15.dp),
+                    color = textColor,
+                    textAlign = TextAlign.Center,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+}
 
 /** NEON THEME STYLE */
 @Composable

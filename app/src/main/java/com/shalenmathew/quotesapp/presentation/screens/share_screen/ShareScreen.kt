@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -25,7 +27,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -52,10 +53,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CodeSnippetStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DefaultQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
-import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,6 +80,14 @@ fun ShareScreen(
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
     var triggerCapture by remember { mutableStateOf(false) }
     var pendingAction by remember { mutableStateOf<String?>(null) }
+
+
+
+    var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
+    var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
+
+    var showColorPicker by remember { mutableStateOf(false) }
+    var editTarget by remember { mutableStateOf("start") }
 
     LaunchedEffect(Unit) {
         quoteStyleState = viewModel.getDefaultQuoteStyle()
@@ -97,42 +111,61 @@ fun ShareScreen(
 
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
-    Box(
-        modifier = Modifier
-            .padding(paddingValues = paddingValues)
+    Column (
+        modifier = Modifier.padding(paddingValues)
             .background(color = Color.Black)
             .fillMaxSize(),
     ) {
 
         Box(modifier = Modifier
-            .wrapContentSize()
-            .align(Alignment.Center)) {
-
-//            Spacer(modifier = Modifier.weight(1f))
+            .weight(.9f),
+            contentAlignment = Alignment.Center
+        ) {
 
             if (quote != null) {
-                CaptureBitmap(quoteData = quote,
-                    quoteStyleState,
-                    triggerCapture = triggerCapture
-                ) { capturedBitmap ->
+//                CaptureBitmap(quoteData = quote,
+//                    quoteStyleState,
+//                    triggerCapture = triggerCapture
+//                ) { capturedBitmap ->
+//
+//                    imgBitmap = capturedBitmap
+//                    triggerCapture = false
+//                }
 
-                    imgBitmap = capturedBitmap
-                    triggerCapture = false
+                CaptureBitmap(
+                    triggerCapture = triggerCapture,
+                    onCapture = { capturedBitmap ->
+                        imgBitmap = capturedBitmap
+                        triggerCapture = false
+                    }
+                ) {
+                    // All style rendering happens here with access to ShareScreen's state
+                    when (quoteStyleState) {
+                        QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
+                        QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
+                        QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
+                        QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
+                        QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
+                            modifier = Modifier,
+                            quote = quote,
+                            color1 = liquidStartColor,  // from ShareScreen state
+                            color2 = liquidEndColor     // from ShareScreen state
+                        )
+                        QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
+                    }
                 }
+
             } else {
                 Log.d("TAG", "ShareScreen: quote is null")
                 Toast.makeText(context, "quote is null", Toast.LENGTH_SHORT).show()
             }
 
-//            Spacer(modifier = Modifier.weight(1f))
-
         }
 
         Box(
             modifier = Modifier.fillMaxWidth()
-                .wrapContentHeight()
-                .background(color = Color.Black)
-                .align(Alignment.BottomEnd),
+                .weight(.1f)
+                .background(color = Color.Black),
             contentAlignment = Alignment.BottomEnd
         )
         {
@@ -143,17 +176,18 @@ fun ShareScreen(
                     .padding(horizontal = 50.dp, vertical = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
-
                 AnimatedVisibility(
-                    visible = true
+                    visible = quoteStyleState == QuoteStyle.LiquidGlassTheme
                 ) {
                     Row {
                         IconButton(
                             onClick = {
+                                editTarget = "start"
+                                showColorPicker = true
 
                             },
                             colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = Color.Red
+                                containerColor = liquidStartColor
                             ),
 //                            shape = MaterialTheme.shapes.extraLarge,
                             content = {}
@@ -161,10 +195,11 @@ fun ShareScreen(
 
                         IconButton(
                             onClick = {
-
+                                editTarget = "end"
+                                showColorPicker = true
                             },
                             colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = Color.White
+                                containerColor = liquidEndColor
                             ),
                             content = {}
                         )
@@ -204,6 +239,23 @@ fun ShareScreen(
 
     }
 
+
+    // COLOR PICKER DIALOG
+    if (showColorPicker){
+        CustomPickerDialog(
+            initialColor = if (editTarget == "start") liquidStartColor else liquidEndColor,
+            onSelect = { selectedColor ->
+                if (editTarget == "start") {
+                    liquidStartColor = selectedColor
+                } else {
+                    liquidEndColor = selectedColor
+                }
+            },
+            onDismiss = { showColorPicker = false }
+        )
+    }
+
+    // BOTTOM SHEET
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = {showSheet=false},
@@ -219,7 +271,6 @@ fun ShareScreen(
                 ,horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // HACKTOBER FEST
 
                 Text(text = "Customize Your Quotes",
                     fontSize = 25.sp,
@@ -461,11 +512,72 @@ fun ShareScreen(
                     }
                 }
 
-            }
+                /* REMINDER THEME */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
+                {
 
+                    Text(text = "Reminder theme",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+//                    Row(modifier = Modifier.fillMaxWidth()
+//                        .wrapContentHeight())
+//                    {
+//
+//                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+//
+//                            ReminderStyleCover(
+//                                modifier = Modifier.size(200.dp).background(Color.Blue)
+//                                .clickable {
+//                                    quoteStyleState = QuoteStyle.ReminderTheme
+//                                    showSheet = false
+//                                },
+//                            )
+//                            Checkbox(
+//                                modifier = Modifier.align(Alignment.BottomEnd),
+//                                checked = quoteStyleState == QuoteStyle.ReminderTheme,
+//                                onCheckedChange = { isChecked ->
+//                                    if (isChecked) {
+//                                        quoteStyleState = QuoteStyle.ReminderTheme
+//                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+//                                    }
+//                                }
+//                            )
+//                        }
+//                    }
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            Image(
+                                painter = painterResource(R.drawable.sample_reminder_2),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.ReminderTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = quoteStyleState == QuoteStyle.ReminderTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        quoteStyleState = QuoteStyle.ReminderTheme
+                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
-
-
-
 }
+
+

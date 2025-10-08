@@ -19,6 +19,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.bratTheme -> "bratTheme"
             is QuoteStyle.igorTheme -> "igorTheme"
             is QuoteStyle.NeonTheme -> "NeonTheme"
+            else -> "DefaultTheme"
         }
         sharedPreferences.edit {
             putString(QUOTE_STYLE_KEY, quoteStyleString)

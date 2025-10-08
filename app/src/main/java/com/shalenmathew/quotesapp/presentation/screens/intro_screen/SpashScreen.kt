@@ -79,12 +79,8 @@ fun SplashScreen(navHost: NavHostController) {
                 text = "Quotes",
                 color = Color.White.copy(alpha = fadeAlpha * glowAlpha),
                 fontSize = 48.sp,
-                fontWeight = FontWeight.ExtraBold,
-                fontFamily = GIFont,
-                modifier = Modifier
-                    .scale(scaleAnim)
-                    .offset(y = offsetYAnim)
-                    .shadow(10.dp, ambientColor = Color.White.copy(0.5f))
+                fontWeight = FontWeight.Medium,
+                fontFamily = GIFont
             )
 
             // Tagline (word-by-word animation)

@@ -185,7 +185,35 @@ fun CaptureBitmap(
             }
         }
     ) {
-        content()
+        when(quoteStyleState) {
+            is QuoteStyle.DefaultTheme -> {
+                DefaultQuoteCard(modifier = Modifier, quoteData)
+            }
+            QuoteStyle.CodeSnippetTheme -> {
+                CodeSnippetStyleQuoteCard(modifier = Modifier, quoteData)
+            }
+            QuoteStyle.bratTheme -> {
+                BratScreen(modifier = Modifier, quoteData)
+            }
+            QuoteStyle.igorTheme -> {
+                IgorScreen(modifier = Modifier, quoteData)
+            }
+            QuoteStyle.LiquidGlassTheme -> {
+                LiquidGlassScreen(
+                    modifier = Modifier, 
+                    quote = quoteData,
+                    color1 = Color(0xFFf093fb),
+                    color2 = Color(0xFF0022BB)
+                )
+            }
+            QuoteStyle.NeonTheme -> {
+                NeonThemeScreen(modifier = Modifier, quoteData)
+            }
+            QuoteStyle.ReminderTheme -> {
+                ReminderStyle(modifier = Modifier, quote = quoteData)
+            }
+            else -> { }
+        }
     }
 }
 

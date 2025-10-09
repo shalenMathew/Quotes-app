@@ -78,6 +78,7 @@ fun ShareScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scrollState = rememberScrollState()
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
+    var defaultQuoteStyle by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
     var triggerCapture by remember { mutableStateOf(false) }
     var pendingAction by remember { mutableStateOf<String?>(null) }
 
@@ -90,7 +91,9 @@ fun ShareScreen(
     var editTarget by remember { mutableStateOf("start") }
 
     LaunchedEffect(Unit) {
-        quoteStyleState = viewModel.getDefaultQuoteStyle()
+        val defaultStyle = viewModel.getDefaultQuoteStyle()
+        quoteStyleState = defaultStyle
+        defaultQuoteStyle = defaultStyle
     }
 
     LaunchedEffect(imgBitmap, pendingAction) {
@@ -309,11 +312,11 @@ fun ShareScreen(
                             )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = quoteStyleState == QuoteStyle.CodeSnippetTheme,
+                                checked = defaultQuoteStyle == QuoteStyle.CodeSnippetTheme,
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
-                                        quoteStyleState = QuoteStyle.CodeSnippetTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                        defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                                     }
                                 }
                             )
@@ -348,11 +351,11 @@ fun ShareScreen(
                             )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = quoteStyleState == QuoteStyle.bratTheme,
+                                checked = defaultQuoteStyle == QuoteStyle.bratTheme,
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
-                                        quoteStyleState = QuoteStyle.bratTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                        defaultQuoteStyle = QuoteStyle.bratTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                                     }
                                 }
                             )
@@ -387,11 +390,11 @@ fun ShareScreen(
                             )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = quoteStyleState == QuoteStyle.igorTheme,
+                                checked = defaultQuoteStyle == QuoteStyle.igorTheme,
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
-                                        quoteStyleState = QuoteStyle.igorTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                        defaultQuoteStyle = QuoteStyle.igorTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                                     }
                                 }
                             )
@@ -426,11 +429,11 @@ fun ShareScreen(
                             )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = quoteStyleState == QuoteStyle.DefaultTheme,
+                                checked = defaultQuoteStyle == QuoteStyle.DefaultTheme,
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
-                                        quoteStyleState = QuoteStyle.DefaultTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                        defaultQuoteStyle = QuoteStyle.DefaultTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                                     }
                                 }
                             )
@@ -463,11 +466,11 @@ fun ShareScreen(
                             )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = quoteStyleState == QuoteStyle.LiquidGlassTheme,
+                                checked = defaultQuoteStyle == QuoteStyle.LiquidGlassTheme,
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
-                                        quoteStyleState = QuoteStyle.LiquidGlassTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                        defaultQuoteStyle = QuoteStyle.LiquidGlassTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                                     }
                                 }
                             )
@@ -527,11 +530,11 @@ fun ShareScreen(
                             )
                             Checkbox(
                                 modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = quoteStyleState == QuoteStyle.ReminderTheme,
+                                checked = defaultQuoteStyle == QuoteStyle.ReminderTheme,
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
-                                        quoteStyleState = QuoteStyle.ReminderTheme
-                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+                                        defaultQuoteStyle = QuoteStyle.ReminderTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                                     }
                                 }
                             )

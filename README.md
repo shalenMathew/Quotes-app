@@ -26,7 +26,7 @@
 
 ## Trailer 📽️
 
-<img src="https://github.com/user-attachments/assets/1da11aa9-3ecb-4ebc-9a06-337d6df6d338" alt="Trailer GIF" width="700" >
+<img src="https://github.com/user-attachments/assets/d566613b-4bb8-43be-a4e6-f21ce8487b57" alt="Trailer GIF" width="700" >
 
 ![Adobe Express - 416798702-38a15a1e-b324-4355-8574-49e83cf044cd](https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534)
 

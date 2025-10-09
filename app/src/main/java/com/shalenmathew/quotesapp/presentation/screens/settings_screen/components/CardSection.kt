@@ -29,9 +29,10 @@ import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import androidx.core.net.toUri
 import com.shalenmathew.quotesapp.presentation.theme.customGrey2
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 
 @Composable
-fun CardSection(index: Int) {
+fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
 
     val context = LocalContext.current
     val card = cardsRow[index]
@@ -53,8 +54,14 @@ fun CardSection(index: Int) {
                     color = Color.Black,
                     shape = RectangleShape )
                 .clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, card.url.toUri())
-                    context.startActivity(intent)
+                    if (card.url == "navigate") {
+                        // Navigate to AboutLibraries screen
+                        navHost.navigate(Screen.AboutLibraries.route)
+                    } else {
+                        // Open external URL
+                        val intent = Intent(Intent.ACTION_VIEW, card.url.toUri())
+                        context.startActivity(intent)
+                    }
                 }
                 .clip(shape)
 //                .background(Color(0xFF1C1C1E))

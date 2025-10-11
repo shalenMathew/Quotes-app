@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.shalenmathew.quotesapp.presentation.screens.about_libraries_screen.AboutLibrariesScreen
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.FavScreen
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.HomeScreen
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
@@ -20,7 +21,8 @@ fun AppNavigation(navHost: NavHostController,paddingValues: PaddingValues){
         composable(Screen.Home.route){  HomeScreen(paddingValues = paddingValues, navHost = navHost) }
         composable(Screen.Fav.route){ FavScreen(paddingValues = paddingValues, navHost = navHost) }
         composable(Screen.Share.route) { ShareScreen(paddingValues, navHost) }
-        composable(Screen.Settings.route) { SettingsScreen(paddingValues = paddingValues) }
+        composable(Screen.Settings.route) { SettingsScreen(paddingValues = paddingValues, navHost = navHost) }
+        composable(Screen.AboutLibraries.route) { AboutLibrariesScreen(paddingValues = paddingValues, navHost = navHost) }
     }
 
 }

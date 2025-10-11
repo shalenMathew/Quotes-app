@@ -7,6 +7,7 @@ plugins {
     id("com.google.devtools.ksp")
     alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
+    alias(libs.plugins.aboutlibraries)
 }
 
 android {
@@ -166,6 +167,8 @@ dependencies {
     //color picker
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
 
+    // AboutLibraries
+    implementation(libs.aboutlibraries.compose.m3)
 
 
 }

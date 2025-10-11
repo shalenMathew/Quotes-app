@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.BuildConfig
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.components.CardSection
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.components.cardsRow
@@ -27,7 +27,7 @@ import com.shalenmathew.quotesapp.presentation.theme.Poppins
 
 
 @Composable
-fun SettingsScreen(paddingValues: PaddingValues) {
+fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController) {
 
     Box(
         modifier = Modifier
@@ -70,7 +70,7 @@ fun SettingsScreen(paddingValues: PaddingValues) {
                 }
 
                 items(cardsRow.size) { cardRowIndex ->
-                    CardSection(index = cardRowIndex)
+                    CardSection(index = cardRowIndex, navHost = navHost)
                 }
 
             }

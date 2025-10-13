@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Handle widget save to favorites action
-        handleWidgetSaveToFavoritesIntent()
+        intent?.let { handleWidgetSaveToFavoritesIntent(it) }
 
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
@@ -122,10 +122,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: android.content.Intent?) {
         super.onNewIntent(intent)
-        intent?.let { handleWidgetSaveToFavoritesIntent() }
+        intent?.let { handleWidgetSaveToFavoritesIntent(it) }
     }
 
-    private fun handleWidgetSaveToFavoritesIntent() {
+    private fun handleWidgetSaveToFavoritesIntent(intent: android.content.Intent) {
         when (intent?.action) {
             WidgetActionReceiver.ACTION_SAVE_TO_FAVORITES -> {
                 Log.d("MainActivity", "Handling save to favorites from widget")
@@ -170,3 +170,4 @@ class MainActivity : ComponentActivity() {
 
 
 
+}

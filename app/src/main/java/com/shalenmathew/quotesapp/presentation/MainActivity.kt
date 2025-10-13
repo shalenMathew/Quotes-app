@@ -1,5 +1,9 @@
 package com.shalenmathew.quotesapp.presentation
 
+import androidx.lifecycle.lifecycleScope
+import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
+import com.shalenmathew.quotesapp.util.saveWidgetQuoteObject
+import kotlinx.coroutines.launch
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -24,9 +28,8 @@ import com.shalenmathew.quotesapp.presentation.workmanager.notification.Schedule
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
+import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-
 
 @AndroidEntryPoint
 // used android entry here as we are injecting the viewmodel using hilt
@@ -34,11 +37,19 @@ import javax.inject.Inject
 // so the activities or fragments which needs to be injected by hilt should be annotated using this annotation
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        const val ACTION_LIKE_QUOTE = "com.shalenmathew.quotesapp.action.LIKE_QUOTE"
+    }
+
     @Inject lateinit var scheduleNotification:ScheduleNotification
     @Inject lateinit var scheduleWidget: ScheduleWidgetRefresh
+    @Inject lateinit var favQuoteUseCase: FavQuoteUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Handle widget save to favorites action
+        handleWidgetSaveToFavoritesIntent()
 
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
@@ -109,15 +120,53 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun requestNotificationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE_NOTIFICATION)
-        }
+    override fun onNewIntent(intent: android.content.Intent?) {
+        super.onNewIntent(intent)
+        intent?.let { handleWidgetSaveToFavoritesIntent() }
     }
 
-}
+    private fun handleWidgetSaveToFavoritesIntent() {
+        when (intent?.action) {
+            WidgetActionReceiver.ACTION_SAVE_TO_FAVORITES -> {
+                Log.d("MainActivity", "Handling save to favorites from widget")
+                lifecycleScope.launch {
+                    try {
+                        val widgetQuote = getSavedWidgetQuoteObject().first()
+                        if (widgetQuote != null && widgetQuote.liked) {
+                            // Save to favorites using the repository
+                            // For now, we'll just log it since we don't have direct access to the repository here
+                            Log.d("SaveToFavorites", "Would save to favorites: ${widgetQuote.quote}")
+                            // TODO: Implement proper favorites saving using repository
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Error saving to favorites", e)
+                    }
+                }
+            }
+            ACTION_LIKE_QUOTE -> {
+                Log.d("MainActivity", "Handling like quote from widget")
+                lifecycleScope.launch {
+                    try {
+                        // Get the current widget quote
+                        val widgetQuote = getSavedWidgetQuoteObject().first()
+                        if (widgetQuote != null) {
+                            // Toggle the like state in the data store (without saving to favorites)
+                            val updatedQuote = widgetQuote.copy(liked = !widgetQuote.liked)
+                            saveWidgetQuoteObject(updatedQuote)
+                            
+                            // Use the injected use case to save to favorites if now liked
+                            if (updatedQuote.liked) {
+                                favQuoteUseCase.favLikedQuote(updatedQuote)
+                                Log.d("MainActivity", "Quote saved to favorites: ${widgetQuote.quote}")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Error liking quote from widget", e)
+                    }
+                }
+            }
+        }
+    }
 
 
 

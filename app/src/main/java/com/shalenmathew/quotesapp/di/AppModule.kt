@@ -44,9 +44,15 @@ object AppModule {
 
     @Singleton
     @Provides
-fun providesQuoteUsecase(getQuote: GetQuote, likedQuote: LikedQuote, getLikedQuotes: GetLikedQuotes): QuoteUseCase {
-return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes = getLikedQuotes)
-}
+    fun providesQuoteUsecase(getQuote: GetQuote, likedQuote: LikedQuote, getLikedQuotes: GetLikedQuotes): QuoteUseCase {
+        return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes = getLikedQuotes)
+    }
+
+    @Singleton
+    @Provides
+    fun providesFavQuoteUseCase(getFavQuote: GetFavQuote,favLikedQuote: FavLikedQuote):FavQuoteUseCase{
+        return FavQuoteUseCase(getFavQuote,favLikedQuote)
+    }
 
     @Singleton
     @Provides
@@ -71,12 +77,24 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
 
     @Singleton
     @Provides
+    fun providesGetFavQuote(repository: FavQuoteRepository): GetFavQuote {
+        return GetFavQuote(repository)
+    }
+
+    @Singleton
+    @Provides
     fun providesFavQuoteUseCase(getFavQuote: GetFavQuote,favLikedQuote: FavLikedQuote):FavQuoteUseCase{
         return FavQuoteUseCase(getFavQuote,favLikedQuote)
     }
 
-    @Provides
     @Singleton
+    @Provides
+    fun providesFavLikedQuote(repository: FavQuoteRepository): FavLikedQuote {
+        return FavLikedQuote(repository)
+    }
+
+    @Singleton
+    @Provides
     fun providesOkhttpClient(@ApplicationContext context: Context):OkHttpClient
     {
 

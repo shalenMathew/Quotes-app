@@ -7,12 +7,13 @@ import androidx.glance.appwidget.updateAll
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetObj
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.dataStore
-import com.shalenmathew.quotesapp.util.saveWidgetQuote
+import com.shalenmathew.quotesapp.util.saveWidgetQuoteObject
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -78,11 +79,20 @@ class WidgetWorkManager @AssistedInject constructor(
         when(response){
 
             is Resource.Success->{
-                val quote =  response.data?.quotesList?.getOrNull(0)?.quote
+                val dtoItem =  response.data?.quotesList?.getOrNull(0)
 
-                if(quote!=null){
-                    Log.d("WorkManagerStatus", "Fetched Quote: $quote")
-                    context.saveWidgetQuote(quote)
+                if(dtoItem!=null){
+                    Log.d("WorkManagerStatus", "Fetched Quote: ${dtoItem.q}")
+                    // Create a Quote object with liked = false initially
+                    // Use the hash field as id if available, otherwise generate one
+                    val id = dtoItem.h?.toIntOrNull() ?: dtoItem.q.hashCode()
+                    val quoteObject = Quote(
+                        id = id,
+                        quote = dtoItem.q,
+                        author = dtoItem.a,
+                        liked = false
+                    )
+                    context.saveWidgetQuoteObject(quoteObject)
                      true
                 }else{
                     Log.d("WorkManagerStatus", "Quote is null")

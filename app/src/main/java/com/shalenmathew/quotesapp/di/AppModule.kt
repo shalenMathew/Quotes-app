@@ -44,18 +44,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesQuoteUsecase(getQuote: GetQuote, likedQuote: LikedQuote, getLikedQuotes: GetLikedQuotes): QuoteUseCase {
-        return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes = getLikedQuotes)
-    }
-
-    @Singleton
-    @Provides
-    fun providesFavQuoteUseCase(getFavQuote: GetFavQuote,favLikedQuote: FavLikedQuote):FavQuoteUseCase{
-        return FavQuoteUseCase(getFavQuote,favLikedQuote)
-    }
-
-    @Singleton
-    @Provides
     fun providesQuoteDatabase(application: Application):QuoteDatabase{
         return Room.databaseBuilder(application,QuoteDatabase::class.java,"quote_db")
             .fallbackToDestructiveMigration(true)

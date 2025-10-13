@@ -25,9 +25,10 @@ import androidx.glance.layout.wrapContentSize
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import androidx.glance.unit.ColorProvider
-import com.shalenmathew.quotesapp.R
-import com.shalenmathew.quotesapp.domain.model.Quote
+import androidx.glance.unit.Dp
+import androidx.glance.unit.sp
+import androidx.compose.runtime.Composable
+import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -110,12 +111,7 @@ fun QuoteWidget(savedQuote: Quote) {
                 modifier = GlanceModifier
                     .size(24.dp)
                     .clickable(
-                        actionStartActivity(
-                            Intent(QuotesWidgetObj.ACTION_LIKE_QUOTE).apply {
-                                setPackage(context.packageName)
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            }
-                        )
+                        actionStartActivity<MainActivity>()
                     )
             )
         }

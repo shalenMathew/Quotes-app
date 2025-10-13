@@ -14,6 +14,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetObj
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetReceiver
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore by preferencesDataStore("quote_prefs")

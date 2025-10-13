@@ -28,8 +28,8 @@ import com.shalenmathew.quotesapp.presentation.workmanager.notification.Schedule
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
-import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
-import dagger.hilt.android.AndroidEntryPoint
+import com.shalenmathew.quotesapp.presentation.widget.WidgetActionReceiver
+import javax.inject.Inject
 
 @AndroidEntryPoint
 // used android entry here as we are injecting the viewmodel using hilt
@@ -110,6 +110,14 @@ class MainActivity : ComponentActivity() {
             requestWriteExternalStoragePermission()
         }
 
+    }
+
+    private fun requestNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE_NOTIFICATION)
+        }
     }
 
     private fun requestWriteExternalStoragePermission() {

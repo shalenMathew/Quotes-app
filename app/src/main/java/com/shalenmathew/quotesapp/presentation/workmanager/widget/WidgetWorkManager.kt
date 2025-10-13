@@ -7,8 +7,7 @@ import androidx.glance.appwidget.updateAll
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
+import com.shalenmathew.quotesapp.data.remote.dto.QuotesDtoItem
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetObj
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
@@ -79,7 +78,7 @@ class WidgetWorkManager @AssistedInject constructor(
         when(response){
 
             is Resource.Success->{
-                val dtoItem =  response.data?.quotesList?.getOrNull(0)
+                val dtoItem = response.data?.quotesList?.getOrNull(0) as? QuotesDtoItem
 
                 if(dtoItem!=null){
                     Log.d("WorkManagerStatus", "Fetched Quote: ${dtoItem.q}")

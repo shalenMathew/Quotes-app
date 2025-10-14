@@ -68,7 +68,7 @@ fun QuoteWidget(savedQuote: Quote) {
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(ColorProvider(android.graphics.Color.BLACK))
+            .background(ColorProvider(R.color.black))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -85,7 +85,7 @@ fun QuoteWidget(savedQuote: Quote) {
             text = savedQuote.quote,
             style = TextStyle(
                 fontSize = 18.sp,
-                color = ColorProvider(android.graphics.Color.WHITE),
+                color = ColorProvider(R.color.white),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize().padding(15.dp)
@@ -96,7 +96,7 @@ fun QuoteWidget(savedQuote: Quote) {
             text = "- ${savedQuote.author}",
             style = TextStyle(
                 fontSize = 14.sp,
-                color = ColorProvider(android.graphics.Color.GRAY),
+                color = ColorProvider(R.color.gray),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.padding(bottom = 10.dp)
@@ -128,7 +128,7 @@ fun QuoteWidgetFallback() {
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(ColorProvider(android.graphics.Color.BLACK))
+            .background(ColorProvider(R.color.black))
             .padding(12.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
@@ -146,7 +146,7 @@ fun QuoteWidgetFallback() {
             text = "Widget is refreshing, will be updated in some time. Or try rebooting the device",
             style = TextStyle(
                 fontSize = 14.sp,
-                color = ColorProvider(android.graphics.Color.WHITE),
+                color = ColorProvider(R.color.white),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize().padding(15.dp)

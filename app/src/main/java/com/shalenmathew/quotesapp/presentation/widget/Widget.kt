@@ -25,9 +25,13 @@ import androidx.glance.layout.wrapContentSize
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
 import androidx.glance.unit.Dp
+import androidx.glance.unit.dp
 import androidx.glance.unit.sp
 import androidx.compose.runtime.Composable
+import com.shalenmathew.quotesapp.R
+import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
 import kotlinx.coroutines.flow.first

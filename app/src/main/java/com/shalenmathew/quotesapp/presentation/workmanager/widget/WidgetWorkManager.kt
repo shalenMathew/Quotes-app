@@ -8,6 +8,8 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.shalenmathew.quotesapp.data.remote.dto.QuotesDtoItem
+import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetObj
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY

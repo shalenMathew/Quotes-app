@@ -62,19 +62,6 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
         return FavQuoteRepositoryImpl(db)
     }
 
-
-    @Singleton
-    @Provides
-    fun providesGetFavQuote(repository: FavQuoteRepository): GetFavQuote {
-        return GetFavQuote(repository)
-    }
-
-    @Singleton
-    @Provides
-    fun providesFavLikedQuote(repository: FavQuoteRepository): FavLikedQuote {
-        return FavLikedQuote(repository)
-    }
-
     @Singleton
     @Provides
     fun providesOkhttpClient(@ApplicationContext context: Context):OkHttpClient

@@ -28,7 +28,9 @@ import com.shalenmathew.quotesapp.presentation.workmanager.notification.Schedule
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
+import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
 import com.shalenmathew.quotesapp.presentation.widget.WidgetActionReceiver
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint

@@ -27,6 +27,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import androidx.glance.GlanceTheme
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +69,7 @@ fun QuoteWidget(savedQuote: Quote) {
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(ColorProvider(R.color.black))
+            .background(ColorProvider(day = Color.Black, night = Color.Black))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -85,7 +86,7 @@ fun QuoteWidget(savedQuote: Quote) {
             text = savedQuote.quote,
             style = TextStyle(
                 fontSize = 18.sp,
-                color = ColorProvider(R.color.white),
+                color = ColorProvider(day = Color.White, night = Color.White),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize().padding(15.dp)
@@ -96,7 +97,7 @@ fun QuoteWidget(savedQuote: Quote) {
             text = "- ${savedQuote.author}",
             style = TextStyle(
                 fontSize = 14.sp,
-                color = ColorProvider(R.color.gray),
+                color = ColorProvider(day = Color.Gray, night = Color.Gray),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.padding(bottom = 10.dp)
@@ -128,7 +129,7 @@ fun QuoteWidgetFallback() {
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(ColorProvider(R.color.black))
+            .background(ColorProvider(day = Color.Black, night = Color.Black))
             .padding(12.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
@@ -146,7 +147,7 @@ fun QuoteWidgetFallback() {
             text = "Widget is refreshing, will be updated in some time. Or try rebooting the device",
             style = TextStyle(
                 fontSize = 14.sp,
-                color = ColorProvider(R.color.white),
+                color = ColorProvider(day = Color.White, night = Color.White),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize().padding(15.dp)

@@ -64,12 +64,13 @@ object QuotesWidgetObj: GlanceAppWidget() {
 }
 
 @Composable
+@Suppress("RestrictedApi")
 fun QuoteWidget(savedQuote: Quote) {
     Column(
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(ColorProvider(day = Color.Black, night = Color.Black))
+            .background(ColorProvider(Color.Black))
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -86,7 +87,7 @@ fun QuoteWidget(savedQuote: Quote) {
             text = savedQuote.quote,
             style = TextStyle(
                 fontSize = 18.sp,
-                color = ColorProvider(day = Color.White, night = Color.White),
+                color = ColorProvider(Color.White),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize().padding(15.dp)
@@ -97,7 +98,7 @@ fun QuoteWidget(savedQuote: Quote) {
             text = "- ${savedQuote.author}",
             style = TextStyle(
                 fontSize = 14.sp,
-                color = ColorProvider(day = Color.Gray, night = Color.Gray),
+                color = ColorProvider(Color.Gray),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.padding(bottom = 10.dp)
@@ -124,12 +125,13 @@ fun QuoteWidget(savedQuote: Quote) {
 }
 
 @Composable
+@Suppress("RestrictedApi")
 fun QuoteWidgetFallback() {
     Column(
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(ColorProvider(day = Color.Black, night = Color.Black))
+            .background(ColorProvider(Color.Black))
             .padding(12.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
@@ -147,7 +149,7 @@ fun QuoteWidgetFallback() {
             text = "Widget is refreshing, will be updated in some time. Or try rebooting the device",
             style = TextStyle(
                 fontSize = 14.sp,
-                color = ColorProvider(day = Color.White, night = Color.White),
+                color = ColorProvider(Color.White),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize().padding(15.dp)

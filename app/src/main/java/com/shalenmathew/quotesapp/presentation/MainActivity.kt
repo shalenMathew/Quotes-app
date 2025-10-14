@@ -130,13 +130,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onNewIntent(intent: android.content.Intent?) {
+    override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
-        intent?.let { handleWidgetSaveToFavoritesIntent(it) }
+        handleWidgetSaveToFavoritesIntent(intent)
     }
 
     private fun handleWidgetSaveToFavoritesIntent(intent: android.content.Intent) {
-        when (intent?.action) {
+        when (intent.action) {
             WidgetActionReceiver.ACTION_SAVE_TO_FAVORITES -> {
                 Log.d("MainActivity", "Handling save to favorites from widget")
                 lifecycleScope.launch {

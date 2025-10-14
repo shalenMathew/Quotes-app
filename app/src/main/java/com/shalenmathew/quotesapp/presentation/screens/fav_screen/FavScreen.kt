@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -111,6 +113,22 @@ fun FavScreen(paddingValues: PaddingValues,
     var selectedTabIndex by remember {
         mutableIntStateOf(0)
     }
+
+    var pagerState = rememberPagerState {
+        tabItems.size
+    }
+
+    LaunchedEffect(selectedTabIndex) {
+        pagerState.animateScrollToPage(selectedTabIndex)
+    }
+
+    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+        if (!pagerState.isScrollInProgress){
+            selectedTabIndex = pagerState.currentPage
+        }
+
+    }
+
 
 
     val cardOffset by animateIntAsState(
@@ -250,6 +268,68 @@ fun FavScreen(paddingValues: PaddingValues,
 
                         },
                         text = { Text(text = tabItem.tabTitle) })
+                }
+
+            }
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth()
+                    .weight(1f)
+            ) { index ->
+
+
+                when (index) {
+                    0 -> {
+                        // Fav Tab Content
+                        if (state.dataList.isNotEmpty()) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 12.dp)
+                            ) {
+                                itemsIndexed(state.dataList) { index, quoteItem ->
+                                    FavQuoteItem(
+                                        quoteItem,
+                                        quoteViewModel,
+                                        navHost,
+                                        modifier = Modifier
+                                            .zIndex((state.dataList.size - index).toFloat())
+                                            .graphicsLayer {
+                                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
+                                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
+                                                    .roundToPx()
+                                                    .toFloat()
+                                            }
+                                    )
+                                }
+                            }
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    "Looks empty...",
+                                    color = White,
+                                    fontFamily = GIFont,
+                                )
+                            }
+                        }
+                    }
+                    1 -> {
+                        // Custom Tab Content - Work in Progress
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Work in Progress...",
+                                color = White,
+                                fontFamily = GIFont,
+                            )
+                        }
+                    }
                 }
 
             }

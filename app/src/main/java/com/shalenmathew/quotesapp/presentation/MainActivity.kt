@@ -3,6 +3,7 @@ package com.shalenmathew.quotesapp.presentation
 import androidx.lifecycle.lifecycleScope
 import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
 import com.shalenmathew.quotesapp.util.saveWidgetQuoteObject
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import android.Manifest
 import android.content.pm.PackageManager

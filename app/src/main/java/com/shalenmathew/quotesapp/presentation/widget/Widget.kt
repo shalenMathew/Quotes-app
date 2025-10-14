@@ -26,7 +26,10 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.glance.GlanceTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.MainActivity
@@ -65,8 +68,8 @@ fun QuoteWidget(savedQuote: Quote) {
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(androidx.glance.unit.ColorProvider(android.graphics.Color.BLACK))
-            .padding(androidx.glance.unit.Dp(12f)),
+            .background(ColorProvider(android.graphics.Color.BLACK))
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -74,29 +77,29 @@ fun QuoteWidget(savedQuote: Quote) {
             provider = ImageProvider(R.drawable.quotation),
             contentDescription = null,
             modifier = GlanceModifier
-                .padding(start = androidx.glance.unit.Dp(12f), top = androidx.glance.unit.Dp(10f))
-                .size(androidx.glance.unit.Dp(30f))
+                .padding(start = 12.dp, top = 10.dp)
+                .size(30.dp)
         )
 
         Text(
             text = savedQuote.quote,
             style = TextStyle(
-                fontSize = androidx.glance.unit.TextUnit(18f, androidx.glance.unit.TextUnitType.Sp),
+                fontSize = 18.sp,
                 color = ColorProvider(android.graphics.Color.WHITE),
                 fontWeight = FontWeight.Normal,
             ),
-            modifier = GlanceModifier.wrapContentSize().padding(androidx.glance.unit.Dp(15f))
+            modifier = GlanceModifier.wrapContentSize().padding(15.dp)
         )
 
         // Author
         Text(
             text = "- ${savedQuote.author}",
             style = TextStyle(
-                fontSize = androidx.glance.unit.TextUnit(14f, androidx.glance.unit.TextUnitType.Sp),
+                fontSize = 14.sp,
                 color = ColorProvider(android.graphics.Color.GRAY),
                 fontWeight = FontWeight.Normal,
             ),
-            modifier = GlanceModifier.padding(bottom = androidx.glance.unit.Dp(10f))
+            modifier = GlanceModifier.padding(bottom = 10.dp)
         )
 
         // Like button
@@ -110,7 +113,7 @@ fun QuoteWidget(savedQuote: Quote) {
                 ),
                 contentDescription = if (savedQuote.liked) "Unlike" else "Like",
                 modifier = GlanceModifier
-                    .size(androidx.glance.unit.Dp(24f))
+                    .size(24.dp)
                     .clickable(
                         actionStartActivity<MainActivity>()
                     )
@@ -125,8 +128,8 @@ fun QuoteWidgetFallback() {
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(androidx.glance.unit.ColorProvider(android.graphics.Color.BLACK))
-            .padding(androidx.glance.unit.Dp(12f))
+            .background(ColorProvider(android.graphics.Color.BLACK))
+            .padding(12.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -135,18 +138,18 @@ fun QuoteWidgetFallback() {
             provider = ImageProvider(R.drawable.quotation),
             contentDescription = null,
             modifier = GlanceModifier
-                .padding(start = androidx.glance.unit.Dp(12f), top = androidx.glance.unit.Dp(10f))
-                .size(androidx.glance.unit.Dp(30f))
+                .padding(start = 12.dp, top = 10.dp)
+                .size(30.dp)
         )
 
         Text(
             text = "Widget is refreshing, will be updated in some time. Or try rebooting the device",
             style = TextStyle(
-                fontSize = androidx.glance.unit.TextUnit(14f, androidx.glance.unit.TextUnitType.Sp),
+                fontSize = 14.sp,
                 color = ColorProvider(android.graphics.Color.WHITE),
                 fontWeight = FontWeight.Normal,
             ),
-            modifier = GlanceModifier.wrapContentSize().padding(androidx.glance.unit.Dp(15f))
+            modifier = GlanceModifier.wrapContentSize().padding(15.dp)
         )
     }
 }

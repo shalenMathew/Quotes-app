@@ -9,6 +9,7 @@ import com.shalenmathew.quotesapp.presentation.screens.about_libraries_screen.Ab
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.FavScreen
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.HomeScreen
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.custom_quote.AddCustomQuoteScreen
 import com.shalenmathew.quotesapp.presentation.screens.intro_screen.SplashScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.SettingsScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.ShareScreen
@@ -23,6 +24,7 @@ fun AppNavigation(navHost: NavHostController,paddingValues: PaddingValues){
         composable(Screen.Share.route) { ShareScreen(paddingValues, navHost) }
         composable(Screen.Settings.route) { SettingsScreen(paddingValues = paddingValues, navHost = navHost) }
         composable(Screen.AboutLibraries.route) { AboutLibrariesScreen(paddingValues = paddingValues, navHost = navHost) }
+        composable(Screen.AddCustomQuote.route) { AddCustomQuoteScreen(paddingValues = paddingValues, navHost = navHost) }
     }
 
 }

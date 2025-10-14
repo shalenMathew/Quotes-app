@@ -223,9 +223,11 @@ sealed class Screen(
     object Share: Screen("Share",false)
     object Settings: Screen("Settings",true)
     object AboutLibraries: Screen("AboutLibraries",false)
+    object AddCustomQuote: Screen("AddCustomQuote",false)
 
     companion object{
-        val values:List<Screen> = listOf(Home,Fav,Splash,Share, Settings, AboutLibraries)
+        val values:List<Screen> = listOf(Home,Fav,Splash,Share, Settings, AboutLibraries,
+            AddCustomQuote)
     }
 
 }

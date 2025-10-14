@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.shalenmathew.quotesapp.BuildConfig
 import com.shalenmathew.quotesapp.data.local.AnimationPreferencesImpl
 import com.shalenmathew.quotesapp.data.local.DefaultQuoteStylePreferencesImpl
@@ -52,8 +54,15 @@ return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes
     @Provides
     fun providesQuoteDatabase(application: Application):QuoteDatabase{
         return Room.databaseBuilder(application,QuoteDatabase::class.java,"quote_db")
-            .fallbackToDestructiveMigration(true)
+            .addMigrations(DB_MIGRATION)
+//            .fallbackToDestructiveMigration(true)
             .build()
+    }
+
+    val DB_MIGRATION = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE Quote ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+        }
     }
 
 @Singleton

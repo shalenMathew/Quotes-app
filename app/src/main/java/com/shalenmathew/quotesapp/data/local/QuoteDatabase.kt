@@ -2,12 +2,14 @@ package com.shalenmathew.quotesapp.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.shalenmathew.quotesapp.domain.model.CustomQuote
 import com.shalenmathew.quotesapp.domain.model.Quote
 
 
-@Database(entities = [Quote::class], version = 4)
-abstract class QuoteDatabase:RoomDatabase() {
+@Database(entities = [Quote::class, CustomQuote::class], version = 5)
+abstract class QuoteDatabase : RoomDatabase() {
 
-    abstract fun getQuoteDao():QuoteDao
+    abstract fun getQuoteDao(): QuoteDao
+    abstract fun getCustomQuoteDao(): CustomQuoteDao
 
 }

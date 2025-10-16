@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,67 +53,60 @@ import com.shalenmathew.quotesapp.presentation.theme.bottomNavItem
 
 @Composable
 fun BottomNavAnimation(
-     navigator:NavHostController
+    navigator: NavHostController
 ) {
-
-    var selectedScreen by remember { mutableStateOf(0) }
-    val haptic = LocalHapticFeedback.current
-
-    val tabItem = listOf(
-         BottomNav.Home,
-        BottomNav.Fav,
-        BottomNav.Settings
-    )
-
     val navBackStackEntry by navigator.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val currentScreen = Screen.values.find { it.route == currentRoute }
 
-    // for scenarios when user clicks back press
-    LaunchedEffect(navBackStackEntry) {
-        val currentDes = navBackStackEntry?.destination?.route
-        selectedScreen = tabItem.indexOfFirst { currentDes==it.route }
-        if (selectedScreen<0) selectedScreen=0
-    }
+    // Only show bottom nav if current screen needs it
+    if (currentScreen?.needBottomNav == true) {
 
-    Box(
-        modifier= Modifier
-            .navigationBarsPadding()
-            .shadow(5.dp)
-            .background(color = Color.Black)  // customize
-            .height(80.dp)
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-    ) {
+        var selectedScreen by remember { mutableIntStateOf(0) }
+        val haptic = LocalHapticFeedback.current
+        val tabItem = listOf(BottomNav.Home, BottomNav.Fav, BottomNav.Settings)
 
-        Row(
-            Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
+        // Update selected tab when back stack changes
+        LaunchedEffect(currentRoute) {
+            selectedScreen = tabItem.indexOfFirst { it.route == currentRoute }.coerceAtLeast(0)
+        }
+
+        Box(
+            modifier = Modifier
+                .navigationBarsPadding()
+                .shadow(5.dp)
+                .background(color = Color.Black)
+                .height(80.dp)
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
         ) {
-            for (screen in tabItem) {
-                val isSelected = screen == tabItem[selectedScreen]
-                val animatedWeight by animateFloatAsState(targetValue = if (isSelected) 1.5f else 1f)
-                Box(
-                    modifier = Modifier.weight(animatedWeight),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    val interactionSource = remember { MutableInteractionSource() }
-
-                    BottomNavItem(
-                        modifier = Modifier.clickable(
-                            interactionSource = interactionSource,
-                            indication = null
-                        ) {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-//                            selectedScreen = screens.indexOf(screen)
-                            navigator.navigate(screen.route){
-                                popUpTo(Screen.Home.route){
-                                    inclusive=false
+            Row(
+                Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                for (screen in tabItem) {
+                    val isSelected = screen == tabItem[selectedScreen]
+                    val animatedWeight by animateFloatAsState(targetValue = if (isSelected) 1.5f else 1f)
+                    Box(
+                        modifier = Modifier.weight(animatedWeight),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        val interactionSource = remember { MutableInteractionSource() }
+                        BottomNavItem(
+                            modifier = Modifier.clickable(
+                                interactionSource = interactionSource,
+                                indication = null
+                            ) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                navigator.navigate(screen.route) {
+                                    popUpTo(Screen.Home.route) { inclusive = false }
+                                    launchSingleTop = true
                                 }
-                                launchSingleTop=true
-                            }
-                        },
-                        item = screen,
-                        isSelected = isSelected
-                    )
+                            },
+                            item = screen,
+                            isSelected = isSelected
+                        )
+                    }
                 }
             }
         }

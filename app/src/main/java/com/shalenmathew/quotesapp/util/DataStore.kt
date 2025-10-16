@@ -3,6 +3,7 @@ package com.shalenmathew.quotesapp.util
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -13,11 +14,23 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore by preferencesDataStore("quote_prefs")
 
-
 val WIDGET_QUOTE_KEY = stringPreferencesKey("widgetQuote")
 val NOTIFICATION_QUOTE_KEY = stringPreferencesKey("notificationQuote")
 val NOTIFICATION_AUTHOR_KEY = stringPreferencesKey("notificationAuthor")
 
+val IS_FIRST_LAUNCH_KEY = booleanPreferencesKey("is_first_launch")
+
+suspend fun Context.setFirstLaunchDone() {
+    dataStore.edit { prefs ->
+        prefs[IS_FIRST_LAUNCH_KEY] = false
+    }
+}
+
+fun Context.isFirstLaunch(): Flow<Boolean> {
+    return dataStore.data.map { prefs ->
+        prefs[IS_FIRST_LAUNCH_KEY] ?: true
+    }
+}
 
 suspend fun Context.saveWidgetQuote(quote: String) {
     // saving quote of the day

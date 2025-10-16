@@ -63,7 +63,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -259,17 +261,40 @@ fun FavScreen(paddingValues: PaddingValues,
                 )
             )
 
-            TabRow( selectedTabIndex =selectedTabIndex ) {
-
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = Color.Black,
+                contentColor = White,
+                indicator = { tabPositions ->
+                    if (selectedTabIndex < tabPositions.size) {
+                        Box(
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[selectedTabIndex])
+                                .height(3.dp)
+                                .background(White)
+                        )
+                    }
+                },
+                divider = {}
+            ) {
                 tabItems.forEachIndexed { index, tabItem ->
-                    Tab(selected = index == selectedTabIndex,
+                    Tab(
+                        selected = index == selectedTabIndex,
                         onClick = {
                             selectedTabIndex = index
-
                         },
-                        text = { Text(text = tabItem.tabTitle) })
+                        text = {
+                            Text(
+                                text = tabItem.tabTitle,
+                                fontFamily = GIFont,
+                                fontWeight = FontWeight.Bold,
+                                color = if (index == selectedTabIndex) White else Grey
+                            )
+                        },
+                        selectedContentColor = White,
+                        unselectedContentColor = Grey
+                    )
                 }
-
             }
 
             HorizontalPager(

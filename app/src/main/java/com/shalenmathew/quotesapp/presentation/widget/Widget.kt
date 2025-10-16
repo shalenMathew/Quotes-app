@@ -163,7 +163,32 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        Log.d("WorkManagerStatus", "Widget enabled, scheduling update")
+        Log.d("WorkManagerStatus", "Widget enabled, scheduling immediate update")
+        triggerWidgetUpdate(context)
+    }
+    
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: android.appwidget.AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        Log.d("WorkManagerStatus", "Widget update requested")
+        triggerWidgetUpdate(context)
+    }
+    
+    private fun triggerWidgetUpdate(context: Context) {
+        // Trigger immediate update
+        androidx.work.WorkManager.getInstance(context)
+            .enqueue(
+                androidx.work.OneTimeWorkRequestBuilder<com.shalenmathew.quotesapp.presentation.workmanager.widget.WidgetWorkManager>()
+                    .setConstraints(
+                        androidx.work.Constraints.Builder()
+                            .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                            .build()
+                    )
+                    .build()
+            )
     }
 
 }

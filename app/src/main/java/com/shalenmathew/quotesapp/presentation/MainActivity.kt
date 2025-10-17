@@ -51,8 +51,30 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Handle widget save to favorites action
-        intent?.let { handleWidgetSaveToFavoritesIntent(it) }
+        // Handle widget actions
+        intent?.let { 
+            // Check if launched from widget (will have CATEGORY_DEFAULT)
+            if (it.categories?.contains(Intent.CATEGORY_DEFAULT) == true && savedInstanceState == null) {
+                // This is a widget click, toggle the like
+                lifecycleScope.launch {
+                    try {
+                        val widgetQuote = getSavedWidgetQuoteObject().first()
+                        if (widgetQuote != null) {
+                            val updatedQuote = widgetQuote.copy(liked = !widgetQuote.liked)
+                            saveWidgetQuoteObject(updatedQuote)
+                            
+                            if (updatedQuote.liked) {
+                                favQuoteUseCase.favLikedQuote(updatedQuote)
+                                Log.d("MainActivity", "Quote saved to favorites from widget: ${widgetQuote.quote}")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Error handling widget click", e)
+                    }
+                }
+            }
+            handleWidgetSaveToFavoritesIntent(it) 
+        }
 
         enableEdgeToEdge(
             navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)

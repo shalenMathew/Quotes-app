@@ -9,7 +9,6 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
-import androidx.glance.action.actionSendBroadcast
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
@@ -118,14 +117,7 @@ fun QuoteWidget(savedQuote: Quote) {
                 modifier = GlanceModifier
                     .size(24.dp)
                     .clickable(
-                        actionSendBroadcast(
-                            Intent(WidgetActionReceiver.ACTION_TOGGLE_LIKE).apply {
-                                setClass(
-                                    androidx.glance.LocalContext.current,
-                                    WidgetActionReceiver::class.java
-                                )
-                            }
-                        )
+                        actionStartActivity<MainActivity>()
                     )
             )
         }

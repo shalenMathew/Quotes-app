@@ -35,8 +35,12 @@ import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
+import com.shalenmathew.quotesapp.util.saveWidgetQuoteObject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object QuotesWidgetObj: GlanceAppWidget() {
 
@@ -164,6 +168,27 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
         Log.d("WorkManagerStatus", "Widget enabled, scheduling immediate update")
+        
+        // Save a placeholder quote immediately so widget shows something
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val existingQuote = context.getSavedWidgetQuoteObject().first()
+                if (existingQuote == null) {
+                    // Save a welcome quote
+                    val placeholderQuote = Quote(
+                        id = 0,
+                        quote = "Welcome! Your daily quote will appear here soon.",
+                        author = "Quotes App",
+                        liked = false
+                    )
+                    context.saveWidgetQuoteObject(placeholderQuote)
+                    Log.d("WorkManagerStatus", "Saved placeholder quote")
+                }
+            } catch (e: Exception) {
+                Log.e("WorkManagerStatus", "Error saving placeholder", e)
+            }
+        }
+        
         triggerWidgetUpdate(context)
     }
     

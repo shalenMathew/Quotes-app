@@ -9,12 +9,7 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
-import androidx.glance.action.ActionParameters
-import androidx.glance.action.actionRunCallback
-import androidx.glance.action.ActionCallback
-import android.content.ComponentName
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.action.ActionCallback as GlanceActionCallback
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
@@ -40,28 +35,8 @@ import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
-import com.shalenmathew.quotesapp.util.toggleWidgetQuoteLike
-import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-
-// Action callback for toggling like
-class ToggleLikeAction : GlanceActionCallback {
-    override suspend fun onAction(
-        context: Context,
-        glanceId: GlanceId,
-        parameters: ActionParameters
-    ) {
-        context.toggleWidgetQuoteLike()
-        
-        // Notify MainActivity to save to favorites
-        val intent = Intent(context, MainActivity::class.java).apply {
-            action = WidgetActionReceiver.ACTION_TOGGLE_LIKE
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        }
-        context.startActivity(intent)
-    }
-}
 
 object QuotesWidgetObj: GlanceAppWidget() {
 
@@ -142,7 +117,16 @@ fun QuoteWidget(savedQuote: Quote) {
                 modifier = GlanceModifier
                     .size(24.dp)
                     .clickable(
-                        actionRunCallback<ToggleLikeAction>()
+                        actionStartActivity(
+                            Intent(Intent.ACTION_MAIN).apply {
+                                setClassName(
+                                    "com.shalenmathew.quotesapp",
+                                    "com.shalenmathew.quotesapp.presentation.MainActivity"
+                                )
+                                action = WidgetActionReceiver.ACTION_TOGGLE_LIKE
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            }
+                        )
                     )
             )
         }

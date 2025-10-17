@@ -9,6 +9,7 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
+import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
@@ -117,7 +118,18 @@ fun QuoteWidget(savedQuote: Quote) {
                 modifier = GlanceModifier
                     .size(24.dp)
                     .clickable(
-                        actionStartActivity<MainActivity>()
+                        actionStartActivity(
+                            Intent(
+                                android.content.Intent.ACTION_VIEW
+                            ).apply {
+                                setClass(
+                                    androidx.glance.appwidget.GlanceAppWidget::class.java.classLoader!!.loadClass("com.shalenmathew.quotesapp.presentation.MainActivity"),
+                                    MainActivity::class.java
+                                )
+                                action = WidgetActionReceiver.ACTION_TOGGLE_LIKE
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                        )
                     )
             )
         }

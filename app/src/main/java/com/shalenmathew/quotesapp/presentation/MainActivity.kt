@@ -138,6 +138,28 @@ class MainActivity : ComponentActivity() {
 
     private fun handleWidgetSaveToFavoritesIntent(intent: android.content.Intent) {
         when (intent.action) {
+            WidgetActionReceiver.ACTION_TOGGLE_LIKE -> {
+                Log.d("MainActivity", "Handling toggle like from widget")
+                lifecycleScope.launch {
+                    try {
+                        // Get the current widget quote
+                        val widgetQuote = getSavedWidgetQuoteObject().first()
+                        if (widgetQuote != null) {
+                            // Toggle the like state in the data store
+                            val updatedQuote = widgetQuote.copy(liked = !widgetQuote.liked)
+                            saveWidgetQuoteObject(updatedQuote)
+                            
+                            // Use the injected use case to save to favorites if now liked
+                            if (updatedQuote.liked) {
+                                favQuoteUseCase.favLikedQuote(updatedQuote)
+                                Log.d("MainActivity", "Quote saved to favorites: ${widgetQuote.quote}")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Error toggling like from widget", e)
+                    }
+                }
+            }
             WidgetActionReceiver.ACTION_SAVE_TO_FAVORITES -> {
                 Log.d("MainActivity", "Handling save to favorites from widget")
                 lifecycleScope.launch {

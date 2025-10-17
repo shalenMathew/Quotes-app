@@ -119,15 +119,13 @@ fun QuoteWidget(savedQuote: Quote) {
                     .size(24.dp)
                     .clickable(
                         actionStartActivity(
-                            Intent(
-                                android.content.Intent.ACTION_VIEW
-                            ).apply {
-                                setClass(
-                                    androidx.glance.appwidget.GlanceAppWidget::class.java.classLoader!!.loadClass("com.shalenmathew.quotesapp.presentation.MainActivity"),
-                                    MainActivity::class.java
+                            Intent().apply {
+                                setClassName(
+                                    "com.shalenmathew.quotesapp",
+                                    "com.shalenmathew.quotesapp.presentation.MainActivity"
                                 )
                                 action = WidgetActionReceiver.ACTION_TOGGLE_LIKE
-                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                             }
                         )
                     )

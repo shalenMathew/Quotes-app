@@ -134,8 +134,8 @@ fun AddCustomQuoteScreen(
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                     viewModel.onEvent(
                         CustomQuoteEvent.SaveQuote(
-                            quote = quoteText,
-                            author = authorText
+                            quote = quoteText.trim(),
+                            author = authorText.trim()
                         )
                     )
                     navHost.popBackStack()

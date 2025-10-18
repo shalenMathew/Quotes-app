@@ -39,12 +39,12 @@ class FavQuoteRepositoryImplTest {
 
 
     @Test
-    fun test_searchQuotesWithQuery() = runBlocking {
+    fun test_searchQuotesWithoutQuery() = runBlocking {
 
         /// CAUTION :  liked should be true for the test to pass or it will fail even when test logic is correct
 
-        val quote= Quote(0,"life is good","future", liked = true)
-        val quote2= Quote(1,"good is life","past", liked = true)
+        val quote = Quote(0, "life is good", "future", liked = true, updatedAt = 100L)
+        val quote2 = Quote(1, "good is life", "past", liked = true, updatedAt = 200L)
 
         quoteDao.insertQuoteList(listOf(quote,quote2))
 
@@ -56,7 +56,7 @@ class FavQuoteRepositoryImplTest {
 
 
     @Test
-    fun test_searchQuotesWithoutQuery() = runBlocking {
+    fun test_searchQuotesWithQuery() = runBlocking {
 
         val quote= Quote(0,"life is good","future",true)
         val quote2= Quote(1,"good is life","past",true)

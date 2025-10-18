@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -59,20 +61,36 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.shalenmathew.quotesapp.domain.model.CustomQuote
+import com.shalenmathew.quotesapp.domain.model.toQuote
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.custom_quote.CustomQuoteItem
+import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.CustomQuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.GlowingTriangle
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.RainbowRays
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.WhiteBeam
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.Grey
+import com.shalenmathew.quotesapp.presentation.viewmodel.CustomQuoteViewModel
 import com.shalenmathew.quotesapp.presentation.viewmodel.FavQuoteViewModel
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
+import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.DeleteConfirmationDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,6 +100,11 @@ fun FavScreen(paddingValues: PaddingValues,
               quoteViewModel:FavQuoteViewModel= hiltViewModel()) {
 
     val state = quoteViewModel.favQuoteState.value
+
+    val tabItems = listOf<TabItem>(
+        TabItem("Fav"),
+        TabItem("Custom")
+    )
 
     // fields related to search box
     var clickedSearch by remember {
@@ -99,6 +122,26 @@ fun FavScreen(paddingValues: PaddingValues,
             pullRefreshState.distanceFraction > 1f
         }
     }
+
+    var selectedTabIndex by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
+    var pagerState = rememberPagerState {
+        tabItems.size
+    }
+
+    LaunchedEffect(selectedTabIndex) {
+        pagerState.animateScrollToPage(selectedTabIndex)
+    }
+
+    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+        if (!pagerState.isScrollInProgress){
+            selectedTabIndex = pagerState.currentPage
+        }
+
+    }
+
 
 
     val cardOffset by animateIntAsState(
@@ -229,33 +272,210 @@ fun FavScreen(paddingValues: PaddingValues,
                 )
             )
 
-
-            if(state.dataList.isNotEmpty()){
-
-                LazyColumn(modifier=Modifier.fillMaxSize()) {
-                    itemsIndexed(state.dataList) {  index, quoteItem ->
-                        FavQuoteItem(quoteItem, quoteViewModel,navHost, modifier =  Modifier
-                            .zIndex((state.dataList.size- index).toFloat())
-                            .graphicsLayer {
-                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
-                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
-                                    .roundToPx()
-                                    .toFloat()
-                            })
-
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = Color.Black,
+                contentColor = White,
+                indicator = { tabPositions ->
+                    if (selectedTabIndex < tabPositions.size) {
+                        Box(
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabPositions[selectedTabIndex])
+                                .height(3.dp)
+                                .background(White)
+                        )
                     }
-                }
-
-
-            }else{
-
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                    Text("Looks empty...",
-                        color = White,
-                        fontFamily = GIFont,
+                },
+                divider = {}
+            ) {
+                tabItems.forEachIndexed { index, tabItem ->
+                    Tab(
+                        selected = index == selectedTabIndex,
+                        onClick = {
+                            selectedTabIndex = index
+                        },
+                        text = {
+                            Text(
+                                text = tabItem.tabTitle,
+                                fontFamily = GIFont,
+                                fontWeight = FontWeight.Bold,
+                                color = if (index == selectedTabIndex) White else Grey
+                            )
+                        },
+                        selectedContentColor = White,
+                        unselectedContentColor = Grey
                     )
                 }
             }
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth()
+                    .weight(1f)
+            ) { index ->
+
+
+                when (index) {
+                    0 -> {
+                        // Fav Tab Content
+                        if (state.dataList.isNotEmpty()) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(top = 12.dp)
+                            ) {
+                                itemsIndexed(state.dataList) { index, quoteItem ->
+                                    FavQuoteItem(
+                                        quoteItem,
+                                        quoteViewModel,
+                                        navHost,
+                                        modifier = Modifier
+                                            .zIndex((state.dataList.size - index).toFloat())
+                                            .graphicsLayer {
+                                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
+                                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
+                                                    .roundToPx()
+                                                    .toFloat()
+                                            }
+                                    )
+                                }
+                            }
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    "Looks empty...",
+                                    color = White,
+                                    fontFamily = GIFont,
+                                )
+                            }
+                        }
+                    }
+                    1 -> {
+                        // Custom Tab Content
+                        val customViewModel: CustomQuoteViewModel = hiltViewModel()
+                        val customState = customViewModel.state.value
+                        var quoteToDelete by remember { mutableStateOf<CustomQuote?>(null) }
+                        val dialogAlpha by animateFloatAsState(
+                            targetValue = if (quoteToDelete != null) 1f else 0f,
+                            animationSpec = tween(durationMillis = 300),
+                            label = "alpha"
+                        )
+                        val dialogScale by animateFloatAsState(
+                            targetValue = if (quoteToDelete != null) 1f else 0.8f,
+                            animationSpec = tween(durationMillis = 300),
+                            label = "scale"
+                        )
+
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            if (customState.customQuotes.isNotEmpty()) {
+                                LazyColumn(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(top = 12.dp)
+                                ) {
+                                    itemsIndexed(customState.customQuotes) { index, customQuote ->
+                                        CustomQuoteItem(
+                                            quote = customQuote,
+                                            onShareClick = { quoteToShare ->
+                                                navHost.currentBackStackEntry?.savedStateHandle?.set("quote", quoteToShare.toQuote())
+                                                navHost.navigate(Screen.Share.route)
+                                            },
+                                            onDeleteClick = { quoteForDeletion ->
+                                                quoteToDelete = quoteForDeletion
+                                            },
+                                            modifier = Modifier
+                                                .zIndex((customState.customQuotes.size - index).toFloat())
+                                                .graphicsLayer {
+                                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
+                                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
+                                                    .roundToPx()
+                                                    .toFloat()
+                                            }
+                                        )
+                                    }
+                                }
+                            } else {
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        "No custom quotes yet.\nTap + to create one!",
+                                        color = White,
+                                        fontFamily = GIFont,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+
+                            FloatingActionButton(
+                                onClick = {
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    navHost.navigate(Screen.AddCustomQuote.route)
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .padding(16.dp),
+                                containerColor = White
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Add Custom Quote",
+                                    tint = Color.Black
+                                )
+                            }
+                            if (dialogAlpha > 0f) {
+                                DeleteConfirmationDialog(
+                                    modifier = Modifier.graphicsLayer {
+                                        alpha = dialogAlpha
+                                        scaleX = dialogScale
+                                        scaleY = dialogScale
+                                    },
+                                    onConfirm = {
+                                        customViewModel.onEvent(CustomQuoteEvent.DeleteQuote(quoteToDelete!!))
+                                        quoteToDelete = null
+                                    },
+                                    onDismiss = {
+                                        quoteToDelete = null
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+            }
+
+//            if(state.dataList.isNotEmpty()){
+//
+//                LazyColumn(modifier=Modifier.fillMaxSize()) {
+//                    itemsIndexed(state.dataList) {  index, quoteItem ->
+//                        FavQuoteItem(quoteItem, quoteViewModel,navHost, modifier =  Modifier
+//                            .zIndex((state.dataList.size- index).toFloat())
+//                            .graphicsLayer {
+//                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
+//                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
+//                                    .roundToPx()
+//                                    .toFloat()
+//                            })
+//
+//                    }
+//                }
+//
+//
+//            }
+//            else{
+//
+//                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+//                    Text("Looks empty...",
+//                        color = White,
+//                        fontFamily = GIFont,
+//                    )
+//                }
+//            }
 
 
         }
@@ -387,3 +607,5 @@ fun Modifier.animatedBorder
         drawIndicator(provideProgress(), pmCcw)
     }
 }
+
+data class TabItem(val tabTitle : String)

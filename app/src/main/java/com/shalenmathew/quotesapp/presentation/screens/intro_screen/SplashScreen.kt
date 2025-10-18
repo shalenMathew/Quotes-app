@@ -99,12 +99,12 @@ fun SplashScreen(navHost: NavHostController) {
     // Launch animation logic
     LaunchedEffect(isFirstLaunch) {
         startAnim = true
-        delay(1800)
+        delay(500)
 
         if (isFirstLaunch) showTagline = true
 
         // Adjust delay: longer if tagline visible, shorter otherwise
-        delay(if (isFirstLaunch) 3200 else 1500)
+        delay(if (isFirstLaunch) 3200 else 1000)
 
         // Navigate to home
         navHost.navigate(Screen.Home.route) {

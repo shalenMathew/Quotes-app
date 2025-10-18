@@ -72,15 +72,17 @@ fun ShareScreen(
     viewModel: ShareQuoteViewModel= hiltViewModel()
 ) {
 
-    var imgBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+//    var imgBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     val context = LocalContext.current
     var showSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scrollState = rememberScrollState()
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
     var defaultQuoteStyle by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
-    var triggerCapture by remember { mutableStateOf(false) }
-    var pendingAction by remember { mutableStateOf<String?>(null) }
+//    var triggerCapture by remember { mutableStateOf(false) }
+//    var pendingAction by remember { mutableStateOf<String?>(null) }
+
+    var captureRequest by remember { mutableStateOf<String?>(null) }
 
 
 
@@ -96,20 +98,20 @@ fun ShareScreen(
         defaultQuoteStyle = defaultStyle
     }
 
-    LaunchedEffect(imgBitmap, pendingAction) {
-        imgBitmap?.let { bitmap ->
-            when (pendingAction) {
-                "download" -> {
-                    saveImgInGallery(context, bitmap.asAndroidBitmap())
-                    pendingAction = null
-                }
-                "share" -> {
-                    shareImg(context, bitmap.asAndroidBitmap())
-                    pendingAction = null
-                }
-            }
-        }
-    }
+//    LaunchedEffect(imgBitmap, pendingAction) {
+//        imgBitmap?.let { bitmap ->
+//            when (pendingAction) {
+//                "download" -> {
+//                    saveImgInGallery(context, bitmap.asAndroidBitmap())
+//                    pendingAction = null
+//                }
+//                "share" -> {
+//                    shareImg(context, bitmap.asAndroidBitmap())
+//                    pendingAction = null
+//                }
+//            }
+//        }
+//    }
 
 
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
@@ -136,10 +138,17 @@ fun ShareScreen(
 //                }
 
                 CaptureBitmap(
-                    triggerCapture = triggerCapture,
-                    onCapture = { capturedBitmap ->
-                        imgBitmap = capturedBitmap
-                        triggerCapture = false
+                    captureRequest = captureRequest,
+                    onCapture = { capturedBitmap, action ->
+                        when (action) {
+                            "download" -> {
+                                saveImgInGallery(context, capturedBitmap.asAndroidBitmap())
+                            }
+                            "share" -> {
+                                shareImg(context, capturedBitmap.asAndroidBitmap())
+                            }
+                        }
+                        captureRequest = null
                     }
                 ) {
                     // All style rendering happens here with access to ShareScreen's state
@@ -221,8 +230,7 @@ fun ShareScreen(
                     painter = painterResource(R.drawable.downloads), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.size(28.dp).clickable {
-                        pendingAction = "download"
-                        triggerCapture = true
+                        captureRequest = "download"
                     })
 
                 Image(
@@ -230,8 +238,7 @@ fun ShareScreen(
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.size(28.dp)
                         .clickable {
-                            pendingAction = "share"
-                            triggerCapture = true
+                            captureRequest = "share"
                         }
 
                 )

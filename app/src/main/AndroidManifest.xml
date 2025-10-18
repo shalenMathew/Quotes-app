@@ -49,6 +49,13 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
+        <receiver android:name=".presentation.widget.WidgetActionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.shalenmathew.quotesapp.action.TOGGLE_LIKE" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".presentation.widget.QuotesWidgetReceiver"
             android:exported="true">
             <intent-filter>

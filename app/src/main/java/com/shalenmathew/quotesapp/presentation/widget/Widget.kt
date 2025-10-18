@@ -1,11 +1,8 @@
 package com.shalenmathew.quotesapp.presentation.widget
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
@@ -17,7 +14,9 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
 import androidx.glance.layout.Column
+import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
@@ -27,45 +26,117 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.glance.GlanceTheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.R
+import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.MainActivity
-import com.shalenmathew.quotesapp.presentation.workmanager.widget.WidgetWorkManager
-import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
-import com.shalenmathew.quotesapp.util.dataStore
+import com.shalenmathew.quotesapp.util.getSavedWidgetQuoteObject
+import com.shalenmathew.quotesapp.util.saveWidgetQuoteObject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object QuotesWidgetObj: GlanceAppWidget() {
+
+    const val ACTION_LIKE_QUOTE = "com.shalenmathew.quotesapp.action.LIKE_QUOTE"
 
     override suspend fun provideGlance(
         context: Context,
         id: GlanceId
     ) {
         val savedQuote = runBlocking {
-            context.dataStore.data.first()[WIDGET_QUOTE_KEY] ?: "widget is refreshing, will be updated in some time.Or try rebooting the device"
+            context.getSavedWidgetQuoteObject().first()
         }
 
         Log.d("WID,","quote $savedQuote")
 
         provideContent {
-            QuoteWidget(savedQuote)
+            if (savedQuote != null) {
+                QuoteWidget(savedQuote)
+            } else {
+                QuoteWidgetFallback()
+            }
         }
 
     }
 }
 
 @Composable
-fun QuoteWidget(savedQuote: String) {
+@Suppress("RestrictedApi")
+fun QuoteWidget(savedQuote: Quote) {
     Column(
         modifier = GlanceModifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(Color.Black)
-            .padding(horizontal = 12.dp, vertical = 5.dp)
+            .background(ColorProvider(Color.Black))
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            provider = ImageProvider(R.drawable.quotation),
+            contentDescription = null,
+            modifier = GlanceModifier
+                .padding(start = 12.dp, top = 10.dp)
+                .size(30.dp)
+        )
+
+        Text(
+            text = savedQuote.quote,
+            style = TextStyle(
+                fontSize = 18.sp,
+                color = ColorProvider(Color.White),
+                fontWeight = FontWeight.Normal,
+            ),
+            modifier = GlanceModifier.wrapContentSize().padding(15.dp)
+        )
+
+        // Author
+        Text(
+            text = "- ${savedQuote.author}",
+            style = TextStyle(
+                fontSize = 14.sp,
+                color = ColorProvider(Color.Gray),
+                fontWeight = FontWeight.Normal,
+            ),
+            modifier = GlanceModifier.padding(bottom = 10.dp)
+        )
+
+        // Like button
+        Row(
+            modifier = GlanceModifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.End
+        ) {
+            Image(
+                provider = ImageProvider(
+                    if (savedQuote.liked) R.drawable.heart_filled else R.drawable.heart_unfilled
+                ),
+                contentDescription = if (savedQuote.liked) "Unlike" else "Like",
+                modifier = GlanceModifier
+                    .size(24.dp)
+                    .clickable(
+                        actionStartActivity<MainActivity>()
+                    )
+            )
+        }
+    }
+}
+
+@Composable
+@Suppress("RestrictedApi")
+fun QuoteWidgetFallback() {
+    Column(
+        modifier = GlanceModifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(ColorProvider(Color.Black))
+            .padding(12.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -79,13 +150,13 @@ fun QuoteWidget(savedQuote: String) {
         )
 
         Text(
-            text = savedQuote,
+            text = "Widget is refreshing, will be updated in some time. Or try rebooting the device",
             style = TextStyle(
-                fontSize = 18.sp,
+                fontSize = 14.sp,
                 color = ColorProvider(Color.White),
                 fontWeight = FontWeight.Normal,
             ),
-            modifier = GlanceModifier.wrapContentSize().padding(horizontal = 15.dp, vertical = 15.dp)
+            modifier = GlanceModifier.wrapContentSize().padding(15.dp)
         )
     }
 }
@@ -96,7 +167,53 @@ class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
 
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        Log.d("WorkManagerStatus", "Widget enabled, scheduling update")
+        Log.d("WorkManagerStatus", "Widget enabled, scheduling immediate update")
+        
+        // Save a placeholder quote immediately so widget shows something
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val existingQuote = context.getSavedWidgetQuoteObject().first()
+                if (existingQuote == null) {
+                    // Save a welcome quote
+                    val placeholderQuote = Quote(
+                        id = 0,
+                        quote = "Welcome! Your daily quote will appear here soon.",
+                        author = "Quotes App",
+                        liked = false
+                    )
+                    context.saveWidgetQuoteObject(placeholderQuote)
+                    Log.d("WorkManagerStatus", "Saved placeholder quote")
+                }
+            } catch (e: Exception) {
+                Log.e("WorkManagerStatus", "Error saving placeholder", e)
+            }
+        }
+        
+        triggerWidgetUpdate(context)
+    }
+    
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: android.appwidget.AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        Log.d("WorkManagerStatus", "Widget update requested")
+        triggerWidgetUpdate(context)
+    }
+    
+    private fun triggerWidgetUpdate(context: Context) {
+        // Trigger immediate update
+        androidx.work.WorkManager.getInstance(context)
+            .enqueue(
+                androidx.work.OneTimeWorkRequestBuilder<com.shalenmathew.quotesapp.presentation.workmanager.widget.WidgetWorkManager>()
+                    .setConstraints(
+                        androidx.work.Constraints.Builder()
+                            .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                            .build()
+                    )
+                    .build()
+            )
     }
 
 }

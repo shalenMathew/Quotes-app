@@ -52,12 +52,6 @@ object AppModule {
 
     @Singleton
     @Provides
-fun providesQuoteUsecase(getQuote: GetQuote, likedQuote: LikedQuote, getLikedQuotes: GetLikedQuotes): QuoteUseCase {
-return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes = getLikedQuotes)
-}
-
-    @Singleton
-    @Provides
     fun providesQuoteDatabase(application: Application):QuoteDatabase{
         return Room.databaseBuilder(application,QuoteDatabase::class.java,"quote_db")
             .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5)
@@ -96,15 +90,8 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
         return FavQuoteRepositoryImpl(db)
     }
 
-
     @Singleton
     @Provides
-    fun providesFavQuoteUseCase(getFavQuote: GetFavQuote,favLikedQuote: FavLikedQuote):FavQuoteUseCase{
-        return FavQuoteUseCase(getFavQuote,favLikedQuote)
-    }
-
-    @Provides
-    @Singleton
     fun providesOkhttpClient(@ApplicationContext context: Context):OkHttpClient
     {
 

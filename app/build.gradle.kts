@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 
-    id ("kotlin-kapt")
     id ("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
     alias(libs.plugins.kotlin.compose)
@@ -73,10 +72,6 @@ android {
         buildConfig = true
     }
 
-    kapt {
-        correctErrorTypes = true
-    }
-
 }
 
 dependencies {
@@ -109,14 +104,8 @@ dependencies {
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0") // hilt for nav
     implementation("androidx.hilt:hilt-work:1.2.0")
 
-//    ksp ("com.google.dagger:hilt-android-compiler:2.54")
-//    kapt("androidx.hilt:hilt-compiler:1.2.0")
-
-    kapt("androidx.hilt:hilt-compiler:1.2.0")
-    kapt("com.google.dagger:hilt-compiler:2.56.2")
-
-//    kapt ("com.google.dagger:hilt-android-compiler:2.54")
-//    kapt ("com.google.dagger:hilt-compiler:2.54")
+    ksp("com.google.dagger:hilt-compiler:2.56.2")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
 
 
     //Room Database
@@ -131,6 +120,7 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:5.0.0")
     implementation ("com.squareup.retrofit2:converter-scalars:3.0.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0")
+    implementation ("com.google.code.gson:gson:2.10.1")
 
 
     // Glance Widget

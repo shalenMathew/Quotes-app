@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -150,44 +151,44 @@ import kotlin.coroutines.resume
 //}
 
 
-@Composable
-fun CaptureBitmap(
-    triggerCapture: Boolean,
-    onCapture: (ImageBitmap) -> Unit,
-    content: @Composable () -> Unit
-) {
-    val context = LocalContext.current
-    val view = LocalView.current
-    val coroutineScope = rememberCoroutineScope()
-
-    Box(
-        modifier = Modifier.onGloballyPositioned { coordinates ->
-            if (triggerCapture) {
-                coroutineScope.launch(Dispatchers.Main) {
-                    try {
-
-                        delay(100)
-
-                        val bounds = coordinates.boundsInRoot()
-                        val bitmap = captureView(
-                            context as Activity,
-                            view,
-                            bounds.left.toInt(),
-                            bounds.top.toInt(),
-                            bounds.width.toInt(),
-                            bounds.height.toInt()
-                        )
-                        bitmap?.let { onCapture(it.asImageBitmap()) }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
-    ) {
-        content()
-    }
-}
+//@Composable
+//fun CaptureBitmap(
+//    triggerCapture: Boolean,
+//    onCapture: (ImageBitmap) -> Unit,
+//    content: @Composable () -> Unit
+//) {
+//    val context = LocalContext.current
+//    val view = LocalView.current
+//    val coroutineScope = rememberCoroutineScope()
+//
+//    Box(
+//        modifier = Modifier.onGloballyPositioned { coordinates ->
+//            if (triggerCapture) {
+//                coroutineScope.launch(Dispatchers.Main) {
+//                    try {
+//
+//                        delay(100)
+//
+//                        val bounds = coordinates.boundsInRoot()
+//                        val bitmap = captureView(
+//                            context as Activity,
+//                            view,
+//                            bounds.left.toInt(),
+//                            bounds.top.toInt(),
+//                            bounds.width.toInt(),
+//                            bounds.height.toInt()
+//                        )
+//                        bitmap?.let { onCapture(it.asImageBitmap()) }
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                    }
+//                }
+//            }
+//        }
+//    ) {
+//        content()
+//    }
+//}
 
 
 
@@ -269,7 +270,43 @@ fun CaptureBitmap(
 //    }
 //}
 
+@Composable
+fun CaptureBitmap(
+    captureRequest: String?,
+    onCapture: (bitmap: ImageBitmap, action: String) -> Unit,
+    content: @Composable () -> Unit
+) {
+    val context = LocalContext.current
+    val view = LocalView.current
 
+    var coordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+
+    LaunchedEffect(captureRequest, coordinates) {
+        if (captureRequest != null && coordinates != null) {
+
+            withFrameNanos { }
+
+            val bounds = coordinates!!.boundsInRoot()
+            val bitmap = captureView(
+                context as Activity,
+                view,
+                bounds.left.toInt(),
+                bounds.top.toInt(),
+                bounds.width.toInt(),
+                bounds.height.toInt()
+            )
+            bitmap?.let { onCapture(it.asImageBitmap(), captureRequest) }
+        }
+    }
+
+    Box(
+        modifier = Modifier.onGloballyPositioned {
+            coordinates = it
+        }
+    ) {
+        content()
+    }
+}
 
 
 private suspend fun captureView(

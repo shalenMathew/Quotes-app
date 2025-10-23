@@ -10,7 +10,10 @@ activityCompose = "1.10.1"
 composeBom = "2025.03.00"
 junitJunit = "4.12"
 animationCore = "1.9.2"
+
 foundation = "1.9.3"
+aboutLibraries = "11.2.3"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,10 +32,15 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 androidx-animation-core = { group = "androidx.compose.animation", name = "animation-core", version.ref = "animationCore" }
+
 androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+
+aboutlibraries-compose-m3 = { group = "com.mikepenz", name = "aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
 

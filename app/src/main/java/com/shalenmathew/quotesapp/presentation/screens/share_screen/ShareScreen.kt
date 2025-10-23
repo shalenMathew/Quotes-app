@@ -39,7 +39,6 @@ fun ShareScreen(
     paddingValues: PaddingValues,
     navHost: NavHostController
 ) {
-
     val styleRepository = remember { StylePreferenceRepository() }
     var imgBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
     val context = LocalContext.current
@@ -48,12 +47,28 @@ fun ShareScreen(
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(styleRepository.getDefaultQuoteStyle()) }
     var triggerCapture by remember { mutableStateOf(false) }
     var pendingAction by remember { mutableStateOf<String?>(null) }
+//    var imgBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+    val context = LocalContext.current
+    var showSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scrollState = rememberScrollState()
+    var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
+    var defaultQuoteStyle by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
+//    var triggerCapture by remember { mutableStateOf(false) }
+//    var pendingAction by remember { mutableStateOf<String?>(null) }
+
+    var captureRequest by remember { mutableStateOf<String?>(null) }
+
+
+
+
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
 
     LaunchedEffect(Unit) {
+
         quoteStyleState = styleRepository.getDefaultQuoteStyle()
     }
 
@@ -72,6 +87,27 @@ fun ShareScreen(
         }
     }
 
+        val defaultStyle = viewModel.getDefaultQuoteStyle()
+        quoteStyleState = defaultStyle
+        defaultQuoteStyle = defaultStyle
+    }
+
+//    LaunchedEffect(imgBitmap, pendingAction) {
+//        imgBitmap?.let { bitmap ->
+//            when (pendingAction) {
+//                "download" -> {
+//                    saveImgInGallery(context, bitmap.asAndroidBitmap())
+//                    pendingAction = null
+//                }
+//                "share" -> {
+//                    shareImg(context, bitmap.asAndroidBitmap())
+//                    pendingAction = null
+//                }
+//            }
+//        }
+//    }
+
+
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
     Column(
@@ -86,10 +122,17 @@ fun ShareScreen(
         ) {
             if (quote != null) {
                 CaptureBitmap(
-                    triggerCapture = triggerCapture,
-                    onCapture = { capturedBitmap ->
-                        imgBitmap = capturedBitmap
-                        triggerCapture = false
+                    captureRequest = captureRequest,
+                    onCapture = { capturedBitmap, action ->
+                        when (action) {
+                            "download" -> {
+                                saveImgInGallery(context, capturedBitmap.asAndroidBitmap())
+                            }
+                            "share" -> {
+                                shareImg(context, capturedBitmap.asAndroidBitmap())
+                            }
+                        }
+                        captureRequest = null
                     }
                 ) {
                     when (quoteStyleState) {
@@ -183,18 +226,32 @@ fun ShareScreen(
                     painter = painterResource(R.drawable.downloads),
                     contentDescription = "Download",
                     colorFilter = ColorFilter.tint(Color.White),
+
                     modifier = Modifier
                         .size(28.dp)
                         .clickable { pendingAction = "download"; triggerCapture = true }
                 )
 
+                    modifier = Modifier.size(28.dp).clickable {
+                        captureRequest = "download"
+                    })
+
+
                 Image(
                     painter = painterResource(R.drawable.share),
                     contentDescription = "Share",
                     colorFilter = ColorFilter.tint(Color.White),
+
                     modifier = Modifier
                         .size(28.dp)
                         .clickable { pendingAction = "share"; triggerCapture = true }
+
+                    modifier = Modifier.size(28.dp)
+                        .clickable {
+                            captureRequest = "share"
+                        }
+
+
                 )
             }
         }
@@ -241,6 +298,36 @@ fun ShareScreen(
 
 
 
+
+                    Row(modifier = Modifier.fillMaxWidth()
+                        .wrapContentHeight()) {
+
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+
+                            Image(
+                                painter = painterResource(R.drawable.sample_code_snippet),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.CodeSnippetTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.CodeSnippetTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+
             Box(
                 modifier = Modifier
                     .width(200.dp)
@@ -252,7 +339,34 @@ fun ShareScreen(
                 contentAlignment = Alignment.Center
             ) {
 
+
                 preview()
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            Image(
+                                painter = painterResource(R.drawable.sample_brat_theme),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.bratTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.bratTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.bratTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
 
 
                 Checkbox(
@@ -271,12 +385,39 @@ fun ShareScreen(
     }
 
 
+
     if (showColorPicker) {
         val initialColor = when (editTarget) {
             "start" -> liquidStartColor
             "end" -> liquidEndColor
             else -> Color.Black
         }
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            Image(
+                                painter = painterResource(R.drawable.sample_igor),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.igorTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.igorTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.igorTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
 
         CustomPickerDialog(
             initialColor = initialColor,
@@ -319,6 +460,7 @@ fun ShareScreen(
                     modifier = Modifier.padding(bottom = 16.dp)
 
                 )
+
 
                 LazyColumn(
                     modifier = Modifier
@@ -364,6 +506,131 @@ fun ShareScreen(
                                 QuoteStyle.ReminderTheme -> ReminderStyle(modifier = previewModifier, quote = previewQuote)
                                 QuoteStyle.FliplingoesTheme -> FliplingoesTheme(modifier = previewModifier, quote = previewQuote)
                             }
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            Image(
+                                painter = painterResource(R.drawable.sample_default_style),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.DefaultTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.DefaultTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.DefaultTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+                /**  LIQUID GLASS */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+                {
+
+                    Text(text = "Liquid Glass",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            Image(
+                                painter = painterResource(R.drawable.sample_liquid_glass),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.LiquidGlassTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.LiquidGlassTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.LiquidGlassTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+
+                /* REMINDER THEME */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
+                {
+
+                    Text(text = "Reminder theme",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+//                    Row(modifier = Modifier.fillMaxWidth()
+//                        .wrapContentHeight())
+//                    {
+//
+//                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+//
+//                            ReminderStyleCover(
+//                                modifier = Modifier.size(200.dp).background(Color.Blue)
+//                                .clickable {
+//                                    quoteStyleState = QuoteStyle.ReminderTheme
+//                                    showSheet = false
+//                                },
+//                            )
+//                            Checkbox(
+//                                modifier = Modifier.align(Alignment.BottomEnd),
+//                                checked = quoteStyleState == QuoteStyle.ReminderTheme,
+//                                onCheckedChange = { isChecked ->
+//                                    if (isChecked) {
+//                                        quoteStyleState = QuoteStyle.ReminderTheme
+//                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
+//                                    }
+//                                }
+//                            )
+//                        }
+//                    }
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            Image(
+                                painter = painterResource(R.drawable.sample_reminder_2),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.ReminderTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.ReminderTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.ReminderTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+
                         }
                     }
                 }

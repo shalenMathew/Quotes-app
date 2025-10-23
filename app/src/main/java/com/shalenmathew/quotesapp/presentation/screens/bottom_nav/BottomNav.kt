@@ -29,11 +29,8 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -49,76 +46,59 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.shalenmathew.quotesapp.presentation.theme.bottomNavItem
 
-
 @Composable
 fun BottomNavAnimation(
-     navigator:NavHostController
+    navigator: NavHostController
 ) {
-
-    var selectedScreen by remember { mutableStateOf(0) }
-    val haptic = LocalHapticFeedback.current
-
-    val tabItem = listOf(
-         BottomNav.Home,
-        BottomNav.Fav,
-        BottomNav.Settings
-    )
-
     val navBackStackEntry by navigator.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val currentScreen = Screen.values.find { it.route == currentRoute }
 
-    // for scenarios when user clicks back press
-    LaunchedEffect(navBackStackEntry) {
-        val currentDes = navBackStackEntry?.destination?.route
-        selectedScreen = tabItem.indexOfFirst { currentDes==it.route }
-        if (selectedScreen<0) selectedScreen=0
-    }
-
-    Box(
-        modifier= Modifier
-            .navigationBarsPadding()
-            .shadow(5.dp)
-            .background(color = Color.Black)  // customize
-            .height(80.dp)
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-    ) {
-
-        Row(
-            Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
+    // Only show bottom nav if current screen needs it
+    if (currentScreen?.needBottomNav == true) {
+        val haptic = LocalHapticFeedback.current
+        val tabItem = listOf(BottomNav.Home, BottomNav.Fav, BottomNav.Settings)
+        Box(
+            modifier = Modifier
+                .navigationBarsPadding()
+                .shadow(5.dp)
+                .background(color = Color.Black)
+                .height(80.dp)
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
         ) {
-            for (screen in tabItem) {
-                val isSelected = screen == tabItem[selectedScreen]
-                val animatedWeight by animateFloatAsState(targetValue = if (isSelected) 1.5f else 1f)
-                Box(
-                    modifier = Modifier.weight(animatedWeight),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    val interactionSource = remember { MutableInteractionSource() }
-
-                    BottomNavItem(
-                        modifier = Modifier.clickable(
-                            interactionSource = interactionSource,
-                            indication = null
-                        ) {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-//                            selectedScreen = screens.indexOf(screen)
-                            navigator.navigate(screen.route){
-                                popUpTo(Screen.Home.route){
-                                    inclusive=false
+            Row(
+                Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                for (screen in tabItem) {
+                    val isSelected = screen.route == currentRoute
+                    val animatedWeight by animateFloatAsState(targetValue = if (isSelected) 1.5f else 1f, label = "")
+                    Box(
+                        modifier = Modifier.weight(animatedWeight),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        val interactionSource = remember { MutableInteractionSource() }
+                        BottomNavItem(
+                            modifier = Modifier.clickable(
+                                interactionSource = interactionSource,
+                                indication = null
+                            ) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                navigator.navigate(screen.route) {
+                                    popUpTo(Screen.Home.route) { inclusive = false }
+                                    launchSingleTop = true
                                 }
-                                launchSingleTop=true
-                            }
-                        },
-                        item = screen,
-                        isSelected = isSelected
-                    )
+                            },
+                            item = screen,
+                            isSelected = isSelected
+                        )
+                    }
                 }
             }
         }
     }
 }
-
 @Composable
 private fun BottomNavItem(
     modifier: Modifier = Modifier,
@@ -134,9 +114,8 @@ private fun BottomNavItem(
         animationSpec = spring(
             stiffness = Spring.StiffnessLow,
             dampingRatio = Spring.DampingRatioMediumBouncy
-        )
+        ), label = ""
     )
-
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -157,7 +136,6 @@ private fun BottomNavItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-
             FlipIcon(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -169,7 +147,6 @@ private fun BottomNavItem(
                 activeIcon = item.activeIcon,
                 inactiveIcon = item.inactiveIcon,
                 contentDescription = "Null")
-
             AnimatedVisibility(visible = isSelected) {
                 Text(
                     text = item.route,
@@ -178,11 +155,9 @@ private fun BottomNavItem(
                     maxLines = 1,
                 )
             }
-
         }
     }
 }
-
 @Composable
 fun FlipIcon(
     modifier: Modifier = Modifier,
@@ -211,7 +186,6 @@ fun FlipIcon(
         )
     }
 }
-
 sealed class Screen(
     val route: String,
     val needBottomNav:Boolean
@@ -222,13 +196,12 @@ sealed class Screen(
     object Splash: Screen("Splash",false)
     object Share: Screen("Share",false)
     object Settings: Screen("Settings",true)
-
+    object AboutLibraries: Screen("AboutLibraries",false)
+    object AddCustomQuote: Screen("AddCustomQuote",false)
     companion object{
-        val values:List<Screen> = listOf(Home,Fav,Splash,Share, Settings)
+        val values:List<Screen> = listOf(Home,Fav,Splash,Share, Settings, AboutLibraries)
     }
-
 }
-
 sealed class BottomNav(
     val route: String,
     val activeIcon: ImageVector,
@@ -239,6 +212,3 @@ sealed class BottomNav(
     object Fav: BottomNav(Screen.Fav.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
     object Settings: BottomNav(Screen.Settings.route, Icons.Filled.Person,Icons.Outlined.Person)
 }
-
-
-

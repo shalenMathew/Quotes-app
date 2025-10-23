@@ -4,17 +4,25 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.shalenmathew.quotesapp.BuildConfig
 import com.shalenmathew.quotesapp.data.local.AnimationPreferencesImpl
 import com.shalenmathew.quotesapp.data.local.DefaultQuoteStylePreferencesImpl
 import com.shalenmathew.quotesapp.data.local.QuoteDatabase
 import com.shalenmathew.quotesapp.data.remote.QuoteApi
+import com.shalenmathew.quotesapp.data.repository.CustomQuoteRepositoryImpl
 import com.shalenmathew.quotesapp.data.repository.FavQuoteRepositoryImpl
 import com.shalenmathew.quotesapp.data.repository.QuoteRepositoryImplementation
 import com.shalenmathew.quotesapp.domain.repository.AnimationPreferences
+import com.shalenmathew.quotesapp.domain.repository.CustomQuoteRepository
 import com.shalenmathew.quotesapp.domain.repository.DefaultQuoteStylePreferences
 import com.shalenmathew.quotesapp.domain.repository.FavQuoteRepository
 import com.shalenmathew.quotesapp.domain.repository.QuoteRepository
+import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
+import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.DeleteCustomQuote
+import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.GetCustomQuotes
+import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.SaveCustomQuote
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.GetFavQuote
@@ -52,8 +60,28 @@ return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes
     @Provides
     fun providesQuoteDatabase(application: Application):QuoteDatabase{
         return Room.databaseBuilder(application,QuoteDatabase::class.java,"quote_db")
-            .fallbackToDestructiveMigration(true)
+            .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5)
+//            .fallbackToDestructiveMigration(true)
             .build()
+    }
+
+    val DB_MIGRATION = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE Quote ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+        }
+    }
+
+    val DB_MIGRATION_4_5 = object : Migration(4, 5) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("""
+            CREATE TABLE IF NOT EXISTS custom_quotes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                quote TEXT NOT NULL,
+                author TEXT NOT NULL,
+                createdAt INTEGER NOT NULL
+            )
+        """)
+        }
     }
 
 @Singleton
@@ -129,5 +157,39 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
     @Provides
     fun providesAnimationPreferences(): AnimationPreferences {
         return AnimationPreferencesImpl()
+    }
+
+    @Singleton
+    @Provides
+    fun providesCustomQuoteRepository(db: QuoteDatabase): CustomQuoteRepository {
+        return CustomQuoteRepositoryImpl(db)
+    }
+
+    @Singleton
+    @Provides
+    fun providesGetCustomQuotes(repository: CustomQuoteRepository): GetCustomQuotes {
+        return GetCustomQuotes(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun providesSaveCustomQuote(repository: CustomQuoteRepository): SaveCustomQuote {
+        return SaveCustomQuote(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun providesDeleteCustomQuote(repository: CustomQuoteRepository): DeleteCustomQuote {
+        return DeleteCustomQuote(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun providesCustomQuoteUseCases(
+        getCustomQuotes: GetCustomQuotes,
+        saveCustomQuote: SaveCustomQuote,
+        deleteCustomQuote: DeleteCustomQuote
+    ): CustomQuoteUseCases {
+        return CustomQuoteUseCases(getCustomQuotes, saveCustomQuote, deleteCustomQuote)
     }
 }

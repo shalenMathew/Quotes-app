@@ -7,14 +7,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.fontResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,9 +21,18 @@ import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import kotlinx.coroutines.delay
 
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
+import com.shalenmathew.quotesapp.util.isFirstLaunch
+import com.shalenmathew.quotesapp.util.setFirstLaunchDone
+import kotlinx.coroutines.launch
 
 @Composable
 fun SplashScreen(navHost: NavHostController) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    // read whether it's first launch
+    val isFirstLaunch by context.isFirstLaunch().collectAsState(initial = true)
+
     var startAnim by remember { mutableStateOf(false) }
     var showTagline by remember { mutableStateOf(false) }
 
@@ -39,13 +44,11 @@ fun SplashScreen(navHost: NavHostController) {
         targetValue = if (startAnim) 1f else 0.85f,
         animationSpec = tween(durationMillis = 1800, easing = FastOutSlowInEasing)
     )
-
     val offsetYAnim by animateDpAsState(
         targetValue = if (startAnim) 0.dp else 40.dp,
         animationSpec = tween(durationMillis = 1800, easing = EaseOutExpo)
     )
 
-    // Glow effect
     val infiniteGlow = rememberInfiniteTransition(label = "")
     val glowAlpha by infiniteGlow.animateFloat(
         initialValue = 0.8f,
@@ -57,8 +60,8 @@ fun SplashScreen(navHost: NavHostController) {
         label = ""
     )
 
+    // UI
     Box(modifier = Modifier.fillMaxSize()) {
-
         Image(
             painter = painterResource(id = R.drawable.splash_3),
             contentDescription = null,
@@ -74,7 +77,6 @@ fun SplashScreen(navHost: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-
             Text(
                 text = "Quotes",
                 color = Color.White.copy(alpha = fadeAlpha * glowAlpha),
@@ -83,27 +85,39 @@ fun SplashScreen(navHost: NavHostController) {
                 fontFamily = GIFont
             )
 
-            // Tagline (word-by-word animation)
-            if (showTagline) {
+            // Only show tagline if it's first launch
+            if (showTagline && isFirstLaunch) {
                 Spacer(modifier = Modifier.height(20.dp))
                 AnimatedTagline(
-                    words = listOf("Feel", "the", "words.", "Live", "the", "meaning."),
+                    words = listOf("Feel", "the", "words.", "Live", "the", "Meaning"),
                     fontFamily = GIFont
                 )
             }
         }
     }
 
-    LaunchedEffect(Unit) {
+    // Launch animation logic
+    LaunchedEffect(isFirstLaunch) {
         startAnim = true
-        delay(1800)
-        showTagline = true
-        delay(3200)
+        delay(500)
+
+        if (isFirstLaunch) showTagline = true
+
+        // Adjust delay: longer if tagline visible, shorter otherwise
+        delay(if (isFirstLaunch) 3200 else 1000)
+
+        // Navigate to home
         navHost.navigate(Screen.Home.route) {
             popUpTo(Screen.Splash.route) { inclusive = true }
         }
+
+        // After showing once, mark first launch done
+        if (isFirstLaunch) {
+            scope.launch { context.setFirstLaunchDone() }
+        }
     }
 }
+
 
 @Composable
 fun AnimatedTagline(words: List<String>, fontFamily: FontFamily) {

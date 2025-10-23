@@ -25,6 +25,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,12 +43,29 @@ import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
 
-/**  this util scope  limited to share screen */
+/**
+ * SEALED CLASS: Defines all available quote styles.
+ */
+sealed class QuoteStyle() {
+    object DefaultTheme : QuoteStyle()
+    object CodeSnippetTheme : QuoteStyle()
+    object LiquidGlassTheme : QuoteStyle()
+    object bratTheme : QuoteStyle()
+    object igorTheme : QuoteStyle()
+    object ReminderTheme : QuoteStyle()
+    object FliplingoesTheme : QuoteStyle()
+
+}
+
+/**
+ * UTILITY FUNCTION: Saves the bitmap image to the device's gallery.
+ */
 fun saveImgInGallery(context: Context , bitmap: Bitmap) {
 
     val fileName = "quote_${System.currentTimeMillis()}.png"
-
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
 
@@ -58,19 +79,14 @@ fun saveImgInGallery(context: Context , bitmap: Bitmap) {
 
         imageUri?.let { uri->
             context.contentResolver.openOutputStream(uri)?.use { stream ->
-
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
                 Toast.makeText(context, "Saved to Gallery", Toast.LENGTH_SHORT).show()
             }
-
         }?:run {
             Toast.makeText(context, "Failed to save image", Toast.LENGTH_SHORT).show()
         }
 
-    }
-    else{
-
+    } else {
         val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val quotesFolder = File(picturesDir, "Quotes")
 
@@ -88,20 +104,19 @@ fun saveImgInGallery(context: Context , bitmap: Bitmap) {
                 arrayOf("image/png"),
                 null
             )
-
             Toast.makeText(context, "Saved to Gallery", Toast.LENGTH_SHORT).show()
 
         } catch (e: Exception) {
             Log.e("SaveError", "Failed to save image: ${e.message}")
             Toast.makeText(context, "Failed to save image", Toast.LENGTH_SHORT).show()
         }
-
     }
-
 }
 
+/**
+ * UTILITY FUNCTION: Shares the bitmap image via an Intent.
+ */
 fun shareImg(context: Context , bitmap: Bitmap){
-
     val file = File(context.cacheDir, "shared_image.png")
     file.outputStream().use {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
@@ -117,25 +132,11 @@ fun shareImg(context: Context , bitmap: Bitmap){
     }
 
     context.startActivity(Intent.createChooser(intent,"Share Quotes via"))
-
-
 }
 
-sealed class QuoteStyle()
-{
-
-    object DefaultTheme : QuoteStyle()
-    object CodeSnippetTheme : QuoteStyle()
-
-    object LiquidGlassTheme : QuoteStyle()
-//    object SpotifyTheme: QuoteStyle()
-    object bratTheme : QuoteStyle()
-    object igorTheme : QuoteStyle()
-
-    object ReminderTheme : QuoteStyle()
-
-}
-
+/**
+ * COMPONENT: Custom Dialog for Color Selection.
+ */
 @Composable
 fun CustomPickerDialog(
     initialColor: Color,
@@ -144,85 +145,70 @@ fun CustomPickerDialog(
 ) {
     val controller = rememberColorPickerController()
 
-    CustomPickerDialog(
-        onDismissRequest = onDismiss
-    ) {
-        Column(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        )
-        {
-            HsvColorPicker(
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier.widthIn(max = 500.dp),
+            shape = MaterialTheme.shapes.extraLarge
+        ) {
+            Column(
                 modifier = Modifier
-                    .width(350.dp)
-                    .height(300.dp)
-                    .padding(top = 10.dp),
-                initialColor = initialColor,
-                controller = controller
-            )
-
-            BrightnessSlider(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .height(35.dp),
-                initialColor = initialColor,
-                controller = controller
-            )
-
-            AlphaTile(
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(vertical = 10.dp)
-                    .clip(RoundedCornerShape(6.dp)),
-                controller = controller
-            )
-
-            Button(
-                onClick = {
-                    onSelect(controller.selectedColor.value)
-                    onDismiss()
-                }
+                    .wrapContentSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "Done",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
+                HsvColorPicker(
+                    modifier = Modifier
+                        .width(350.dp)
+                        .height(300.dp)
+                        .padding(top = 10.dp),
+                    initialColor = initialColor,
+                    controller = controller
                 )
+
+                BrightnessSlider(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .height(35.dp),
+                    initialColor = initialColor,
+                    controller = controller
+                )
+
+                AlphaTile(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(vertical = 10.dp)
+                        .clip(RoundedCornerShape(6.dp)),
+                    controller = controller
+                )
+
+                Button(
+                    onClick = {
+                        onSelect(controller.selectedColor.value)
+                        onDismiss()
+                    }
+                ) {
+                    Text(text = "Done", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                }
             }
         }
     }
 }
 
+/**
+ * SIMPLE REPOSITORY: In-memory store for the default style (Non-persistent).
+ */
+@Singleton
+class StylePreferenceRepository @Inject constructor() {
 
-@Composable
-fun CustomPickerDialog(
-    onDismissRequest: () -> Unit,
-    content: @Composable () -> Unit
-) {
-    Dialog(
-        onDismissRequest = onDismissRequest
-    ) {
-        Card(
-            modifier = Modifier.widthIn(max = 500.dp),
-            shape = MaterialTheme.shapes.extraLarge
-        ) { content() }
+    // Use mutableStateOf to hold the default style state in memory
+    private var currentDefaultStyle by mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme)
+
+    fun getDefaultQuoteStyle(): QuoteStyle {
+        return currentDefaultStyle
     }
-}
 
-
-fun Color.lighten(factor: Float = 1.3f): Color {
-    val hsv = FloatArray(3)
-    android.graphics.Color.colorToHSV(this.toArgb(), hsv)
-    hsv[2] = (hsv[2] * factor).coerceIn(0f, 1f)  // Increase brightness
-    return Color(android.graphics.Color.HSVToColor(hsv))
-}
-
-fun Color.darken(factor: Float = 0.7f): Color {
-    val hsv = FloatArray(3)
-    android.graphics.Color.colorToHSV(this.toArgb(), hsv)
-    hsv[2] = (hsv[2] * factor).coerceIn(0f, 1f)  // Decrease brightness
-    return Color(android.graphics.Color.HSVToColor(hsv))
+    fun changeDefaultQuoteStyle(newStyle: QuoteStyle) {
+        currentDefaultStyle = newStyle
+    }
 }

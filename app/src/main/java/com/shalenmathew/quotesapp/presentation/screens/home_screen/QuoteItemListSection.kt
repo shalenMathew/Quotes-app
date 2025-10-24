@@ -52,6 +52,10 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
 
     val context = LocalContext.current
     val activity = context as ComponentActivity
+    
+    // Observe the current state to get the updated quote with correct liked status
+    val currentState = quoteViewModel.quoteState.value
+    val currentQuote = currentState.dataList.find { it.id == data.id } ?: data
 
     val gradient = Brush.radialGradient(
         0.0f to customBlack,
@@ -80,7 +84,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
             .background(Color.Transparent)
             .align(Alignment.Center)
         ) {
-            Text(text = data.quote,
+            Text(text = currentQuote.quote,
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Normal,
                 fontSize = 19.sp,
@@ -94,7 +98,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
 
             Spacer(modifier= Modifier.height(50.dp))
 
-            Text(text = data.author,
+            Text(text = currentQuote.author,
                 color = Color.Gray,
                 modifier = Modifier.padding(horizontal = 15.dp))
         }
@@ -104,14 +108,14 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
             .padding(horizontal = 20.dp,vertical=28.dp)) {
 
 
-                if (data.liked )
+                if (currentQuote.liked )
                 {
 
                     AsyncImage(model = R.drawable.heart_filled,
                         contentDescription = null,
                         modifier= Modifier.size(35.dp)
                             .clickable {
-                                quoteViewModel.onEvent(QuoteEvent.Like(data))
+                                quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
 
                             })
                 }
@@ -121,7 +125,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                         contentDescription = "share",
                         modifier= Modifier.size(35.dp)
                             .clickable {
-                                quoteViewModel.onEvent(QuoteEvent.Like(data))
+                                quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
                             })
                 }
 
@@ -132,7 +136,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                 modifier= Modifier.size(35.dp).testTag("share").clickable
                 {
 
-                    navHost.currentBackStackEntry?.savedStateHandle?.set("quote",data)
+                    navHost.currentBackStackEntry?.savedStateHandle?.set("quote",currentQuote)
                     navHost.navigate(Screen.Share.route)
 
 
@@ -201,7 +205,7 @@ fun QuoteItemListSection(
                     QuoteItem(it,quoteViewModel,navHost)
                 }
                 onSwiped { item, _ ->
-                    state.dataList.add(item as Quote)
+                    quoteViewModel.onEvent(QuoteEvent.Swipe(item as Quote))
                 }
             }
     }

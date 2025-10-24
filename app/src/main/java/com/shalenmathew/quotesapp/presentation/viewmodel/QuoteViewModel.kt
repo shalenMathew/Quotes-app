@@ -90,13 +90,14 @@ class QuoteViewModel @Inject constructor(
 
                     _quoteState.value=_quoteState.value.copy(dataList = _quoteState.value.dataList.map { quote->
                         if(quote.id==updatedQuote.id) updatedQuote else quote
-                    }.toMutableList(), isLoading = true)
-
-                    delay(100)
-                    _quoteState.value=_quoteState.value.copy(isLoading = false)
-
+                    }.toMutableList())
                 }
-
+            }
+            is QuoteEvent.Swipe -> {
+                // Move the swiped item to the back of the list
+                val currentList = _quoteState.value.dataList.toList() // Convert to immutable list first
+                val newList = currentList.filter { it.id != quoteEvent.quote.id } + quoteEvent.quote
+                _quoteState.value=_quoteState.value.copy(dataList = newList.toMutableList())
             }
             is QuoteEvent.Retry -> {
                 getQuote()

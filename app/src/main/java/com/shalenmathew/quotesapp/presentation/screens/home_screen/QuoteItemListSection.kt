@@ -45,6 +45,7 @@ import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.customBlack
 import com.shalenmathew.quotesapp.presentation.theme.customGrey
 import com.shalenmathew.quotesapp.presentation.viewmodel.QuoteViewModel
+import com.shalenmathew.quotesapp.presentation.widget.AnimatedHeartButton
 
 
 @Composable
@@ -108,26 +109,12 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
             .padding(horizontal = 20.dp,vertical=28.dp)) {
 
 
-                if (currentQuote.liked )
-                {
-
-                    AsyncImage(model = R.drawable.heart_filled,
-                        contentDescription = null,
-                        modifier= Modifier.size(35.dp)
-                            .clickable {
-                                quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
-
-                            })
+            AnimatedHeartButton(
+                isLiked = currentQuote.liked,
+                onLikeClick = {
+                    quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
                 }
-                else
-                {
-                    AsyncImage(model = R.drawable.heart_unfilled,
-                        contentDescription = "share",
-                        modifier= Modifier.size(35.dp)
-                            .clickable {
-                                quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
-                            })
-                }
+            )
 
             Spacer(modifier= Modifier.height(25.dp))
 

@@ -38,6 +38,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -55,8 +56,7 @@ import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.darken
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.lighten
+
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
 import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
@@ -94,16 +94,18 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
                 painter = painterResource(id = R.drawable.quotation),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(horizontal = 15.dp, vertical = 20.dp)
-                    .size(25.dp)
+                    .size(30.dp)
+                    .padding(start = 15.dp)
+                    .padding(top = 20.dp)
                     .align(Alignment.TopStart),
                 contentScale = ContentScale.Crop
             )
 
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 80.dp)
+                    .padding(start = 10.dp, end = 10.dp, top = 30.dp, bottom = 45.dp)
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -114,7 +116,7 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
                     color = Color.White,
                     fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
                     modifier = Modifier
-                        .padding(top = 12.dp)
+                        .padding(top = 15.dp)
                         .align(Alignment.Start)
                 )
 
@@ -124,9 +126,10 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
                     color = DarkerGrey,
                     modifier = Modifier
                         .align(Alignment.Start)
-                        .padding(top = 30.dp)
+                        .padding(top = 30.dp, bottom = 40.dp)
                 )
             }
+
 
             Text(
                 text = "Quotes.app",
@@ -136,6 +139,7 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
                 fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+
                     .padding(bottom = 5.dp),
                 textAlign = TextAlign.Center
             )
@@ -154,7 +158,7 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
         Card (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 40.dp, vertical = 50.dp)
+                .padding(horizontal = 25.dp, vertical = 40.dp)
                 .shadow(
                     elevation = 20.dp,
                     shape = RoundedCornerShape(8.dp),

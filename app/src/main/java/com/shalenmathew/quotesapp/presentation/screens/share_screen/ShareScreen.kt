@@ -72,23 +72,16 @@ fun ShareScreen(
     viewModel: ShareQuoteViewModel= hiltViewModel()
 ) {
 
-//    var imgBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
     val context = LocalContext.current
     var showSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scrollState = rememberScrollState()
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
     var defaultQuoteStyle by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
-//    var triggerCapture by remember { mutableStateOf(false) }
-//    var pendingAction by remember { mutableStateOf<String?>(null) }
-
     var captureRequest by remember { mutableStateOf<String?>(null) }
-
-
-
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
-
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
 
@@ -98,29 +91,14 @@ fun ShareScreen(
         defaultQuoteStyle = defaultStyle
     }
 
-//    LaunchedEffect(imgBitmap, pendingAction) {
-//        imgBitmap?.let { bitmap ->
-//            when (pendingAction) {
-//                "download" -> {
-//                    saveImgInGallery(context, bitmap.asAndroidBitmap())
-//                    pendingAction = null
-//                }
-//                "share" -> {
-//                    shareImg(context, bitmap.asAndroidBitmap())
-//                    pendingAction = null
-//                }
-//            }
-//        }
-//    }
-
-
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
     Column (
         modifier = Modifier.padding(paddingValues)
             .background(color = Color.Black)
             .fillMaxSize(),
-    ) {
+    )
+    {
 
         Box(modifier = Modifier
             .weight(.9f),
@@ -128,14 +106,6 @@ fun ShareScreen(
         ) {
 
             if (quote != null) {
-//                CaptureBitmap(quoteData = quote,
-//                    quoteStyleState,
-//                    triggerCapture = triggerCapture
-//                ) { capturedBitmap ->
-//
-//                    imgBitmap = capturedBitmap
-//                    triggerCapture = false
-//                }
 
                 CaptureBitmap(
                     captureRequest = captureRequest,
@@ -201,7 +171,6 @@ fun ShareScreen(
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = liquidStartColor
                             ),
-//                            shape = MaterialTheme.shapes.extraLarge,
                             content = {}
                         )
 
@@ -267,287 +236,179 @@ fun ShareScreen(
 
     // BOTTOM SHEET
     if (showSheet) {
+
         ModalBottomSheet(
-            onDismissRequest = {showSheet=false},
+            onDismissRequest = { showSheet = false },
             sheetState = sheetState,
-            containerColor = Color.LightGray)
-        {
-
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(10.dp)
-                .verticalScroll(scrollState)
-                ,horizontalAlignment = Alignment.CenterHorizontally
+            containerColor = Color.LightGray
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(10.dp)
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-
-                Text(text = "Customize Your Quotes",
+                Text(
+                    text = "Customize Your Quotes",
                     fontSize = 25.sp,
                     fontFamily = GIFont,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    modifier= Modifier.padding(bottom = 15.dp))
+                    modifier = Modifier.padding(bottom = 15.dp)
+                )
+
+                // Code Snippet Theme
+                ThemeItem(
+                    title = "Code Snippet",
+                    drawableRes = R.drawable.sample_code_snippet,
+                    quoteStyle = QuoteStyle.CodeSnippetTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.CodeSnippetTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.CodeSnippetTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // brat Theme
+                ThemeItem(
+                    title = "brat Theme",
+                    drawableRes = R.drawable.sample_brat_theme,
+                    quoteStyle = QuoteStyle.bratTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.bratTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.bratTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.bratTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // IGOR Theme
+                ThemeItem(
+                    title = "IGOR Theme",
+                    drawableRes = R.drawable.sample_igor,
+                    quoteStyle = QuoteStyle.igorTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.igorTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.igorTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.igorTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // Default Theme
+                ThemeItem(
+                    title = "Default Theme",
+                    drawableRes = R.drawable.sample_default_style,
+                    quoteStyle = QuoteStyle.DefaultTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.DefaultTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.DefaultTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.DefaultTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // Liquid Glass Theme
+                ThemeItem(
+                    title = "Liquid Glass",
+                    drawableRes = R.drawable.sample_liquid_glass,
+                    quoteStyle = QuoteStyle.LiquidGlassTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.LiquidGlassTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.LiquidGlassTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.LiquidGlassTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // Reminder Theme
+                ThemeItem(
+                    title = "Reminder theme",
+                    drawableRes = R.drawable.sample_reminder_2,
+                    quoteStyle = QuoteStyle.ReminderTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.ReminderTheme,
+                    contentScale = ContentScale.Crop,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.ReminderTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.ReminderTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+            }
+        }
+    }
+}
 
 
-                /**  CODE SNIPPET STYLE*/
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
-                {
+@Composable
+fun ThemeItem(
+    title: String,
+    drawableRes: Int,
+    quoteStyle: QuoteStyle,
+    isSelected: Boolean,
+    contentScale: ContentScale = ContentScale.Fit,
+    onThemeClick: () -> Unit,
+    onSetDefault: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(bottom = 10.dp)
+    ) {
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontFamily = GIFont,
+            fontWeight = FontWeight.Medium
+        )
 
-                    Text(text = "Code Snippet",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth()
-                        .wrapContentHeight()) {
-
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-
-                            Image(
-                                painter = painterResource(R.drawable.sample_code_snippet),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.CodeSnippetTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.CodeSnippetTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                Image(
+                    painter = painterResource(drawableRes),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clickable { onThemeClick() },
+                    contentScale = contentScale
+                )
+                Checkbox(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    checked = isSelected,
+                    onCheckedChange = { isChecked ->
+                        if (isChecked) {
+                            onSetDefault()
                         }
                     }
-
-                }
-
-                /**  BRAT THEME  */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-                {
-
-                    Text(text = "brat Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_brat_theme),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.bratTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.bratTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.bratTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-
-                }
-
-                    /**  IGOR THEME */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-                {
-
-                    Text(text = "IGOR Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_igor),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.igorTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.igorTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.igorTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-
-                }
-
-                /**  DEFAULT STYLE*/
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-                {
-
-                    Text(text = "Default Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_default_style),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.DefaultTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.DefaultTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.DefaultTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-                /**  LIQUID GLASS */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-                {
-
-                    Text(text = "Liquid Glass",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_liquid_glass),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.LiquidGlassTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.LiquidGlassTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.LiquidGlassTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-
-                /* REMINDER THEME */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
-                {
-
-                    Text(text = "Reminder theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-//                    Row(modifier = Modifier.fillMaxWidth()
-//                        .wrapContentHeight())
-//                    {
-//
-//                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-//
-//                            ReminderStyleCover(
-//                                modifier = Modifier.size(200.dp).background(Color.Blue)
-//                                .clickable {
-//                                    quoteStyleState = QuoteStyle.ReminderTheme
-//                                    showSheet = false
-//                                },
-//                            )
-//                            Checkbox(
-//                                modifier = Modifier.align(Alignment.BottomEnd),
-//                                checked = quoteStyleState == QuoteStyle.ReminderTheme,
-//                                onCheckedChange = { isChecked ->
-//                                    if (isChecked) {
-//                                        quoteStyleState = QuoteStyle.ReminderTheme
-//                                        viewModel.changeDefaultQuoteStyle(quoteStyleState)
-//                                    }
-//                                }
-//                            )
-//                        }
-//                    }
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_reminder_2),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.ReminderTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Crop
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.ReminderTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.ReminderTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
+                )
             }
         }
     }

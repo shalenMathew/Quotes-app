@@ -18,6 +18,8 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
 //            is QuoteStyle.SpotifyTheme -> "SpotifyTheme"
             is QuoteStyle.bratTheme -> "bratTheme"
             is QuoteStyle.igorTheme -> "igorTheme"
+            is QuoteStyle.CardImageTheme -> "CardImageTheme"
+            is QuoteStyle.ArtisanCardTheme -> "ArtisanCardTheme"
             QuoteStyle.ReminderTheme -> "ReminderTheme"
         }
         sharedPreferences.edit {
@@ -28,6 +30,8 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
     override fun getDefaultQuoteStyle(): QuoteStyle {
         return when (sharedPreferences.getString(QUOTE_STYLE_KEY, "DefaultTheme")) {
             "CodeSnippetTheme" -> QuoteStyle.CodeSnippetTheme
+            "CardImageTheme" -> QuoteStyle.CardImageTheme
+            "ArtisanCardTheme" -> QuoteStyle.ArtisanCardTheme
 //            "SpotifyTheme" -> QuoteStyle.SpotifyTheme
             "bratTheme" -> QuoteStyle.bratTheme
             "igorTheme" -> QuoteStyle.igorTheme

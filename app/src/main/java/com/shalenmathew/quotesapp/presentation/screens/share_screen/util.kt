@@ -133,6 +133,10 @@ sealed class QuoteStyle()
     object igorTheme : QuoteStyle()
 
     object ReminderTheme : QuoteStyle()
+    // New theme: Card with user-selectable image on a grey background
+    object CardImageTheme : QuoteStyle()
+    // Artisan card style: blue rounded card on grey background with an image area
+    object ArtisanCardTheme : QuoteStyle()
 
 }
 

@@ -38,6 +38,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
@@ -409,6 +410,144 @@ fun LiquidGlassScreen(
                 textAlign = TextAlign.Center
             )
 
+        }
+    }
+}
+
+/** CARD WITH IMAGE THEME */
+@Composable
+fun CardImageStyle(modifier: Modifier, quote: Quote, imageModel: Any?) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.LightGray)
+            .wrapContentSize(Alignment.Center)
+            .padding(12.dp)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp, vertical = 30.dp)
+                .shadow(
+                    elevation = 16.dp,
+                    shape = RoundedCornerShape(12.dp),
+                    ambientColor = Color.Black.copy(alpha = 0.6f),
+                    spotColor = Color.Black.copy(alpha = 0.6f)
+                ),
+            shape = RoundedCornerShape(12.dp),
+            elevation = CardDefaults.cardElevation(8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                AsyncImage(
+                    model = imageModel ?: R.drawable.sample3,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = quote.quote,
+                        fontSize = 18.sp,
+                        lineHeight = 30.sp,
+                        color = Color.Black,
+                        fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .align(Alignment.Start),
+                        textAlign = TextAlign.Start
+                    )
+
+                    Text(
+                        text = quote.author,
+                        fontSize = 14.sp,
+                        color = DarkerGrey,
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(top = 10.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** ARTISAN CARD THEME (new) */
+@Composable
+fun ArtisanCardStyle(modifier: Modifier, quote: Quote, imageModel: Any?) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color(0xFFE9E9EA)) // light grey background for the screen
+            .wrapContentSize(Alignment.Center)
+            .padding(12.dp)
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 36.dp, vertical = 30.dp)
+                .shadow(
+                    elevation = 18.dp,
+                    shape = RoundedCornerShape(20.dp),
+                    ambientColor = Color.Black.copy(alpha = 0.5f),
+                    spotColor = Color.Black.copy(alpha = 0.5f)
+                ),
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(10.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2077FF)) // bright blue card
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                // top image area (rounded inside card)
+                AsyncImage(
+                    model = imageModel ?: R.drawable.sample3,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(170.dp)
+                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
+                    contentScale = ContentScale.Crop
+                )
+
+                // content area with quote and author
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp)) {
+
+                    Text(
+                        text = quote.quote.uppercase(),
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.glaciaiindifference_regular)),
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                    )
+
+                    Text(
+                        text = quote.author,
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier
+                            .padding(top = 12.dp)
+                            .align(Alignment.Start)
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // decorative barcode-like box at bottom left
+                    Box(
+                        modifier = Modifier
+                            .height(28.dp)
+                            .width(160.dp)
+                            .background(Color.Black, shape = RoundedCornerShape(4.dp))
+                    ) {}
+                }
+            }
         }
     }
 }

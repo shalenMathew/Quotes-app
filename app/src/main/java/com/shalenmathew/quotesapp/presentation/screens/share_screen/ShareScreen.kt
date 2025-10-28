@@ -45,6 +45,9 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,6 +63,8 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.D
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CardImageStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ArtisanCardStyle
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 
@@ -84,6 +89,12 @@ fun ShareScreen(
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri = uri
+    }
 
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
@@ -133,6 +144,8 @@ fun ShareScreen(
                             color1 = liquidStartColor,  // from ShareScreen state
                             color2 = liquidEndColor     // from ShareScreen state
                         )
+                        QuoteStyle.CardImageTheme -> CardImageStyle(Modifier, quote, selectedImageUri)
+                        QuoteStyle.ArtisanCardTheme -> ArtisanCardStyle(Modifier, quote, selectedImageUri)
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
                     }
                 }
@@ -194,6 +207,19 @@ fun ShareScreen(
                         .clickable {
                             showSheet = true
                         })
+
+                // When Card Image or Artisan Card theme is active, show an icon to pick an image from gallery
+                if (quoteStyleState == QuoteStyle.CardImageTheme || quoteStyleState == QuoteStyle.ArtisanCardTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.sample3),
+                        contentDescription = "Pick background image",
+                        modifier = Modifier.size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                imagePickerLauncher.launch("image/*")
+                            }
+                    )
+                }
 
                 Image(
                     painter = painterResource(R.drawable.downloads), contentDescription = null,
@@ -319,6 +345,40 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.DefaultTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // Card Image Theme (new)
+                ThemeItem(
+                    title = "Card Image",
+                    drawableRes = R.drawable.sample3,
+                    quoteStyle = QuoteStyle.CardImageTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.CardImageTheme,
+                    contentScale = ContentScale.Crop,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.CardImageTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.CardImageTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // Artisan Card Theme (new)
+                ThemeItem(
+                    title = "Artisan Card",
+                    drawableRes = R.drawable.sample3,
+                    quoteStyle = QuoteStyle.ArtisanCardTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.ArtisanCardTheme,
+                    contentScale = ContentScale.Crop,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.ArtisanCardTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.ArtisanCardTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

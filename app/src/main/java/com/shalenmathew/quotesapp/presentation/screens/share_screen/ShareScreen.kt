@@ -47,6 +47,7 @@ fun ShareScreen(
     viewModel: ShareQuoteViewModel = hiltViewModel()
 ) {
 
+
     val context = LocalContext.current
     var showSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -72,7 +73,8 @@ fun ShareScreen(
             .padding(paddingValues)
             .background(color = Color.Black)
             .fillMaxSize(),
-    ) {
+    )
+    {
 
         Box(
             modifier = Modifier
@@ -199,6 +201,7 @@ fun ShareScreen(
 
     // BOTTOM SHEET
     if (showSheet) {
+
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
             sheetState = sheetState,
@@ -297,8 +300,23 @@ fun ShareScreen(
                             )
                         }
                     }
+                )
 
-                }
+                // brat Theme
+                ThemeItem(
+                    title = "brat Theme",
+                    drawableRes = R.drawable.sample_brat_theme,
+                    quoteStyle = QuoteStyle.bratTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.bratTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.bratTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.bratTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
 
                 /** IGOR THEME **/
                 Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
@@ -336,8 +354,23 @@ fun ShareScreen(
                             )
                         }
                     }
+                )
 
-                }
+                // Default Theme
+                ThemeItem(
+                    title = "Default Theme",
+                    drawableRes = R.drawable.sample_default_style,
+                    quoteStyle = QuoteStyle.DefaultTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.DefaultTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.DefaultTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.DefaultTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
 
                 /** DEFAULT STYLE **/
                 Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
@@ -413,7 +446,37 @@ fun ShareScreen(
                             )
                         }
                     }
-                }
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun ThemeItem(
+    title: String,
+    drawableRes: Int,
+    quoteStyle: QuoteStyle,
+    isSelected: Boolean,
+    contentScale: ContentScale = ContentScale.Fit,
+    onThemeClick: () -> Unit,
+    onSetDefault: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(bottom = 10.dp)
+    ) {
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontFamily = GIFont,
+            fontWeight = FontWeight.Medium
+        )
 
                 /** REMINDER THEME **/
                 Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {

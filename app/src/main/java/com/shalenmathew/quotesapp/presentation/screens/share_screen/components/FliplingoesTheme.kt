@@ -1,7 +1,10 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +50,9 @@ fun FliplingoesTheme(
                 textAlign = TextAlign.Start,
                 fontWeight = FontWeight.ExtraBold,
                 lineHeight = 30.sp,
-                modifier = Modifier.align(Alignment.TopStart).padding(bottom = 100.dp, end = 20.dp)
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(bottom = 100.dp, end = 20.dp)
             )
 
             if (!quote.author.isNullOrBlank()) {

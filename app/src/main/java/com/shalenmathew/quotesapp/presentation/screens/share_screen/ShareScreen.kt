@@ -1,12 +1,25 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
+
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -17,34 +30,49 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.FliplingoesTheme
+
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.*
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.BratScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CodeSnippetStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DefaultQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareScreen(
     paddingValues: PaddingValues,
     navHost: NavHostController,
-    viewModel: ShareQuoteViewModel = hiltViewModel()
+    viewModel: ShareQuoteViewModel= hiltViewModel()
 ) {
 
 
@@ -68,17 +96,15 @@ fun ShareScreen(
 
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
-    Column(
-        modifier = Modifier
-            .padding(paddingValues)
+    Column (
+        modifier = Modifier.padding(paddingValues)
             .background(color = Color.Black)
             .fillMaxSize(),
     )
     {
 
-        Box(
-            modifier = Modifier
-                .weight(.9f),
+        Box(modifier = Modifier
+            .weight(.9f),
             contentAlignment = Alignment.Center
         ) {
 
@@ -88,12 +114,17 @@ fun ShareScreen(
                     captureRequest = captureRequest,
                     onCapture = { capturedBitmap, action ->
                         when (action) {
-                            "download" -> saveImgInGallery(context, capturedBitmap.asAndroidBitmap())
-                            "share" -> shareImg(context, capturedBitmap.asAndroidBitmap())
+                            "download" -> {
+                                saveImgInGallery(context, capturedBitmap.asAndroidBitmap())
+                            }
+                            "share" -> {
+                                shareImg(context, capturedBitmap.asAndroidBitmap())
+                            }
                         }
                         captureRequest = null
                     }
                 ) {
+                    // All style rendering happens here with access to ShareScreen's state
                     when (quoteStyleState) {
                         QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
                         QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
@@ -102,11 +133,12 @@ fun ShareScreen(
                         QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
                             modifier = Modifier,
                             quote = quote,
-                            color1 = liquidStartColor,
-                            color2 = liquidEndColor
+                            color1 = liquidStartColor,  // from ShareScreen state
+                            color2 = liquidEndColor     // from ShareScreen state
                         )
+                        QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
+
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
-                        QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote, modifier = Modifier) // <-- Added
                     }
                 }
 
@@ -118,12 +150,12 @@ fun ShareScreen(
         }
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
                 .weight(.1f)
                 .background(color = Color.Black),
             contentAlignment = Alignment.BottomEnd
-        ) {
+        )
+        {
 
             Row(
                 modifier = Modifier
@@ -139,6 +171,7 @@ fun ShareScreen(
                             onClick = {
                                 editTarget = "start"
                                 showColorPicker = true
+
                             },
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = liquidStartColor
@@ -160,40 +193,47 @@ fun ShareScreen(
                 }
 
                 Image(
-                    painter = painterResource(R.drawable.custom),
-                    contentDescription = null,
+                    painter = painterResource(R.drawable.custom), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.size(28.dp)
-                        .clickable { showSheet = true }
-                )
+                        .clickable {
+                            showSheet = true
+                        })
 
                 Image(
-                    painter = painterResource(R.drawable.downloads),
-                    contentDescription = null,
+                    painter = painterResource(R.drawable.downloads), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
-                    modifier = Modifier.size(28.dp).clickable { captureRequest = "download" }
-                )
+                    modifier = Modifier.size(28.dp).clickable {
+                        captureRequest = "download"
+                    })
 
                 Image(
-                    painter = painterResource(R.drawable.share),
-                    contentDescription = null,
+                    painter = painterResource(R.drawable.share), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
                     modifier = Modifier.size(28.dp)
-                        .clickable { captureRequest = "share" }
+                        .clickable {
+                            captureRequest = "share"
+                        }
+
                 )
+
             }
 
         }
 
     }
 
+
     // COLOR PICKER DIALOG
-    if (showColorPicker) {
+    if (showColorPicker){
         CustomPickerDialog(
             initialColor = if (editTarget == "start") liquidStartColor else liquidEndColor,
             onSelect = { selectedColor ->
-                if (editTarget == "start") liquidStartColor = selectedColor
-                else liquidEndColor = selectedColor
+                if (editTarget == "start") {
+                    liquidStartColor = selectedColor
+                } else {
+                    liquidEndColor = selectedColor
+                }
             },
             onDismiss = { showColorPicker = false }
         )
@@ -215,7 +255,6 @@ fun ShareScreen(
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Text(
                     text = "Customize Your Quotes",
                     fontSize = 25.sp,
@@ -225,80 +264,19 @@ fun ShareScreen(
                     modifier = Modifier.padding(bottom = 15.dp)
                 )
 
-                /** CODE SNIPPET STYLE **/
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-
-                    Text(
-                        text = "Code Snippet",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_code_snippet),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.CodeSnippetTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.CodeSnippetTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-
-                }
-
-                /** BRAT THEME **/
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
-
-                    Text(
-                        text = "Brat Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_brat_theme),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.bratTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.bratTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.bratTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
+                // Code Snippet Theme
+                ThemeItem(
+                    title = "Code Snippet",
+                    drawableRes = R.drawable.sample_code_snippet,
+                    quoteStyle = QuoteStyle.CodeSnippetTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.CodeSnippetTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.CodeSnippetTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
 
@@ -318,41 +296,19 @@ fun ShareScreen(
                     }
                 )
 
-                /** IGOR THEME **/
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
-
-                    Text(
-                        text = "IGOR Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_igor),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.igorTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.igorTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.igorTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
+                // IGOR Theme
+                ThemeItem(
+                    title = "IGOR Theme",
+                    drawableRes = R.drawable.sample_igor,
+                    quoteStyle = QuoteStyle.igorTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.igorTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.igorTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.igorTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
 
@@ -372,81 +328,54 @@ fun ShareScreen(
                     }
                 )
 
-                /** DEFAULT STYLE **/
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
-
-                    Text(
-                        text = "Default Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_default_style),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.DefaultTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.DefaultTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.DefaultTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-
-                /** LIQUID GLASS **/
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
-
-                    Text(
-                        text = "Liquid Glass",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_liquid_glass),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.LiquidGlassTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.LiquidGlassTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.LiquidGlassTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
+                // Liquid Glass Theme
+                ThemeItem(
+                    title = "Liquid Glass",
+                    drawableRes = R.drawable.sample_liquid_glass,
+                    quoteStyle = QuoteStyle.LiquidGlassTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.LiquidGlassTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.LiquidGlassTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.LiquidGlassTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
+
+                // Reminder Theme
+                ThemeItem(
+                    title = "Reminder theme",
+                    drawableRes = R.drawable.sample_reminder_2,
+                    quoteStyle = QuoteStyle.ReminderTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.ReminderTheme,
+                    contentScale = ContentScale.Crop,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.ReminderTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.ReminderTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Fliplingoes Theme",
+                    drawableRes = R.drawable.fliplingoes, // add this preview image
+                    quoteStyle = QuoteStyle.FliplingoesTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.FliplingoesTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.FliplingoesTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.FliplingoesTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
             }
         }
     }
@@ -478,81 +407,46 @@ fun ThemeItem(
             fontWeight = FontWeight.Medium
         )
 
-                /** REMINDER THEME **/
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
-
-                    Text(
-                        text = "Reminder Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            Image(
-                                painter = painterResource(R.drawable.sample_reminder_2),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.ReminderTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Crop
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.ReminderTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.ReminderTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                Image(
+                    painter = painterResource(drawableRes),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clickable { onThemeClick() },
+                    contentScale = contentScale
+                )
+                Checkbox(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    checked = isSelected,
+                    onCheckedChange = { isChecked ->
+                        if (isChecked) {
+                            onSetDefault()
                         }
                     }
-                }
-
-                /** FLIPLINGOES THEME **/
-                Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp)) {
-
-                    Text(
-                        text = "Fliplingoes Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-                            FliplingoesPreviewCard(
-                                modifier = Modifier
-                                    .size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.FliplingoesTheme
-                                        showSheet = false
-                                    },
-                                quote = quote!!
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.FliplingoesTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.FliplingoesTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
+                )
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ShareScreenPreview() {
+    // Dummy quote data
+    val sampleQuote = Quote(
+        quote = "The only limit to our realization of tomorrow is our doubts of today.",
+        author = "Franklin D. Roosevelt",
+        liked = false
+    )
+
+    FliplingoesTheme(
+        quote = sampleQuote,
+        modifier = Modifier.fillMaxSize()
+    )
 }

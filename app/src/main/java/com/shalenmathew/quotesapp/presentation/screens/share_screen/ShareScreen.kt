@@ -14,12 +14,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -41,28 +38,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.FliplingoesTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
 
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.BratScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CodeSnippetStyleQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DefaultQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 
@@ -363,7 +358,7 @@ fun ShareScreen(
 
                 ThemeItem(
                     title = "Fliplingoes Theme",
-                    drawableRes = R.drawable.fliplingoes, // add this preview image
+                    drawableRes = R.drawable.sample_fliplingoes,
                     quoteStyle = QuoteStyle.FliplingoesTheme,
                     isSelected = defaultQuoteStyle == QuoteStyle.FliplingoesTheme,
                     onThemeClick = {
@@ -388,7 +383,7 @@ fun ThemeItem(
     drawableRes: Int,
     quoteStyle: QuoteStyle,
     isSelected: Boolean,
-    contentScale: ContentScale = ContentScale.Fit,
+    contentScale: ContentScale = ContentScale.Crop,
     onThemeClick: () -> Unit,
     onSetDefault: () -> Unit
 ) {
@@ -435,18 +430,3 @@ fun ThemeItem(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ShareScreenPreview() {
-    // Dummy quote data
-    val sampleQuote = Quote(
-        quote = "The only limit to our realization of tomorrow is our doubts of today.",
-        author = "Franklin D. Roosevelt",
-        liked = false
-    )
-
-    FliplingoesTheme(
-        quote = sampleQuote,
-        modifier = Modifier.fillMaxSize()
-    )
-}

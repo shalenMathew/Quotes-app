@@ -1,4 +1,4 @@
-package com.shalenmathew.quotesapp.presentation.screens.share_screen.components
+package com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

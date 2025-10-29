@@ -1,4 +1,4 @@
-package com.shalenmathew.quotesapp.presentation.screens.share_screen.components
+package com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -55,10 +54,7 @@ import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.darken
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.lighten
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
-import com.shalenmathew.quotesapp.presentation.theme.Violet
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.presentation.theme.handWritten

@@ -12,4 +12,13 @@ object Constants {
     val WORK_MANAGER_STATUS_NOTIFY =  "WorkManagerStatusNotify"
     const val SHARED_PREFERENCES_NAME = "quotes_app_preferences"
 
+    const val DefaultTheme = "DefaultTheme"
+    const val CodeSnippetTheme = "CodeSnippetTheme"
+    const val LiquidGlassTheme = "LiquidGlassTheme"
+    const val bratTheme = "bratTheme"
+    const val igorTheme = "igorTheme"
+    const val ReminderTheme = "ReminderTheme"
+    const val FliplingoesTheme = "FliplingoesTheme"
+
+
 }

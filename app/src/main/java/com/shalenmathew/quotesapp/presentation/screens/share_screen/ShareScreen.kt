@@ -41,12 +41,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.FliplingoesTheme
+
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -133,6 +136,8 @@ fun ShareScreen(
                             color1 = liquidStartColor,  // from ShareScreen state
                             color2 = liquidEndColor     // from ShareScreen state
                         )
+                        QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
+
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
                     }
                 }
@@ -355,6 +360,22 @@ fun ShareScreen(
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
+
+                ThemeItem(
+                    title = "Fliplingoes Theme",
+                    drawableRes = R.drawable.fliplingoes, // add this preview image
+                    quoteStyle = QuoteStyle.FliplingoesTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.FliplingoesTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.FliplingoesTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.FliplingoesTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
             }
         }
     }
@@ -414,4 +435,18 @@ fun ThemeItem(
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ShareScreenPreview() {
+    // Dummy quote data
+    val sampleQuote = Quote(
+        quote = "The only limit to our realization of tomorrow is our doubts of today.",
+        author = "Franklin D. Roosevelt",
+        liked = false
+    )
 
+    FliplingoesTheme(
+        quote = sampleQuote,
+        modifier = Modifier.fillMaxSize()
+    )
+}

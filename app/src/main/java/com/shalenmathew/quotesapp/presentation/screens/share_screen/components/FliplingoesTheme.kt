@@ -24,9 +24,6 @@ fun FliplingoesTheme(
     val backgroundColor = Color(0xFF4C450C)
     val cardColor = Color(0xFFFFEB3B)
 
-    val cardWidth = 280.dp
-    val cardHeight = 350.dp
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -35,37 +32,34 @@ fun FliplingoesTheme(
     ) {
         Box(
             modifier = Modifier
-                .size(cardWidth, cardHeight)
+                .padding(40.dp)
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(cardColor)
                 .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center
-            ) {
+            Text(
+                text = quote.quote,
+                fontFamily = GIFont,
+                color = Color.Black,
+                fontSize = 25.sp,
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.ExtraBold,
+                lineHeight = 30.sp,
+                modifier = Modifier.align(Alignment.TopStart).padding(bottom = 100.dp, end = 20.dp)
+            )
+
+            if (!quote.author.isNullOrBlank()) {
                 Text(
-                    text = quote.quote,
+                    text = quote.author,
                     fontFamily = GIFont,
                     color = Color.Black,
-                    fontSize = 20.sp,
+                    fontSize = 16.sp,
                     textAlign = TextAlign.Start,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.align(Alignment.BottomStart)
                 )
-
-                if (!quote.author.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = quote.author,
-                        fontFamily = GIFont,
-                        color = Color.Black,
-                        fontSize = 14.sp,
-                        textAlign = TextAlign.Start,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
             }
         }
     }

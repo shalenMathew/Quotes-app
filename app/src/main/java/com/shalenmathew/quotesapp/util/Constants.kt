@@ -1,7 +1,5 @@
 package com.shalenmathew.quotesapp.util
 
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.QuoteStyle
-
 object Constants {
 
 

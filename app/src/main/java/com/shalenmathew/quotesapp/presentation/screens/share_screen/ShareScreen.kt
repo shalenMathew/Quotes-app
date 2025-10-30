@@ -58,12 +58,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CodeSnippetStyleQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DefaultQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DiceDreamsStyleQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 import android.net.Uri

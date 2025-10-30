@@ -1,5 +1,7 @@
 package com.shalenmathew.quotesapp.util
 
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.QuoteStyle
+
 object Constants {
 
 
@@ -14,6 +16,7 @@ object Constants {
 
     const val DefaultTheme = "DefaultTheme"
     const val CodeSnippetTheme = "CodeSnippetTheme"
+    const val DiceDreamsTheme = "DiceDreamsTheme"
     const val LiquidGlassTheme = "LiquidGlassTheme"
     const val bratTheme = "bratTheme"
     const val igorTheme = "igorTheme"

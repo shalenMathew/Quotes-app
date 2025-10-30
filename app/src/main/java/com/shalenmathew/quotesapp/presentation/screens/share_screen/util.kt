@@ -136,6 +136,9 @@ sealed class QuoteStyle()
 
     object ReminderTheme : QuoteStyle()
 
+    object FliplingoesTheme : QuoteStyle()
+
+
 }
 
 @Composable

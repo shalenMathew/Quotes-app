@@ -56,6 +56,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.C
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
@@ -163,6 +164,7 @@ fun ShareScreen(
                         color2 = liquidEndColor     // from ShareScreen state
                     )
                     QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
+                    QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
                     QuoteStyle.TravelCardTheme -> TravelCardTheme(
                         modifier = Modifier,
                         quote = quote,
@@ -449,6 +451,21 @@ fun ShareScreen(
                     }
                 }
 
+                ThemeItem(
+                    title = "Fliplingoes Theme",
+                    drawableRes = R.drawable.sample_fliplingoes,
+                    quoteStyle = QuoteStyle.FliplingoesTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.FliplingoesTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.FliplingoesTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.FliplingoesTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
                 /**  TRAVEL CARD THEME */
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
                 {
@@ -586,6 +603,59 @@ fun ShareScreen(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun ThemeItem(
+    title: String,
+    drawableRes: Int,
+    quoteStyle: QuoteStyle,
+    isSelected: Boolean,
+    contentScale: ContentScale = ContentScale.Crop,
+    onThemeClick: () -> Unit,
+    onSetDefault: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(bottom = 10.dp)
+    ) {
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 10.dp),
+            fontFamily = GIFont,
+            fontWeight = FontWeight.Medium
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                Image(
+                    painter = painterResource(drawableRes),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clickable { onThemeClick() },
+                    contentScale = contentScale
+                )
+                Checkbox(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    checked = isSelected,
+                    onCheckedChange = { isChecked ->
+                        if (isChecked) {
+                            onSetDefault()
+                        }
+                    }
+                )
             }
         }
     }

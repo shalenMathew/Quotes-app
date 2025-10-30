@@ -20,5 +20,7 @@ object Constants {
     const val ReminderTheme = "ReminderTheme"
     const val FliplingoesTheme = "FliplingoesTheme"
 
+    const val TravelTheme = "TravelCardTheme"
+
 
 }

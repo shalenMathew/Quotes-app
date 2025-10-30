@@ -3,6 +3,8 @@ package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,12 +16,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -41,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -49,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
@@ -60,6 +59,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.D
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 
@@ -92,6 +92,14 @@ fun ShareScreen(
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
 
+    // Travel card image state + launcher
+    var travelImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickTravelImage = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        travelImageUri = uri
+    }
+
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
         quoteStyleState = defaultStyle
@@ -114,7 +122,8 @@ fun ShareScreen(
 //    }
 
 
-    val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
+    val quote = navHost
+        .previousBackStackEntry?.savedStateHandle?.get<Quote>("quote") ?: Quote(quote = "Pausing for a moment to look to inspiring leaders", author = "Unknown", liked = true)
 
     Column (
         modifier = Modifier.padding(paddingValues)
@@ -127,49 +136,41 @@ fun ShareScreen(
             contentAlignment = Alignment.Center
         ) {
 
-            if (quote != null) {
-//                CaptureBitmap(quoteData = quote,
-//                    quoteStyleState,
-//                    triggerCapture = triggerCapture
-//                ) { capturedBitmap ->
-//
-//                    imgBitmap = capturedBitmap
-//                    triggerCapture = false
-//                }
-
-                CaptureBitmap(
-                    captureRequest = captureRequest,
-                    onCapture = { capturedBitmap, action ->
-                        when (action) {
-                            "download" -> {
-                                saveImgInGallery(context, capturedBitmap.asAndroidBitmap())
-                            }
-                            "share" -> {
-                                shareImg(context, capturedBitmap.asAndroidBitmap())
-                            }
+            CaptureBitmap(
+                captureRequest = captureRequest,
+                onCapture = { capturedBitmap, action ->
+                    when (action) {
+                        "download" -> {
+                            saveImgInGallery(context, capturedBitmap.asAndroidBitmap())
                         }
-                        captureRequest = null
+                        "share" -> {
+                            shareImg(context, capturedBitmap.asAndroidBitmap())
+                        }
                     }
-                ) {
-                    // All style rendering happens here with access to ShareScreen's state
-                    when (quoteStyleState) {
-                        QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
-                        QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
-                        QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
-                        QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
-                        QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
-                            modifier = Modifier,
-                            quote = quote,
-                            color1 = liquidStartColor,  // from ShareScreen state
-                            color2 = liquidEndColor     // from ShareScreen state
-                        )
-                        QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
-                    }
+                    captureRequest = null
                 }
+            ) {
+                // All style rendering happens here with access to ShareScreen's state
+                when (quoteStyleState) {
+                    QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
+                    QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
+                    QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
+                    QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
+                    QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
+                        modifier = Modifier,
+                        quote = quote,
+                        color1 = liquidStartColor,  // from ShareScreen state
+                        color2 = liquidEndColor     // from ShareScreen state
+                    )
+                    QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
+                    QuoteStyle.TravelCardTheme -> TravelCardTheme(
+                        modifier = Modifier,
+                        quote = quote,
+                        imageUri = travelImageUri,
+                        onPickImage = { pickTravelImage.launch("image/*") }
+                    )
 
-            } else {
-                Log.d("TAG", "ShareScreen: quote is null")
-                Toast.makeText(context, "quote is null", Toast.LENGTH_SHORT).show()
+                }
             }
 
         }
@@ -447,6 +448,43 @@ fun ShareScreen(
                         }
                     }
                 }
+
+                /**  TRAVEL CARD THEME */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
+                {
+                    Text(text = "Travel Theme",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+                            Image(
+                                painter = painterResource(R.drawable.travelcard),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.TravelCardTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.TravelCardTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.TravelCardTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
                 /**  LIQUID GLASS */
                 Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
                 {
@@ -552,5 +590,3 @@ fun ShareScreen(
         }
     }
 }
-
-

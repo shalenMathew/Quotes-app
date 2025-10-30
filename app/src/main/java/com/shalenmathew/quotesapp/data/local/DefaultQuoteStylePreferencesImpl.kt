@@ -19,6 +19,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.bratTheme -> "bratTheme"
             is QuoteStyle.igorTheme -> "igorTheme"
             QuoteStyle.ReminderTheme -> "ReminderTheme"
+            QuoteStyle.TravelCardTheme -> "TravelCardTheme"
         }
         sharedPreferences.edit {
             putString(QUOTE_STYLE_KEY, quoteStyleString)
@@ -33,6 +34,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             "igorTheme" -> QuoteStyle.igorTheme
             "LiquidGlassTheme" -> QuoteStyle.LiquidGlassTheme
             "ReminderTheme" -> QuoteStyle.ReminderTheme
+            "TravelCardTheme" -> QuoteStyle.TravelCardTheme
             else -> QuoteStyle.DefaultTheme
         }
     }

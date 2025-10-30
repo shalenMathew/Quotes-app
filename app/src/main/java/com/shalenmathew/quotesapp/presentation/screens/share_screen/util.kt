@@ -134,6 +134,8 @@ sealed class QuoteStyle()
 
     object ReminderTheme : QuoteStyle()
 
+    object TravelCardTheme : QuoteStyle()
+
 }
 
 @Composable

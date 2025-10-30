@@ -57,11 +57,15 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.B
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CodeSnippetStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DefaultQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,13 +88,26 @@ fun ShareScreen(
 
     var captureRequest by remember { mutableStateOf<String?>(null) }
 
-
+    var showImage by remember { mutableStateOf(false) }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
+    var backgroundColor by remember { mutableStateOf(Color(0xFFf093fb))}
+    var fontColor by remember { mutableStateOf(Color(0xFF12017B))}
 
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
+
+    // Launcher to pick image from gallery
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            selectedImageUri = uri
+            showImage = false // hide the picker trigger
+        }
+    }
 
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
@@ -155,6 +172,7 @@ fun ShareScreen(
                     when (quoteStyleState) {
                         QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
                         QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
+                        QuoteStyle.DiceDreamsTheme -> DiceDreamsStyleQuoteCard(Modifier, quote, backgroundColor, fontColor, selectedImageUri = selectedImageUri) // need to be changes
                         QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
                         QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
                         QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
@@ -188,6 +206,19 @@ fun ShareScreen(
                     .padding(horizontal = 50.dp, vertical = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
+
+                AnimatedVisibility(
+                    visible = quoteStyleState == QuoteStyle.DiceDreamsTheme
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.photo), contentDescription = null,
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier.size(30.dp)
+                            .clickable {
+                                showImage = true
+                            })
+                }
+
                 AnimatedVisibility(
                     visible = quoteStyleState == QuoteStyle.LiquidGlassTheme
                 ) {
@@ -212,6 +243,34 @@ fun ShareScreen(
                             },
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = liquidEndColor
+                            ),
+                            content = {}
+                        )
+                    }
+                }
+
+                AnimatedVisibility(
+                    visible = quoteStyleState == QuoteStyle.DiceDreamsTheme
+                ) {
+                    Row {
+                        IconButton(
+                            onClick = {
+                                editTarget = "backgroundColor"
+                                showColorPicker = true
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = backgroundColor
+                            ),
+                            content = {}
+                        )
+
+                        IconButton(
+                            onClick = {
+                                editTarget = "fontColor"
+                                showColorPicker = true
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = fontColor
                             ),
                             content = {}
                         )
@@ -253,16 +312,35 @@ fun ShareScreen(
     // COLOR PICKER DIALOG
     if (showColorPicker){
         CustomPickerDialog(
-            initialColor = if (editTarget == "start") liquidStartColor else liquidEndColor,
+            initialColor = if (editTarget == "start") {
+                liquidStartColor
+            } else if (editTarget == "end"){
+                liquidEndColor
+            } else if (editTarget == "backgroundColor"){
+                backgroundColor
+            } else {
+                fontColor
+            },
             onSelect = { selectedColor ->
                 if (editTarget == "start") {
                     liquidStartColor = selectedColor
-                } else {
+                } else if (editTarget == "end") {
                     liquidEndColor = selectedColor
+                } else if (editTarget == "backgroundColor") {
+                    backgroundColor = selectedColor
+                } else {
+                    fontColor = selectedColor
                 }
             },
             onDismiss = { showColorPicker = false }
         )
+    }
+
+    if(showImage) {
+        // Launch the gallery picker
+        LaunchedEffect(Unit) {
+            imagePickerLauncher.launch("image/*")
+        }
     }
 
     // BOTTOM SHEET
@@ -323,6 +401,48 @@ fun ShareScreen(
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
+                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
+                }
+
+                /**  DICE DREAMS */
+                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
+                {
+
+                    Text(text = "Dice Dreams",
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.Medium
+                    )
+
+                    Row(modifier = Modifier.fillMaxWidth()
+                        .wrapContentHeight()) {
+
+                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
+
+                            Image(
+                                painter = painterResource(R.drawable.sample_dice_dreams),
+                                contentDescription = null,
+                                modifier = Modifier.size(200.dp)
+                                    .clickable {
+                                        quoteStyleState = QuoteStyle.DiceDreamsTheme
+                                        showSheet = false
+                                    },
+                                contentScale = ContentScale.Fit
+                            )
+                            Checkbox(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                checked = defaultQuoteStyle == QuoteStyle.DiceDreamsTheme,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        defaultQuoteStyle = QuoteStyle.DiceDreamsTheme
                                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                                     }
                                 }

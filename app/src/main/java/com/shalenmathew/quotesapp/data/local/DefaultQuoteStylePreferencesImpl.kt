@@ -14,6 +14,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
         val quoteStyleString = when (quoteStyle) {
             is QuoteStyle.DefaultTheme -> "DefaultTheme"
             is QuoteStyle.CodeSnippetTheme -> "CodeSnippetTheme"
+            is QuoteStyle.DiceDreamsTheme -> "DiceDreamsTheme"
             is QuoteStyle.LiquidGlassTheme -> "LiquidGlassTheme"
 //            is QuoteStyle.SpotifyTheme -> "SpotifyTheme"
             is QuoteStyle.bratTheme -> "bratTheme"
@@ -28,6 +29,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
     override fun getDefaultQuoteStyle(): QuoteStyle {
         return when (sharedPreferences.getString(QUOTE_STYLE_KEY, "DefaultTheme")) {
             "CodeSnippetTheme" -> QuoteStyle.CodeSnippetTheme
+            "DiceDreamsTheme" -> QuoteStyle.DiceDreamsTheme
 //            "SpotifyTheme" -> QuoteStyle.SpotifyTheme
             "bratTheme" -> QuoteStyle.bratTheme
             "igorTheme" -> QuoteStyle.igorTheme

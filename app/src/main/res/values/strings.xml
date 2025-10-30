@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Quotes.app</string>
+    <string name="settings_short">Settings</string>
+    <string name="settings_long">Open App Settings</string>
+    <string name="settings_disable_msg">Click here to navigate to Settings of Quotes.app</string>
+    <string name="fav_short">Favorite</string>
+    <string name="fav_long">Open Favorites</string>
+    <string name="fav_disable_msg">Favorites are unavailable in %1$s right now</string>
 </resources>

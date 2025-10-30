@@ -97,7 +97,13 @@ class MainActivity : ComponentActivity() {
                 })
                 { paddingValues ->
                     // CHANGE APP NAVIGATION
-                    AppNavigation(navHost = navHost, paddingValues = paddingValues)
+                    val startDestination =
+                        if (intent.getStringExtra("shortcut_nav") == "settings") {
+                            Screen.Settings.route
+                        } else if (intent.getStringExtra("shortcut_nav") == "favourite") {
+                            Screen.Fav.route
+                        } else Screen.Splash.route
+                    AppNavigation(navHost = navHost, paddingValues = paddingValues , startDestination = startDestination)
                 }
 
             }

@@ -52,14 +52,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CodeSnippetStyleQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.DefaultQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.IgorScreen
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.LiquidGlassScreen
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.ReminderStyle
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.TravelCardTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 

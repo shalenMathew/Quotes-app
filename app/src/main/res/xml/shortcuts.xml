@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:targetApi="25">
+    <!--    Settings-->
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:shortcutDisabledMessage="@string/settings_disable_msg"
+        android:shortcutId="settings"
+        android:shortcutLongLabel="@string/settings_long"
+        android:shortcutShortLabel="@string/settings_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.shalenmathew.quotesapp.presentation.MainActivity"
+            android:targetPackage="com.shalenmathew.quotesapp">
+            <extra
+                android:name="shortcut_nav"
+                android:value="settings" />
+        </intent>
+
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_fav"
+        android:shortcutDisabledMessage="@string/fav_disable_msg"
+        android:shortcutId="fav"
+        android:shortcutLongLabel="@string/fav_long"
+        android:shortcutShortLabel="@string/fav_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.shalenmathew.quotesapp.presentation.MainActivity"
+            android:targetPackage="com.shalenmathew.quotesapp">
+            <extra
+                android:name="shortcut_nav"
+                android:value="favourite" />
+        </intent>
+
+    </shortcut>
+</shortcuts>

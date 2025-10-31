@@ -73,6 +73,7 @@ import com.shalenmathew.quotesapp.presentation.theme.Grey
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
+import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
@@ -295,6 +296,57 @@ fun CircleDot(color: Color) {
             .size(12.dp)
             .background(color = color, shape = CircleShape)
     )
+}
+
+/** DICE DREAMS STYLE */
+@Preview(showSystemUi = true)
+@Composable
+fun DiceDreamsStyleQuoteCard(
+    modifier: Modifier = Modifier,
+    quote: Quote = Quote(quote = "The man who moves a mountain begins by carrying away small stones", author = "Unknown", liked = true),
+    color: Color = Grey,
+    selectedImageUri: Uri? = null // <- add this
+) {
+    val painter = if (selectedImageUri != null) {
+        rememberAsyncImagePainter(selectedImageUri) // load gallery image
+    } else {
+        painterResource(R.drawable.dice_dreams_smpl) // default
+    }
+    Box (
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(color = color)
+            .padding(5.dp),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(.8f)
+                .wrapContentHeight()
+                .shadow(elevation = 20.dp, shape = RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.White)
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = "Dice Dreams",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+
+            Text(
+                text = quote.quote,
+                fontSize = 26.sp,
+                fontFamily = GIFont,
+                fontWeight = FontWeight.Bold,
+                color = color,
+                modifier = Modifier.padding(20.dp)
+            )
+        }
+    }
 }
 
 /** brat THEME STYLE */

@@ -703,6 +703,7 @@ fun TravelCardTheme(
     }
 }
 
+@Preview
 @Composable
 fun MinimalBrownTheme(
     modifier: Modifier = Modifier,
@@ -715,7 +716,7 @@ fun MinimalBrownTheme(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .fillMaxHeight()
+            .wrapContentHeight()
             .background(Color(0xFF7D5B43))
     ) {
         Column(

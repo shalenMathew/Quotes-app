@@ -137,6 +137,9 @@ sealed class QuoteStyle()
     object FliplingoesTheme : QuoteStyle()
     object TravelCardTheme : QuoteStyle()
 
+    object MinimalBlackTheme : QuoteStyle()
+
+
 }
 
 @Composable

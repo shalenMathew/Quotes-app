@@ -59,6 +59,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
@@ -147,6 +148,26 @@ fun ShareScreen(
                         "share" -> {
                             shareImg(context, capturedBitmap.asAndroidBitmap())
                         }
+                        captureRequest = null
+                    }
+                ) {
+                    // All style rendering happens here with access to ShareScreen's state
+                    when (quoteStyleState) {
+                        QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
+                        QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
+                        QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
+                        QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
+                        QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
+                            modifier = Modifier,
+                            quote = quote,
+                            color1 = liquidStartColor,  // from ShareScreen state
+                            color2 = liquidEndColor     // from ShareScreen state
+                        )
+                        QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
+
+                        QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
+
+                        QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
                     }
                     captureRequest = null
                 }
@@ -603,6 +624,21 @@ fun ShareScreen(
                         }
                     }
                 }
+                ThemeItem(
+                    title = "Minimal Black Theme",
+                    drawableRes = R.drawable.sample_minimal_black,
+                    quoteStyle = QuoteStyle.MinimalBlackTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.MinimalBlackTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.MinimalBlackTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.MinimalBlackTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
             }
         }
     }

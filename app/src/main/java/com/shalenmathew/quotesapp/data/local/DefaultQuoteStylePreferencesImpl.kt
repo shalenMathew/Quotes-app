@@ -21,6 +21,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.ReminderTheme -> Constants.ReminderTheme
             is QuoteStyle.FliplingoesTheme -> Constants.FliplingoesTheme
             is QuoteStyle.TravelCardTheme -> Constants.TravelTheme
+            is QuoteStyle.MinimalBlackTheme -> Constants.MinimalBlackTheme
         }
         sharedPreferences.edit {
             putString(QUOTE_STYLE_KEY, quoteStyleString)
@@ -36,6 +37,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             Constants.ReminderTheme -> QuoteStyle.ReminderTheme
             Constants.FliplingoesTheme -> QuoteStyle.FliplingoesTheme
             Constants.TravelTheme -> QuoteStyle.TravelCardTheme
+            Constants.MinimalBlackTheme -> QuoteStyle.MinimalBlackTheme
             else -> QuoteStyle.DefaultTheme
         }
     }

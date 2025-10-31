@@ -385,6 +385,21 @@ fun ShareScreen(
                 )
 
                 ThemeItem(
+                    title = "Travel Card Theme",
+                    drawableRes = R.drawable.travelcard,
+                    quoteStyle = QuoteStyle.TravelCardTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.TravelCardTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.TravelCardTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.TravelCardTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
                     title = "Fliplingoes Theme",
                     drawableRes = R.drawable.sample_fliplingoes,
                     quoteStyle = QuoteStyle.FliplingoesTheme,

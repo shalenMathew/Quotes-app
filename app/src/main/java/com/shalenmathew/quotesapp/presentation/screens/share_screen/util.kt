@@ -140,6 +140,8 @@ sealed class QuoteStyle()
 
     object MinimalBlackTheme : QuoteStyle()
 
+    object MinimalBrownTheme : QuoteStyle()
+
 
 }
 

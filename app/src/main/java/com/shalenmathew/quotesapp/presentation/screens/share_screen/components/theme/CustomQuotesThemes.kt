@@ -58,6 +58,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -693,6 +694,39 @@ fun TravelCardTheme(
                     }
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun MinimalBrownTheme(
+    modifier: Modifier = Modifier,
+    quote: Quote = Quote(
+        quote = "Pausing for a moment to look to inspiring leaders",
+        author = "Unknown",
+        liked = true
+    )
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(Color(0xFF7D5B43))
+    ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(horizontal = 20.dp, vertical = 180.dp)
+                .wrapContentHeight(),
+        ) {
+            Text(
+                text = quote.quote,
+                color = Color(0xFFEDE1D6),
+                fontSize = 20.sp,
+                lineHeight = 30.sp,
+                textAlign = TextAlign.Start
+            )
         }
     }
 }

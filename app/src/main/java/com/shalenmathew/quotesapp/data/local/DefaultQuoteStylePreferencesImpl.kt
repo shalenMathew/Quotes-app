@@ -22,6 +22,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.TravelCardTheme -> Constants.TravelTheme
             is QuoteStyle.FliplingoesTheme -> Constants.FliplingoesTheme
             is QuoteStyle.MinimalBlackTheme -> Constants.MinimalBlackTheme
+            is QuoteStyle.MinimalBrownTheme -> Constants.MinimalBrownTheme
         }
         sharedPreferences.edit {
             putString(QUOTE_STYLE_KEY, quoteStyleString)
@@ -38,6 +39,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             Constants.TravelTheme -> QuoteStyle.TravelCardTheme
             Constants.FliplingoesTheme -> QuoteStyle.FliplingoesTheme
             Constants.MinimalBlackTheme -> QuoteStyle.MinimalBlackTheme
+            Constants.MinimalBrownTheme -> QuoteStyle.MinimalBrownTheme
             else -> QuoteStyle.DefaultTheme
         }
     }

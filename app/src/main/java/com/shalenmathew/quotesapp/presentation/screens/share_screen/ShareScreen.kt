@@ -57,6 +57,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
@@ -134,6 +135,8 @@ fun ShareScreen(
                         QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
 
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
+
+                        QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
                     }
                 }
 
@@ -367,6 +370,21 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.FliplingoesTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Minimal Black Theme",
+                    drawableRes = R.drawable.minimal_black_theme,
+                    quoteStyle = QuoteStyle.MinimalBlackTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.MinimalBlackTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.MinimalBlackTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.MinimalBlackTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

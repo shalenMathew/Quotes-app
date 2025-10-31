@@ -136,6 +136,8 @@ sealed class QuoteStyle()
 
     object FliplingoesTheme : QuoteStyle()
 
+    object MinimalBlackTheme : QuoteStyle()
+
 
 }
 

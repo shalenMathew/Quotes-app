@@ -376,7 +376,7 @@ fun ShareScreen(
 
                 ThemeItem(
                     title = "Minimal Black Theme",
-                    drawableRes = R.drawable.minimal_black_theme,
+                    drawableRes = R.drawable.sample_minimal_black,
                     quoteStyle = QuoteStyle.MinimalBlackTheme,
                     isSelected = defaultQuoteStyle == QuoteStyle.MinimalBlackTheme,
                     onThemeClick = {

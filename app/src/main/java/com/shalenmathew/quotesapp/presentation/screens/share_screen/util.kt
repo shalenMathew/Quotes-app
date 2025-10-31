@@ -142,7 +142,9 @@ sealed class QuoteStyle()
 
     object MinimalBrownTheme : QuoteStyle()
 
+    object YoutubeTheme : QuoteStyle()
 
+ 
 }
 
 @Composable

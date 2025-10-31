@@ -3,9 +3,12 @@ package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -47,6 +51,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
@@ -59,6 +64,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 
@@ -83,6 +89,9 @@ fun ShareScreen(
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
+
+    var travelImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickTravelImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> travelImageUri = uri }
 
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
@@ -135,6 +144,10 @@ fun ShareScreen(
                         QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
 
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
+
+                        QuoteStyle.TravelCardTheme -> TravelCardTheme(
+                            modifier = Modifier, quote = quote, imageUri = travelImageUri, onPickImage = { pickTravelImage.launch("image/*") }
+                        )
 
                         QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
                     }
@@ -198,6 +211,18 @@ fun ShareScreen(
                             showSheet = true
                         })
 
+                AnimatedVisibility(visible = quoteStyleState == QuoteStyle.TravelCardTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Upload image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                pickTravelImage.launch("image/*")
+                            }
+                    )
+                }
                 Image(
                     painter = painterResource(R.drawable.downloads), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),

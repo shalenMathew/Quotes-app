@@ -1,7 +1,9 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme
 
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -248,6 +250,7 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
 
 
 //@Preview
+@RequiresApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 @Composable
 fun LiquidGlassScreen(
     modifier: Modifier,

@@ -226,8 +226,7 @@ fun CircleDot(color: Color) {
 fun DiceDreamsStyleQuoteCard(
     modifier: Modifier = Modifier,
     quote: Quote = Quote(quote = "The man who moves a mountain begins by carrying away small stones", author = "Unknown", liked = true),
-    backgroundColor: Color = Grey,
-    textColor: Color = Violet,
+    color: Color = Grey,
     selectedImageUri: Uri? = null // <- add this
 ) {
     val painter = if (selectedImageUri != null) {
@@ -239,7 +238,7 @@ fun DiceDreamsStyleQuoteCard(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(color = backgroundColor)
+            .background(color = color)
             .padding(5.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -265,7 +264,7 @@ fun DiceDreamsStyleQuoteCard(
                 fontSize = 26.sp,
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Bold,
-                color = textColor,
+                color = color,
                 modifier = Modifier.padding(20.dp)
             )
         }

@@ -88,8 +88,7 @@ fun ShareScreen(
 
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
-    var backgroundColor by remember { mutableStateOf(Color(0xFFf093fb))}
-    var fontColor by remember { mutableStateOf(Color(0xFF12017B))}
+    var diceColor by remember { mutableStateOf(Color(0xFFf093fb))}
 
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
@@ -144,7 +143,7 @@ fun ShareScreen(
                     when (quoteStyleState) {
                         QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
                         QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
-                        QuoteStyle.DiceDreamsTheme -> DiceDreamsStyleQuoteCard(Modifier, quote, backgroundColor, fontColor, selectedImageUri = selectedImageUri) // need to be changes
+                        QuoteStyle.DiceDreamsTheme -> DiceDreamsStyleQuoteCard(Modifier, quote, diceColor,  selectedImageUri = selectedImageUri) // need to be changes
                         QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
                         QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
                         QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
@@ -228,22 +227,11 @@ fun ShareScreen(
                     Row {
                         IconButton(
                             onClick = {
-                                editTarget = "backgroundColor"
+                                editTarget = "diceColor"
                                 showColorPicker = true
                             },
                             colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = backgroundColor
-                            ),
-                            content = {}
-                        )
-
-                        IconButton(
-                            onClick = {
-                                editTarget = "fontColor"
-                                showColorPicker = true
-                            },
-                            colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = fontColor
+                                containerColor = diceColor
                             ),
                             content = {}
                         )
@@ -289,29 +277,26 @@ fun ShareScreen(
                 liquidStartColor
             } else if (editTarget == "end"){
                 liquidEndColor
-            } else if (editTarget == "backgroundColor"){
-                backgroundColor
             } else {
-                fontColor
+                diceColor
             },
             onSelect = { selectedColor ->
                 if (editTarget == "start") {
                     liquidStartColor = selectedColor
                 } else if (editTarget == "end") {
                     liquidEndColor = selectedColor
-                } else if (editTarget == "backgroundColor") {
-                    backgroundColor = selectedColor
-                } else {
-                    fontColor = selectedColor
+                } else  {
+                    diceColor = selectedColor
                 }
             },
             onDismiss = { showColorPicker = false }
         )
     }
 
-    if(showImage) {
-        // Launch the gallery picker
-        LaunchedEffect(Unit) {
+    LaunchedEffect(showImage) {
+        if (showImage) {
+            // Prevent relaunch on recomposition while the picker UI is open
+            showImage = false
             imagePickerLauncher.launch("image/*")
         }
     }

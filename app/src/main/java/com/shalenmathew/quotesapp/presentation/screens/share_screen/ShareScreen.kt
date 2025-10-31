@@ -63,6 +63,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
@@ -150,7 +151,7 @@ fun ShareScreen(
                         )
 
                         QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
-                    }
+                        QuoteStyle.MinimalBrownTheme -> MinimalBrownTheme(quote = quote)                    }
                 }
 
             } else {
@@ -425,6 +426,21 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.MinimalBlackTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Minimal Brown Theme",
+                    drawableRes = R.drawable.samplebrown,
+                    quoteStyle = QuoteStyle.MinimalBrownTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.MinimalBrownTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.MinimalBrownTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.MinimalBrownTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

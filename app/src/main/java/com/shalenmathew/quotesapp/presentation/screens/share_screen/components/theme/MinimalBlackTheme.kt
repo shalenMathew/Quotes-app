@@ -33,7 +33,7 @@ fun MinimalBlackTheme(
         Text(
             text = quote.quote.lowercase(),
             color = textColor,
-            fontSize = 42.sp,
+            fontSize = 32.sp,
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold,
             lineHeight = 52.sp,

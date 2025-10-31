@@ -66,6 +66,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.YoutubeStyleTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
 
@@ -93,6 +94,9 @@ fun ShareScreen(
 
     var travelImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
     val pickTravelImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> travelImageUri = uri }
+
+    var youtubeThumbnailUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    val pickYoutubeThumbnail = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri -> youtubeThumbnailUri = uri }
 
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
@@ -151,7 +155,14 @@ fun ShareScreen(
                         )
 
                         QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
-                        QuoteStyle.MinimalBrownTheme -> MinimalBrownTheme(quote = quote)                    }
+                        QuoteStyle.MinimalBrownTheme -> MinimalBrownTheme(quote = quote)
+                        QuoteStyle.YoutubeTheme -> YoutubeStyleTheme(
+                            modifier = Modifier,
+                            quote = quote,
+                            thumbnailUri = youtubeThumbnailUri,
+                            onPickImage = { pickYoutubeThumbnail.launch("image/*") }
+                        )
+                    }
                 }
 
             } else {
@@ -213,6 +224,19 @@ fun ShareScreen(
                             .size(28.dp)
                             .clickable {
                                 pickTravelImage.launch("image/*")
+                            }
+                    )
+                }
+
+                AnimatedVisibility(visible = quoteStyleState == QuoteStyle.YoutubeTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Upload thumbnail",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                pickYoutubeThumbnail.launch("image/*")
                             }
                     )
                 }
@@ -442,6 +466,21 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.MinimalBrownTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "YouTube Style Theme",
+                    drawableRes = R.drawable.sample_yt_card,
+                    quoteStyle = QuoteStyle.YoutubeTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.YoutubeTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.YoutubeTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.YoutubeTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

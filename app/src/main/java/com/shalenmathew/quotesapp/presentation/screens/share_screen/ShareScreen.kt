@@ -204,14 +204,6 @@ fun ShareScreen(
                     }
                 }
 
-                Image(
-                    painter = painterResource(R.drawable.custom), contentDescription = null,
-                    colorFilter = ColorFilter.tint(Color.White),
-                    modifier = Modifier.size(28.dp)
-                        .clickable {
-                            showSheet = true
-                        })
-
                 AnimatedVisibility(visible = quoteStyleState == QuoteStyle.TravelCardTheme) {
                     Image(
                         painter = painterResource(R.drawable.upload),
@@ -224,6 +216,15 @@ fun ShareScreen(
                             }
                     )
                 }
+
+                Image(
+                    painter = painterResource(R.drawable.custom), contentDescription = null,
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier.size(28.dp)
+                        .clickable {
+                            showSheet = true
+                        })
+
                 Image(
                     painter = painterResource(R.drawable.downloads), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
@@ -387,7 +388,7 @@ fun ShareScreen(
 
                 ThemeItem(
                     title = "Travel Card Theme",
-                    drawableRes = R.drawable.travelcard,
+                    drawableRes = R.drawable.sample_travel_card,
                     quoteStyle = QuoteStyle.TravelCardTheme,
                     isSelected = defaultQuoteStyle == QuoteStyle.TravelCardTheme,
                     onThemeClick = {

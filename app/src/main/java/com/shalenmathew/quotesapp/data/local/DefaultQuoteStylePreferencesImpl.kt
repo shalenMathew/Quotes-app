@@ -19,6 +19,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.bratTheme -> Constants.bratTheme
             is QuoteStyle.igorTheme -> Constants.igorTheme
             is QuoteStyle.ReminderTheme -> Constants.ReminderTheme
+            is QuoteStyle.TravelCardTheme -> Constants.TravelTheme
             is QuoteStyle.FliplingoesTheme -> Constants.FliplingoesTheme
             is QuoteStyle.MinimalBlackTheme -> Constants.MinimalBlackTheme
         }
@@ -34,6 +35,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             Constants.igorTheme -> QuoteStyle.igorTheme
             Constants.LiquidGlassTheme -> QuoteStyle.LiquidGlassTheme
             Constants.ReminderTheme -> QuoteStyle.ReminderTheme
+            Constants.TravelTheme -> QuoteStyle.TravelCardTheme
             Constants.FliplingoesTheme -> QuoteStyle.FliplingoesTheme
             Constants.MinimalBlackTheme -> QuoteStyle.MinimalBlackTheme
             else -> QuoteStyle.DefaultTheme

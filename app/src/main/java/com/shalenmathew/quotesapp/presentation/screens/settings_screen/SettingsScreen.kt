@@ -189,46 +189,88 @@ fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController , se
 
                 }
 
+                item {
+                    if (BuildConfig.DEBUG) {
+
+                        Box(modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                            contentAlignment = Alignment.Center)
+                        {
+                            Text(
+//                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
+                                text = "made with ❤\uFE0F by Shalen Mathew (debug.mode)",
+                                fontSize = 12.sp,
+                                color = Color.White,
+                                fontFamily = Poppins,
+                                fontWeight = FontWeight.Medium
+                            )
+
+                        }
+
+                    }
+                    else {
+
+                        Box(modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth(),
+                            contentAlignment = Alignment.Center)
+                        {
+                            Text(
+//                        text = "made with \uD83E\uDD75 by Shalen Mathew",
+                                text = "made with ❤\uFE0F by Shalen Mathew",
+                                fontSize = 12.sp,
+                                color = Color.White,
+                                fontFamily = Poppins,
+                                fontWeight = FontWeight.Medium
+                            )
+
+                        }
+                    }
+                }
+
             }
 
             Spacer(Modifier.weight(1f))
 
-            if (BuildConfig.DEBUG) {
-
-                Box(modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth(),
-                    contentAlignment = Alignment.Center)
-                {
-                    Text(
-//                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
-                        text = "made with ❤\uFE0F by Shalen Mathew (debug.mode)",
-                        fontSize = 12.sp,
-                        color = Color.White,
-                        fontFamily = Poppins,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                }
-
-            } else {
-
-                Box(modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth(),
-                    contentAlignment = Alignment.Center)
-                {
-                    Text(
-//                        text = "made with \uD83E\uDD75 by Shalen Mathew",
-                        text = "made with ❤\uFE0F by Shalen Mathew",
-                        fontSize = 12.sp,
-                        color = Color.White,
-                        fontFamily = Poppins,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                }
-            }
+//            if (BuildConfig.DEBUG) {
+//
+//                Box(modifier = Modifier
+//                    .wrapContentHeight()
+//                    .fillMaxWidth(),
+//                    contentAlignment = Alignment.Center)
+//                {
+//                    Text(
+////                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
+//                        text = "made with ❤\uFE0F by Shalen Mathew (debug.mode)",
+//                        fontSize = 12.sp,
+//                        color = Color.White,
+//                        fontFamily = Poppins,
+//                        fontWeight = FontWeight.Medium
+//                    )
+//
+//                }
+//
+//            }
+//            else {
+//
+//                Box(modifier = Modifier
+//                    .wrapContentHeight()
+//                    .fillMaxWidth(),
+//                    contentAlignment = Alignment.Center)
+//                {
+//                    Text(
+////                        text = "made with \uD83E\uDD75 by Shalen Mathew",
+//                        text = "made with ❤\uFE0F by Shalen Mathew",
+//                        fontSize = 12.sp,
+//                        color = Color.White,
+//                        fontFamily = Poppins,
+//                        fontWeight = FontWeight.Medium
+//                    )
+//
+//                }
+//            }
 
         }
 

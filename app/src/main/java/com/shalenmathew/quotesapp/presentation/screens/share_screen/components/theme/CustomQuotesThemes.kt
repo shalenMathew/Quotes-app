@@ -749,6 +749,7 @@ fun YoutubeStyleTheme(
     thumbnailUri: Uri? = null,
     onPickImage: (() -> Unit)? = null
 ) {
+    val context = LocalContext.current
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -849,9 +850,9 @@ fun YoutubeStyleTheme(
                             .padding(top = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Channel name (Author)
+                        // Channel name (app)
                         Text(
-                            text = quote.author,
+                            text = context.getString(R.string.app_name),
                             color = Color(0xFFAAAAAA),
                             fontSize = 14.sp,
                             modifier = Modifier.padding(end = 4.dp)

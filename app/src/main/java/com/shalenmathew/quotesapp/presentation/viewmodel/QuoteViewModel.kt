@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.util.QuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.util.QuoteState
+import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.Resource
+import com.shalenmathew.quotesapp.util.getSavedWidgetQuote
+import com.shalenmathew.quotesapp.util.saveWidgetQuote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,6 +49,11 @@ class QuoteViewModel @Inject constructor(
                           // saving in state
                           _quoteState.value = _quoteState.value.copy(dataList = data.quotesList.toMutableList(),
                               qot = data.quotesOfTheDay[0], isLoading = false, error = "")
+
+                          val firstQuote = data.quotesList.firstOrNull()
+                          if(context.getSavedWidgetQuote().firstOrNull().equals(Constants.NO_QUOTE_SAVED_YET)){
+                              context.saveWidgetQuote(firstQuote?.quote?:Constants.NO_QUOTE_SAVED_YET)
+                          }
 
                       } ?:{
                           _quoteState.value = _quoteState.value.copy(dataList = mutableListOf(),

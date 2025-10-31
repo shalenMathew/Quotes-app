@@ -135,7 +135,9 @@ sealed class QuoteStyle()
     object ReminderTheme : QuoteStyle()
 
     object FliplingoesTheme : QuoteStyle()
-    object TravelCardTheme : QuoteStyle()
+
+    object MinimalBlackTheme : QuoteStyle()
+
 
 }
 

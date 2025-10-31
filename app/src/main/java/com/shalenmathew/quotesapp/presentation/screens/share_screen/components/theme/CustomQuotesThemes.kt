@@ -62,11 +62,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
+import com.shalenmathew.quotesapp.presentation.theme.GIFont
+import com.shalenmathew.quotesapp.presentation.theme.Grey
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
@@ -217,6 +220,73 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
         }
     }
 }
+
+/** Dice Dreams STYLE */
+@Composable
+fun DiceDreamsStyleQuoteCard(
+    modifier: Modifier,
+    quote: Quote = Quote(quote = "The man who moves a mountain begins by carrying away small stones", author = "Unknown", liked = true),
+    color: Color = Grey,
+    imageUri: Uri? = null,
+    onPickImage: () -> Unit = {}
+) {
+    val context = LocalContext.current
+    val image = painterResource(R.drawable.dice_dreams_smpl)
+
+    val painter: Painter = remember(imageUri) {
+        if (imageUri != null) {
+            val bitmap = try {
+                MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+            } catch (e: Exception) {
+                null
+            }
+            if (bitmap != null) {
+                BitmapPainter(bitmap.asImageBitmap())
+            } else {
+                image
+            }
+        } else {
+            image
+        }
+    }
+
+    Box (
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(color = color)
+            .padding(5.dp),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(.8f)
+                .wrapContentHeight()
+                .shadow(elevation = 20.dp, shape = RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.White)
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = "Dice Dreams",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+
+            Text(
+                text = quote.quote,
+                fontSize = 26.sp,
+                fontFamily = GIFont,
+                fontWeight = FontWeight.Bold,
+                color = color,
+                modifier = Modifier.padding(20.dp)
+            )
+        }
+    }
+}
+
 
 @Composable
 fun CircleDot(color: Color) {

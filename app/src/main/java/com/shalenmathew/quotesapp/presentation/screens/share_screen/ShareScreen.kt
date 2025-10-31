@@ -63,12 +63,8 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,10 +83,6 @@ fun ShareScreen(
     var quoteStyleState by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
     var defaultQuoteStyle by remember { mutableStateOf<QuoteStyle>(QuoteStyle.DefaultTheme) }
     var captureRequest by remember { mutableStateOf<String?>(null) }
-
-    var showImage by remember { mutableStateOf(false) }
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
     var diceDreamColor by remember { mutableStateOf(Color(0xFF0022BB)) }
@@ -189,19 +181,6 @@ fun ShareScreen(
                     .padding(horizontal = 50.dp, vertical = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
-
-                AnimatedVisibility(
-                    visible = quoteStyleState == QuoteStyle.DiceDreamsTheme
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.photo), contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier.size(30.dp)
-                            .clickable {
-                                showImage = true
-                            })
-                }
-
                 AnimatedVisibility(
                     visible = quoteStyleState == QuoteStyle.LiquidGlassTheme
                 ) {
@@ -319,14 +298,6 @@ fun ShareScreen(
             },
             onDismiss = { showColorPicker = false }
         )
-    }
-
-    LaunchedEffect(showImage) {
-        if (showImage) {
-            // Prevent relaunch on recomposition while the picker UI is open
-            showImage = false
-            imagePickerLauncher.launch("image/*")
-        }
     }
 
     // BOTTOM SHEET
@@ -585,4 +556,3 @@ fun ThemeItem(
         }
     }
 }
-

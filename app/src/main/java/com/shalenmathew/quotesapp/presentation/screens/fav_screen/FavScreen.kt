@@ -100,6 +100,9 @@ fun FavScreen(paddingValues: PaddingValues,
               quoteViewModel:FavQuoteViewModel= hiltViewModel()) {
 
     val state = quoteViewModel.favQuoteState.value
+    val customViewModel: CustomQuoteViewModel = hiltViewModel()
+    val customState = customViewModel.state.value
+
 
     val tabItems = listOf<TabItem>(
         TabItem("Fav"),
@@ -212,9 +215,13 @@ fun FavScreen(paddingValues: PaddingValues,
 
 
             OutlinedTextField(
-                value = state.query,
+                value = if (selectedTabIndex == 0) state.query else customState.query,
                 onValueChange = { value ->
-                    quoteViewModel.onEvent(FavQuoteEvent.onSearchQueryChanged(value))
+                    if (selectedTabIndex == 0) {
+                        quoteViewModel.onEvent(FavQuoteEvent.onSearchQueryChanged(value))
+                    } else {
+                        customViewModel.onEvent(CustomQuoteEvent.OnSearchQueryChanged(value))
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -234,7 +241,15 @@ fun FavScreen(paddingValues: PaddingValues,
                     .animatedBorder({ progress }, White, Color.Black),
                 maxLines = 1,
                 shape = MaterialTheme.shapes.extraLarge,
-                placeholder = { Text(text = "Search your favorite quotes...") },
+                placeholder = {
+                    Text(
+                    text = if (selectedTabIndex == 0)
+                        "Search your favorite quotes..."
+                    else
+                        "Search your custom quotes..."
+                    )
+                },
+
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -251,11 +266,15 @@ fun FavScreen(paddingValues: PaddingValues,
                     focusedLeadingIconColor = White,
                     unfocusedLeadingIconColor = Color.Gray,
                 ),
-                trailingIcon = { 
-                    if (state.query.isNotEmpty()) {
+                trailingIcon = {
+                    val hasQuery = if (selectedTabIndex == 0) state.query.isNotEmpty() else customState.query.isNotEmpty()
+                    if (hasQuery) {
                         WhiteCancelIcon(onClick = {
-                            // Clear search query and focus
-                            quoteViewModel.onEvent(FavQuoteEvent.onSearchQueryChanged(""))
+                            if (selectedTabIndex == 0) {
+                                quoteViewModel.onEvent(FavQuoteEvent.onSearchQueryChanged(""))
+                            } else {
+                                customViewModel.onEvent(CustomQuoteEvent.OnSearchQueryChanged(""))
+                            }
                             clickedSearch = false
                             keyboardController?.hide()
                         })
@@ -355,8 +374,7 @@ fun FavScreen(paddingValues: PaddingValues,
                     }
                     1 -> {
                         // Custom Tab Content
-                        val customViewModel: CustomQuoteViewModel = hiltViewModel()
-                        val customState = customViewModel.state.value
+
                         var quoteToDelete by remember { mutableStateOf<CustomQuote?>(null) }
                         val dialogAlpha by animateFloatAsState(
                             targetValue = if (quoteToDelete != null) 1f else 0f,

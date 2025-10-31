@@ -126,9 +126,7 @@ sealed class QuoteStyle()
 
     object DefaultTheme : QuoteStyle()
     object CodeSnippetTheme : QuoteStyle()
-
     object DiceDreamsTheme : QuoteStyle()
-
     object LiquidGlassTheme : QuoteStyle()
 //    object SpotifyTheme: QuoteStyle()
     object bratTheme : QuoteStyle()
@@ -137,6 +135,12 @@ sealed class QuoteStyle()
     object ReminderTheme : QuoteStyle()
 
     object FliplingoesTheme : QuoteStyle()
+
+    object TravelCardTheme : QuoteStyle()
+
+    object MinimalBlackTheme : QuoteStyle()
+
+    object MinimalBrownTheme : QuoteStyle()
 
 
 }

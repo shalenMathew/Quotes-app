@@ -23,11 +23,11 @@ class CustomQuoteViewModel @Inject constructor(
         getCustomQuotes()
     }
 
-    private fun getCustomQuotes() {
+    private fun getCustomQuotes(query: String = _state.value.query) {
         _state.value = _state.value.copy(isLoading = true)
 
         viewModelScope.launch {
-            customQuoteUseCases.getCustomQuotes("").collect { quotes ->
+            customQuoteUseCases.getCustomQuotes(query).collect { quotes ->
                 _state.value = _state.value.copy(
                     customQuotes = quotes,
                     isLoading = false
@@ -51,6 +51,10 @@ class CustomQuoteViewModel @Inject constructor(
                 viewModelScope.launch {
                     customQuoteUseCases.deleteCustomQuote(event.quote)
                 }
+            }
+            is CustomQuoteEvent.OnSearchQueryChanged -> {
+                _state.value = _state.value.copy(query = event.query)
+                getCustomQuotes(event.query)
             }
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 
 fun checkWorkManagerStatus(context: Context,lifecycleOwner: LifecycleOwner) {
 
@@ -32,3 +33,7 @@ fun checkWorkManagerStatus(context: Context,lifecycleOwner: LifecycleOwner) {
 
 }
 
+
+fun getMillisFromNow(hour: Int): Long {
+    return System.currentTimeMillis() + TimeUnit.HOURS.toMillis(hour.toLong())
+}

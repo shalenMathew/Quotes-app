@@ -1,8 +1,9 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
-
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,7 +40,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
-
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
@@ -54,10 +55,14 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
@@ -88,20 +93,17 @@ fun ShareScreen(
 
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
-    var diceColor by remember { mutableStateOf(Color(0xFFf093fb))}
-
+    var diceDreamColor by remember { mutableStateOf(Color(0xFF0022BB)) }
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
 
-    // Launcher to pick image from gallery
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            selectedImageUri = uri
-            showImage = false // hide the picker trigger
-        }
-    }
+    var travelImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickTravelImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> travelImageUri = uri }
+
+    var diceDreamsImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickDiceImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> diceDreamsImageUri = uri }
+
+
 
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
@@ -143,7 +145,9 @@ fun ShareScreen(
                     when (quoteStyleState) {
                         QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
                         QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
-                        QuoteStyle.DiceDreamsTheme -> DiceDreamsStyleQuoteCard(Modifier, quote, diceColor,  selectedImageUri = selectedImageUri) // need to be changes
+                        QuoteStyle.DiceDreamsTheme -> DiceDreamsStyleQuoteCard(
+                            Modifier, quote, color = diceDreamColor, imageUri = diceDreamsImageUri, onPickImage = { pickDiceImage.launch("image/*")}
+                        )
                         QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
                         QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
                         QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
@@ -155,7 +159,13 @@ fun ShareScreen(
                         QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
 
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
-                    }
+
+                        QuoteStyle.TravelCardTheme -> TravelCardTheme(
+                            modifier = Modifier, quote = quote, imageUri = travelImageUri, onPickImage = { pickTravelImage.launch("image/*") }
+                        )
+
+                        QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
+                        QuoteStyle.MinimalBrownTheme -> MinimalBrownTheme(quote = quote)                    }
                 }
 
             } else {
@@ -221,21 +231,45 @@ fun ShareScreen(
                     }
                 }
 
-                AnimatedVisibility(
-                    visible = quoteStyleState == QuoteStyle.DiceDreamsTheme
-                ) {
+                AnimatedVisibility(visible = quoteStyleState == QuoteStyle.DiceDreamsTheme) {
                     Row {
                         IconButton(
                             onClick = {
-                                editTarget = "diceColor"
+                                editTarget = "diceDreamsColor"
                                 showColorPicker = true
+
                             },
                             colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = diceColor
+                                containerColor = diceDreamColor
                             ),
-                            content = {}
+                            content = {},
+                            modifier = Modifier.padding(10.dp,0.dp)
+                        )
+
+                        Image(
+                            painter = painterResource(R.drawable.upload),
+                            contentDescription = "Upload image",
+                            colorFilter = ColorFilter.tint(Color.White),
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clickable {
+                                    pickDiceImage.launch("image/*")
+                                }
                         )
                     }
+                }
+
+                AnimatedVisibility(visible = quoteStyleState == QuoteStyle.TravelCardTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Upload image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                pickTravelImage.launch("image/*")
+                            }
+                    )
                 }
 
                 Image(
@@ -273,20 +307,14 @@ fun ShareScreen(
     // COLOR PICKER DIALOG
     if (showColorPicker){
         CustomPickerDialog(
-            initialColor = if (editTarget == "start") {
-                liquidStartColor
-            } else if (editTarget == "end"){
-                liquidEndColor
-            } else {
-                diceColor
-            },
+            initialColor = if (editTarget == "start") liquidStartColor else if (editTarget == "end") liquidEndColor else diceDreamColor,
             onSelect = { selectedColor ->
                 if (editTarget == "start") {
                     liquidStartColor = selectedColor
-                } else if (editTarget == "end") {
+                } else if (editTarget == "end")  {
                     liquidEndColor = selectedColor
                 } else  {
-                    diceColor = selectedColor
+                    diceDreamColor = selectedColor
                 }
             },
             onDismiss = { showColorPicker = false }
@@ -342,61 +370,21 @@ fun ShareScreen(
                     }
                 )
 
-                }
-
-                /**  DICE DREAMS */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight())
-                {
-
-                    Text(text = "Dice Dreams",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
-
-                    Row(modifier = Modifier.fillMaxWidth()
-                        .wrapContentHeight()) {
-
-                        Box(modifier = Modifier.clip(shape = RoundedCornerShape(6))) {
-
-                            Image(
-                                painter = painterResource(R.drawable.sample_dice_dreams),
-                                contentDescription = null,
-                                modifier = Modifier.size(200.dp)
-                                    .clickable {
-                                        quoteStyleState = QuoteStyle.DiceDreamsTheme
-                                        showSheet = false
-                                    },
-                                contentScale = ContentScale.Fit
-                            )
-                            Checkbox(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                checked = defaultQuoteStyle == QuoteStyle.DiceDreamsTheme,
-                                onCheckedChange = { isChecked ->
-                                    if (isChecked) {
-                                        defaultQuoteStyle = QuoteStyle.DiceDreamsTheme
-                                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                                    }
-                                }
-                            )
-                        }
+                // Dice Dreams Theme
+                ThemeItem(
+                    title = "Dice Dreams",
+                    drawableRes = R.drawable.sample_dice_dreams,
+                    quoteStyle = QuoteStyle.DiceDreamsTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.DiceDreamsTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.DiceDreamsTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.DiceDreamsTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
-
-                }
-
-                /**  BRAT THEME  */
-                Column(modifier= Modifier.fillMaxWidth().wrapContentHeight().padding(bottom = 10.dp))
-                {
-
-                    Text(text = "brat Theme",
-                        fontSize = 20.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(bottom = 10.dp),
-                        fontFamily = GIFont,
-                        fontWeight = FontWeight.Medium
-                    )
+                )
 
                 // brat Theme
                 ThemeItem(
@@ -480,6 +468,21 @@ fun ShareScreen(
                 )
 
                 ThemeItem(
+                    title = "Travel Card Theme",
+                    drawableRes = R.drawable.sample_travel_card,
+                    quoteStyle = QuoteStyle.TravelCardTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.TravelCardTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.TravelCardTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.TravelCardTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
                     title = "Fliplingoes Theme",
                     drawableRes = R.drawable.sample_fliplingoes,
                     quoteStyle = QuoteStyle.FliplingoesTheme,
@@ -490,6 +493,36 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.FliplingoesTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Minimal Black Theme",
+                    drawableRes = R.drawable.sample_minimal_black,
+                    quoteStyle = QuoteStyle.MinimalBlackTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.MinimalBlackTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.MinimalBlackTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.MinimalBlackTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Minimal Brown Theme",
+                    drawableRes = R.drawable.samplebrown,
+                    quoteStyle = QuoteStyle.MinimalBrownTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.MinimalBrownTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.MinimalBrownTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.MinimalBrownTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

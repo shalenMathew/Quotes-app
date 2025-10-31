@@ -12,7 +12,9 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -23,8 +25,13 @@ import com.shalenmathew.quotesapp.presentation.theme.QuotesAppTheme
 import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.Constants
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
+import com.shalenmathew.quotesapp.util.getMillisFromNow
+import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 
@@ -47,12 +54,21 @@ class MainActivity : ComponentActivity() {
             QuotesAppTheme {
 
                 scheduleNotification.scheduleNotification()
+                val context = LocalContext.current
 
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    scheduleWidget.scheduleWidgetRefresh()
-                }, 5000)
-
+                LaunchedEffect(Unit) {
+                    val widgetRefreshInterval = context.getWidgetRefreshInterval().first()
+                    if (widgetRefreshInterval == null) {
+                        context.setWidgetRefreshInterval(DEFAULT_WIDGET_REFRESH_INTERVAL)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            scheduleWidget.scheduleWidgetRefreshWorkAlarm(
+                                getMillisFromNow(
+                                    DEFAULT_WIDGET_REFRESH_INTERVAL
+                                )
+                            )
+                        }, 5000)
+                    }
+                }
 
                 /* REQUESTING NECESSARY PERMISSIONS  */
                 requestNecessaryPermissions()

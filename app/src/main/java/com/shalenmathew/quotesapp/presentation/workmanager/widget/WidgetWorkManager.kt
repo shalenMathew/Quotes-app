@@ -9,10 +9,14 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetObj
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.dataStore
+import com.shalenmathew.quotesapp.util.getMillisFromNow
+import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
 import com.shalenmathew.quotesapp.util.saveWidgetQuote
+import com.shalenmathew.quotesapp.util.setLastAlarmTriggerMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -24,7 +28,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 class WidgetWorkManager @AssistedInject constructor(
     @Assisted private val  context: Context,
     @Assisted private val params: WorkerParameters,
-    private val quoteUseCase: QuoteUseCase
+    private val quoteUseCase: QuoteUseCase,
+    private val scheduleWidgetRefresh : ScheduleWidgetRefresh
 ) : CoroutineWorker(context, params)
 {
 
@@ -52,6 +57,8 @@ class WidgetWorkManager @AssistedInject constructor(
               }
           }
 
+          context.setLastAlarmTriggerMillis(System.currentTimeMillis())
+
           return Result.success()
 
         }
@@ -71,6 +78,8 @@ class WidgetWorkManager @AssistedInject constructor(
 
      val response =
          withTimeoutOrNull(5000) {
+             val refreshInterval = context.getWidgetRefreshInterval().first() ?: DEFAULT_WIDGET_REFRESH_INTERVAL
+             scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(getMillisFromNow(refreshInterval))
              quoteUseCase.getQuote()
                  .filter { it is Resource.Success || it is Resource.Error }
                  .first()

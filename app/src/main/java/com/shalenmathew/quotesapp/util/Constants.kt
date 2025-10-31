@@ -29,6 +29,7 @@ object Constants {
     const val MinimalBrownTheme = "MinimalBrownTheme"
 
     const val TravelTheme = "TravelCardTheme"
+    const val YoutubeTheme = "YoutubeTheme"
 
 
 }

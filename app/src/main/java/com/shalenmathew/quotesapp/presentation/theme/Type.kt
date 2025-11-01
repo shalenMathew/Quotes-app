@@ -41,6 +41,12 @@ val Poppins = FontFamily(
     Font(R.font.poppinsregular,FontWeight.Medium)
     )
 
+val RobotoFont = FontFamily(
+    Font(R.font.roboto_condensed_bold,FontWeight.Bold),
+    Font(R.font.roboto_condensed_regular,FontWeight.Normal),
+    Font(R.font.roboto_condensed_medium,FontWeight.Medium)
+)
+
 val GIFont = FontFamily(
     Font(R.font.glaciaiindifference_bold,FontWeight.Bold),
     Font(R.font.glaciaiindifference_regular,FontWeight.Medium),

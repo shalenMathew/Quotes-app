@@ -143,9 +143,11 @@ fun YoutubeStyleTheme(
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        maxLines = 2,
                         lineHeight = 20.sp,
-                        modifier = Modifier.padding(bottom = 4.dp)
+                        maxLines = 6,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 4.dp)
                     )
 
                     Row(

@@ -19,12 +19,13 @@ object Constants {
 
     const val DefaultTheme = "DefaultTheme"
     const val CodeSnippetTheme = "CodeSnippetTheme"
+    const val DiceDreamsTheme = "DiceDreamsTheme"
     const val LiquidGlassTheme = "LiquidGlassTheme"
     const val bratTheme = "bratTheme"
     const val igorTheme = "igorTheme"
     const val ReminderTheme = "ReminderTheme"
     const val FliplingoesTheme = "FliplingoesTheme"
-        const val MinimalBlackTheme = "MinimalBlackTheme"
+    const val MinimalBlackTheme = "MinimalBlackTheme"
     const val MinimalBrownTheme = "MinimalBrownTheme"
 
     const val TravelTheme = "TravelCardTheme"

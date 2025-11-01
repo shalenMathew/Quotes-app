@@ -1,6 +1,5 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
-
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -8,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,7 +40,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
-
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -59,6 +55,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
@@ -89,11 +86,16 @@ fun ShareScreen(
     var captureRequest by remember { mutableStateOf<String?>(null) }
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
+    var diceDreamColor by remember { mutableStateOf(Color(0xFF0022BB)) }
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
 
     var travelImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
     val pickTravelImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> travelImageUri = uri }
+
+    var diceDreamsImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickDiceImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> diceDreamsImageUri = uri }
+
 
     var youtubeThumbnailUri by remember { mutableStateOf<android.net.Uri?>(null) }
     val pickYoutubeThumbnail = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri -> youtubeThumbnailUri = uri }
@@ -138,6 +140,9 @@ fun ShareScreen(
                     when (quoteStyleState) {
                         QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
                         QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
+                        QuoteStyle.DiceDreamsTheme -> DiceDreamsStyleQuoteCard(
+                            Modifier, quote, color = diceDreamColor, imageUri = diceDreamsImageUri, onPickImage = { pickDiceImage.launch("image/*")}
+                        )
                         QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
                         QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
                         QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
@@ -215,6 +220,34 @@ fun ShareScreen(
                     }
                 }
 
+                AnimatedVisibility(visible = quoteStyleState == QuoteStyle.DiceDreamsTheme) {
+                    Row {
+                        IconButton(
+                            onClick = {
+                                editTarget = "diceDreamsColor"
+                                showColorPicker = true
+
+                            },
+                            colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = diceDreamColor
+                            ),
+                            content = {},
+                            modifier = Modifier.padding(10.dp,0.dp)
+                        )
+
+                        Image(
+                            painter = painterResource(R.drawable.upload),
+                            contentDescription = "Upload image",
+                            colorFilter = ColorFilter.tint(Color.White),
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clickable {
+                                    pickDiceImage.launch("image/*")
+                                }
+                        )
+                    }
+                }
+
                 AnimatedVisibility(visible = quoteStyleState == QuoteStyle.TravelCardTheme) {
                     Image(
                         painter = painterResource(R.drawable.upload),
@@ -276,12 +309,14 @@ fun ShareScreen(
     // COLOR PICKER DIALOG
     if (showColorPicker){
         CustomPickerDialog(
-            initialColor = if (editTarget == "start") liquidStartColor else liquidEndColor,
+            initialColor = if (editTarget == "start") liquidStartColor else if (editTarget == "end") liquidEndColor else diceDreamColor,
             onSelect = { selectedColor ->
                 if (editTarget == "start") {
                     liquidStartColor = selectedColor
-                } else {
+                } else if (editTarget == "end")  {
                     liquidEndColor = selectedColor
+                } else  {
+                    diceDreamColor = selectedColor
                 }
             },
             onDismiss = { showColorPicker = false }
@@ -325,6 +360,22 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.CodeSnippetTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                // Dice Dreams Theme
+                ThemeItem(
+                    title = "Dice Dreams",
+                    drawableRes = R.drawable.sample_dice_dreams,
+                    quoteStyle = QuoteStyle.DiceDreamsTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.DiceDreamsTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.DiceDreamsTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.DiceDreamsTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
@@ -543,4 +594,3 @@ fun ThemeItem(
         }
     }
 }
-

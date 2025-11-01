@@ -126,9 +126,9 @@ sealed class QuoteStyle()
 
     object DefaultTheme : QuoteStyle()
     object CodeSnippetTheme : QuoteStyle()
-
+    object DiceDreamsTheme : QuoteStyle()
     object LiquidGlassTheme : QuoteStyle()
-//    object SpotifyTheme: QuoteStyle()
+    //    object SpotifyTheme: QuoteStyle()
     object bratTheme : QuoteStyle()
     object igorTheme : QuoteStyle()
 

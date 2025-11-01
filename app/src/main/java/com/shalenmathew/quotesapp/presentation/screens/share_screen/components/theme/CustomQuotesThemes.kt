@@ -72,6 +72,8 @@ import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
+import com.shalenmathew.quotesapp.presentation.theme.GIFont
+import com.shalenmathew.quotesapp.presentation.theme.Grey
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
@@ -81,7 +83,7 @@ import dev.chrisbanes.haze.hazeChild
 
 /**  THIS SECTION COMPRISES OF ALL DIFFERENT STYLES OF QUOTES */
 
- /** DEFAULT STYLE */
+/** DEFAULT STYLE */
 //@Preview
 @Composable
 fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
@@ -223,6 +225,73 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
     }
 }
 
+/** Dice Dreams STYLE */
+@Composable
+fun DiceDreamsStyleQuoteCard(
+    modifier: Modifier,
+    quote: Quote = Quote(quote = "The man who moves a mountain begins by carrying away small stones", author = "Unknown", liked = true),
+    color: Color = Grey,
+    imageUri: Uri? = null,
+    onPickImage: () -> Unit = {}
+) {
+    val context = LocalContext.current
+    val image = painterResource(R.drawable.dice_dreams_smpl)
+
+    val painter: Painter = remember(imageUri) {
+        if (imageUri != null) {
+            val bitmap = try {
+                MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+            } catch (e: Exception) {
+                null
+            }
+            if (bitmap != null) {
+                BitmapPainter(bitmap.asImageBitmap())
+            } else {
+                image
+            }
+        } else {
+            image
+        }
+    }
+
+    Box (
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(color = color)
+            .padding(5.dp),
+        contentAlignment = Alignment.Center
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(.8f)
+                .wrapContentHeight()
+                .shadow(elevation = 20.dp, shape = RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(20.dp))
+                .background(Color.White)
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = "Dice Dreams",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+
+            Text(
+                text = quote.quote,
+                fontSize = 26.sp,
+                fontFamily = GIFont,
+                fontWeight = FontWeight.Bold,
+                color = color,
+                modifier = Modifier.padding(20.dp)
+            )
+        }
+    }
+}
+
+
 @Composable
 fun CircleDot(color: Color) {
     Box(
@@ -286,9 +355,9 @@ fun LiquidGlassScreen(
     val textPadding = screenWidth * 0.04f // 4% of screen width
 
 
-/** we need to maintain two box where votrh boxes are above the other one and their properties are
- * exactly the same just one box will apply the blur effect other will take care
- * of displaying the text */
+    /** we need to maintain two box where votrh boxes are above the other one and their properties are
+     * exactly the same just one box will apply the blur effect other will take care
+     * of displaying the text */
 
 
 
@@ -317,7 +386,7 @@ fun LiquidGlassScreen(
                 fallback = {
                     Brush.horizontalGradient(
                         generateGradientColors(
-                          color1,
+                            color1,
                             color2
                         )
                     )
@@ -526,59 +595,59 @@ fun ReminderStyle (
 ) {
 
 
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight(.8f)
-                .background(bgColor)
-                .wrapContentSize(Alignment.Center),
-            contentAlignment = Alignment.Center
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight(.8f)
+            .background(bgColor)
+            .wrapContentSize(Alignment.Center),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(.8f)
+                .wrapContentHeight()
+                .shadow(elevation = 20.dp, shape = RoundedCornerShape(20.dp))
+                .clip(RoundedCornerShape(20.dp))
+                .background(cardBgColor)
+
         ) {
-            Column(
+
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth(.8f)
-                    .wrapContentHeight()
-                    .shadow(elevation = 20.dp, shape = RoundedCornerShape(20.dp))
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(cardBgColor)
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp, horizontal = 20.dp),
+                text = "Reminder",
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
 
-            ) {
+            Text(
+                text = quote.quote,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp, horizontal = 20.dp),
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                fontSize = 15.sp
+            )
 
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 15.dp, horizontal = 20.dp),
-                    text = "Reminder",
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            HorizontalDivider()
 
-                Text(
-                    text = quote.quote,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp, horizontal = 20.dp),
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    fontSize = 15.sp
-                )
-
-                HorizontalDivider()
-
-                Text(
-                    text = "Okay",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 15.dp),
-                    color = textColor,
-                    textAlign = TextAlign.Center,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(
+                text = "Okay",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp),
+                color = textColor,
+                textAlign = TextAlign.Center,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         }
+    }
 }
 
 @Suppress("DEPRECATION")

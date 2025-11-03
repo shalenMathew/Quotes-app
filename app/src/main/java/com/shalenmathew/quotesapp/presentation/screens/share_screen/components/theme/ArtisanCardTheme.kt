@@ -93,13 +93,6 @@ fun ArtisanCardTheme(modifier: Modifier, quote: Quote, imageModel: Any?) {
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // decorative barcode-like box at bottom left
-//                    Image(
-//                        modifier = Modifier
-//                            .height(28.dp)
-//                            .width(160.dp)
-//                            .background(Color.Black, shape = RoundedCornerShape(4.dp))
-//                    )
 
                     Image(painter = painterResource(id = R.drawable.barcode),
                         contentDescription = null,

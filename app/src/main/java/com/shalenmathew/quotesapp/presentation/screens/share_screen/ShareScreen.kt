@@ -55,6 +55,7 @@ import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ArtisanCardTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
@@ -67,6 +68,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.YoutubeStyleTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
+import com.shalenmathew.quotesapp.util.Constants.ArtisanCardTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -175,6 +177,7 @@ fun ShareScreen(
                             thumbnailUri = youtubeThumbnailUri,
                             onPickImage = { pickYoutubeThumbnail.launch("image/*") }
                         )
+                        QuoteStyle.ArtisanCardTheme -> ArtisanCardTheme()
                     }
                 }
 
@@ -553,6 +556,22 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.YoutubeTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Artisan Card",
+                    drawableRes = R.drawable.sample_yt_2,
+                    quoteStyle = QuoteStyle.ArtisanCardTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.ArtisanCardTheme,
+                    contentScale = ContentScale.Crop,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.ArtisanCardTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.ArtisanCardTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

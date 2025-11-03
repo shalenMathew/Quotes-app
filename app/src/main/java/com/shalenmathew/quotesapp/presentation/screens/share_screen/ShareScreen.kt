@@ -1,5 +1,6 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -89,6 +90,13 @@ fun ShareScreen(
     var diceDreamColor by remember { mutableStateOf(Color(0xFF0022BB)) }
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
+
+    var artisanImageUri by remember { mutableStateOf<Uri?>(null) }
+    val pickArtisanImage = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        artisanImageUri = uri
+    }
 
     var travelImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
     val pickTravelImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> travelImageUri = uri }

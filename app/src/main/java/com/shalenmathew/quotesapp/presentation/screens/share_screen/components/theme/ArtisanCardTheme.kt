@@ -1,5 +1,6 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -92,12 +94,19 @@ fun ArtisanCardTheme(modifier: Modifier, quote: Quote, imageModel: Any?) {
                     Spacer(modifier = Modifier.height(12.dp))
 
                     // decorative barcode-like box at bottom left
-                    Box(
+//                    Image(
+//                        modifier = Modifier
+//                            .height(28.dp)
+//                            .width(160.dp)
+//                            .background(Color.Black, shape = RoundedCornerShape(4.dp))
+//                    )
+
+                    Image(painter = painterResource(id = R.drawable.barcode),
+                        contentDescription = null,
                         modifier = Modifier
                             .height(28.dp)
-                            .width(160.dp)
-                            .background(Color.Black, shape = RoundedCornerShape(4.dp))
-                    ) {}
+                            .width(160.dp),
+                        alignment =Alignment.BottomStart)
                 }
             }
         }

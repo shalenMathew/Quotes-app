@@ -177,7 +177,7 @@ fun ShareScreen(
                             thumbnailUri = youtubeThumbnailUri,
                             onPickImage = { pickYoutubeThumbnail.launch("image/*") }
                         )
-                        QuoteStyle.ArtisanCardTheme -> ArtisanCardTheme()
+                        QuoteStyle.ArtisanCardTheme -> ArtisanCardTheme(Modifier, quote, artisanImageUri)
                     }
                 }
 

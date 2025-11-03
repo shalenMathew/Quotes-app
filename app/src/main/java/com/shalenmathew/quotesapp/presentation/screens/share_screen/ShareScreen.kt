@@ -282,6 +282,19 @@ fun ShareScreen(
                     )
                 }
 
+                if (quoteStyleState ==  QuoteStyle.ArtisanCardTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Pick background image",
+                        modifier = Modifier.size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                pickArtisanImage.launch("image/*")
+                            }
+                    )
+                }
+
+
                 Image(
                     painter = painterResource(R.drawable.custom), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),

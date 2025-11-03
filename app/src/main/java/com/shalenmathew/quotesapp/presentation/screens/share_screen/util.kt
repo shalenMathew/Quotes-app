@@ -144,6 +144,8 @@ sealed class QuoteStyle()
 
     object YoutubeTheme : QuoteStyle()
 
+    object ArtisanCardTheme : QuoteStyle()
+
  
 }
 

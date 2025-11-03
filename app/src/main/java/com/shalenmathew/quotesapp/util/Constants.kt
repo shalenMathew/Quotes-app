@@ -1,5 +1,7 @@
 package com.shalenmathew.quotesapp.util
 
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.QuoteStyle
+
 object Constants {
 
 
@@ -30,6 +32,9 @@ object Constants {
 
     const val TravelTheme = "TravelCardTheme"
     const val YoutubeTheme = "YoutubeTheme"
+
+    const val ArtisanCardTheme = "ArtisanCardTheme"
+
 
 
 }

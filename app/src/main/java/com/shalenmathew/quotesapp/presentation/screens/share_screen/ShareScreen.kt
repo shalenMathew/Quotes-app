@@ -285,10 +285,11 @@ fun ShareScreen(
                     )
                 }
 
-                if (quoteStyleState ==  QuoteStyle.ArtisanCardTheme) {
+                AnimatedVisibility(quoteStyleState ==  QuoteStyle.ArtisanCardTheme) {
                     Image(
                         painter = painterResource(R.drawable.upload),
                         contentDescription = "Pick background image",
+                        colorFilter = ColorFilter.tint(Color.White),
                         modifier = Modifier.size(28.dp)
                             .clickable {
                                 // Launch image picker

@@ -563,7 +563,7 @@ fun ShareScreen(
 
                 ThemeItem(
                     title = "Artisan Card",
-                    drawableRes = R.drawable.sample_yt_2,
+                    drawableRes = R.drawable.sample_artisian_theme,
                     quoteStyle = QuoteStyle.ArtisanCardTheme,
                     isSelected = defaultQuoteStyle == QuoteStyle.ArtisanCardTheme,
                     contentScale = ContentScale.Crop,

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,9 +37,10 @@ fun ArtisanCardTheme(modifier: Modifier, quote: Quote, imageModel: Any?) {
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .fillMaxHeight()
             .background(Color(0xFFE9E9EA)) // light grey background for the screen
-            .wrapContentSize(Alignment.Center)
             .padding(12.dp)
+        , contentAlignment = Alignment.Center
     ) {
         Card(
             modifier = Modifier

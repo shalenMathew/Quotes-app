@@ -3,6 +3,8 @@ A minimalistic quotes app with Tinder-like swipeable cards, delivering inspirati
 Features 
 
 ✨ fresh motivational quotes daily
+📝 Add and customize your own quotes
+🎨 Customize quotes with your fav style
 📂 save favorites offline
 📤 share quotes with friends & family
 🏠 home screen widget (auto-refreshes every 24hrs)

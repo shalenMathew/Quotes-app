@@ -30,8 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.Grey
+import com.shalenmathew.quotesapp.presentation.theme.Poppins
 import com.shalenmathew.quotesapp.presentation.theme.RobotoFont
+import com.shalenmathew.quotesapp.presentation.theme.sugarPie
 
 /** Dice Dreams STYLE */
 @Composable
@@ -89,10 +92,10 @@ fun DiceDreamsStyleQuoteCard(
 
             Text(
                 text = quote.quote,
-                fontSize = 22.sp,
-                fontFamily = RobotoFont,
-                fontWeight = FontWeight.Medium,
-                lineHeight = 30.sp,
+                fontSize = 18.sp,
+                fontFamily = Poppins,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 28.sp,
                 color = color,
                 modifier = Modifier.padding(20.dp)
             )

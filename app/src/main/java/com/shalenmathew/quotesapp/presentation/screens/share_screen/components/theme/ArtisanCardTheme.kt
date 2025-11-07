@@ -45,7 +45,7 @@ fun ArtisanCardTheme(modifier: Modifier, quote: Quote, imageModel: Any?) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 36.dp, vertical = 30.dp)
+                .padding(horizontal = 30.dp, vertical = 30.dp)
                 .shadow(
                     elevation = 18.dp,
                     shape = RoundedCornerShape(20.dp),

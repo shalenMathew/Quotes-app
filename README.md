@@ -41,15 +41,19 @@
 
 
 ## Built With 🛠
-- Kotlin
-- Jetpack Compose
-- Flow
-- Coroutines
-- Clean Architecture(MVVM)
-- Hilt
-- Retrofit
-- Room
-- WorkManager
+
+- **Kotlin**: primary language for modern Android development  
+- **Jetpack Compose**: declarative UI framework  
+- **Coroutines & Flow**: asynchronous and reactive programming for smooth, non-blocking operations  
+- **Clean Architecture (MVVM)**: separation of concerns between UI, business logic, and data  
+- **Hilt**: dependency injection  
+- **Retrofit**: networking and API integration  
+- **Room**: local database for offline-first data persistence  
+- **WorkManager**: periodic background tasks (app uses this for sending notifications)  
+- **Notifications**: push notifications for new quotes  
+- **CI/CD**: automated builds, lint checks, tests, and APK distribution via Discord  
+- **Unit & Instrumentation Tests**: ensures correctness across database, repository, and UI layers
+
 
 ## 🚀 Features
 - ✨ fresh motivational quotes daily

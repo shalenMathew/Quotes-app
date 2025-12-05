@@ -50,7 +50,8 @@
 - **Retrofit**: networking and API integration  
 - **Room**: local database for offline-first data persistence  
 - **WorkManager**: periodic background tasks (app uses this for sending notifications)  
-- **Notifications**: push notifications for new quotes  
+- **Notifications**: notify users with new quotes
+- - **Widgets**: home-screen widget that refreshes every 24 hours with new quotes
 - **CI/CD**: automated builds, lint checks, tests, and APK distribution via Discord  
 - **Unit & Instrumentation Tests**: ensures correctness across database, repository, and UI layers
 

@@ -56,6 +56,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ArtisanCardTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BookLookTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
@@ -177,6 +178,7 @@ fun ShareScreen(
                             thumbnailUri = youtubeThumbnailUri,
                             onPickImage = { pickYoutubeThumbnail.launch("image/*") }
                         )
+                        QuoteStyle.BookLookTheme -> BookLookTheme(quote = quote)
                         QuoteStyle.ArtisanCardTheme -> ArtisanCardTheme(Modifier, quote, artisanImageUri)
                     }
                 }
@@ -542,6 +544,21 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.MinimalBrownTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "BookLook Theme",
+                    drawableRes = R.drawable.theme_paper_bg,
+                    quoteStyle = QuoteStyle.BookLookTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.BookLookTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.BookLookTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.BookLookTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

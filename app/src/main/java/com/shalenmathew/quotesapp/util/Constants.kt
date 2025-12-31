@@ -35,6 +35,8 @@ object Constants {
 
     const val ArtisanCardTheme = "ArtisanCardTheme"
 
+    const val BookLookTheme = "BookLookTheme"
+
 
 
 }

@@ -146,6 +146,8 @@ sealed class QuoteStyle()
 
     object ArtisanCardTheme : QuoteStyle()
 
+    object BookLookTheme : QuoteStyle()
+
  
 }
 

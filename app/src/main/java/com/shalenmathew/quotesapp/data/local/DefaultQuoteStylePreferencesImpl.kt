@@ -26,6 +26,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.MinimalBrownTheme -> Constants.MinimalBrownTheme
             is QuoteStyle.YoutubeTheme -> Constants.YoutubeTheme
             is QuoteStyle.ArtisanCardTheme -> Constants.ArtisanCardTheme
+            is QuoteStyle.BookLookTheme -> Constants.BookLookTheme
         }
         sharedPreferences.edit {
             putString(QUOTE_STYLE_KEY, quoteStyleString)
@@ -46,6 +47,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             Constants.MinimalBrownTheme -> QuoteStyle.MinimalBrownTheme
             Constants.YoutubeTheme -> QuoteStyle.YoutubeTheme
             Constants.ArtisanCardTheme -> QuoteStyle.ArtisanCardTheme
+            Constants.BookLookTheme -> QuoteStyle.BookLookTheme
             else -> QuoteStyle.DefaultTheme
         }
     }

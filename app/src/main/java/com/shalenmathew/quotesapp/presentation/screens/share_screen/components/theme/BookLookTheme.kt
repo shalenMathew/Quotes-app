@@ -64,7 +64,7 @@ fun BookLookTheme(
 
             Text(
                 text = quote.quote,
-                color = Color(0xFF2B2B2B),
+                color = Color.Black,
                 fontSize = 18.sp,
                 lineHeight = 24.sp,
                 textAlign = TextAlign.Start,

@@ -12,22 +12,28 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ScheduleNotification @Inject constructor(@ApplicationContext private val context: Context)  {
+class ScheduleNotification @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
-    fun scheduleNotification(){
+    fun scheduleNotification(intervalInDays: Long) {
 
-        val workRequest = PeriodicWorkRequestBuilder<NotificationWorkManager>(48, TimeUnit.HOURS)
-            .setConstraints(
-                Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-                .build())
-            .build()
+        val workRequest =
+            PeriodicWorkRequestBuilder<NotificationWorkManager>(
+                intervalInDays,
+                TimeUnit.DAYS
+            )
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                        .build()
+                )
+                .build()
 
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             "quotes_notification",
             ExistingPeriodicWorkPolicy.KEEP,
-            workRequest)
-
+            workRequest
+        )
     }
-
 }

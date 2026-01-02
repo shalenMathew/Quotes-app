@@ -34,26 +34,28 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
-// used android entry here as we are injecting the viewmodel using hilt
-// even when not explicitly mention @inject the viewmodel creation and its factory creation is taken care by hilt behind the scenes
-// so the activities or fragments which needs to be injected by hilt should be annotated using this annotation
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var scheduleNotification:ScheduleNotification
+    @Inject lateinit var scheduleNotification: ScheduleNotification
     @Inject lateinit var scheduleWidget: ScheduleWidgetRefresh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge(
-            navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+            navigationBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            )
         )
+
         setContent {
             QuotesAppTheme {
 
-                scheduleNotification.scheduleNotification()
+                // ✅ FIX: pass default interval (Every 2 Days)
+                scheduleNotification.scheduleNotification(intervalInDays = 2)
+
                 val context = LocalContext.current
 
                 LaunchedEffect(Unit) {
@@ -62,84 +64,89 @@ class MainActivity : ComponentActivity() {
                         context.setWidgetRefreshInterval(DEFAULT_WIDGET_REFRESH_INTERVAL)
                         Handler(Looper.getMainLooper()).postDelayed({
                             scheduleWidget.scheduleWidgetRefreshWorkAlarm(
-                                getMillisFromNow(
-                                    DEFAULT_WIDGET_REFRESH_INTERVAL
-                                )
+                                getMillisFromNow(DEFAULT_WIDGET_REFRESH_INTERVAL)
                             )
                         }, 5000)
                     }
                 }
 
-                /* REQUESTING NECESSARY PERMISSIONS  */
+                /* REQUESTING NECESSARY PERMISSIONS */
                 requestNecessaryPermissions()
-                checkWorkManagerStatus(this,this)
+                checkWorkManagerStatus(this, this)
 
                 val navHost = rememberNavController()
 
                 Scaffold(
-                    containerColor = androidx.compose.ui.graphics.Color.Black, bottomBar = {
+                    containerColor = androidx.compose.ui.graphics.Color.Black,
+                    bottomBar = {
 
-                    val currentBackStackEntry by navHost.currentBackStackEntryAsState()
-                    val currentDestination = currentBackStackEntry?.destination?.route
+                        val currentBackStackEntry by navHost.currentBackStackEntryAsState()
+                        val currentDestination = currentBackStackEntry?.destination?.route
 
-                 val currentScreen = Screen.values.firstOrNull{ it->
-                        it.route==currentDestination
-                    }
-
-                    currentScreen?.let {
-                        if (it.needBottomNav){
-                            BottomNavAnimation(navHost)
+                        val currentScreen = Screen.values.firstOrNull {
+                            it.route == currentDestination
                         }
-                    }?:run {
-                        Log.d("TAG","currentScreen = $currentScreen")
+
+                        currentScreen?.let {
+                            if (it.needBottomNav) {
+                                BottomNavAnimation(navHost)
+                            }
+                        } ?: run {
+                            Log.d("TAG", "currentScreen = $currentScreen")
+                        }
                     }
+                ) { paddingValues ->
 
-                })
-                { paddingValues ->
-                    // CHANGE APP NAVIGATION
                     val startDestination =
-                        if (intent.getStringExtra("shortcut_nav") == "settings") {
-                            Screen.Settings.route
-                        } else if (intent.getStringExtra("shortcut_nav") == "favourite") {
-                            Screen.Fav.route
-                        } else Screen.Splash.route
-                    AppNavigation(navHost = navHost, paddingValues = paddingValues , startDestination = startDestination)
-                }
+                        when (intent.getStringExtra("shortcut_nav")) {
+                            "settings" -> Screen.Settings.route
+                            "favourite" -> Screen.Fav.route
+                            else -> Screen.Splash.route
+                        }
 
+                    AppNavigation(
+                        navHost = navHost,
+                        paddingValues = paddingValues,
+                        startDestination = startDestination
+                    )
+                }
             }
         }
     }
 
     fun requestNecessaryPermissions() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestNotificationPermission()
         }
 
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             requestWriteExternalStoragePermission()
         }
-
     }
 
     private fun requestWriteExternalStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.REQUEST_CODE_WRITE_STORAGE)
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                Constants.REQUEST_CODE_WRITE_STORAGE
+            )
         }
     }
 
     private fun requestNotificationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-            != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE_NOTIFICATION)
+            requestPermissions(
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                Constants.REQUEST_CODE_NOTIFICATION
+            )
         }
     }
-
 }
-
-
-

@@ -77,6 +77,7 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                         401 -> "Unauthorized"
                         403 -> "Forbidden"
                         429 -> "To many request to the server please check back in some time"
+                        500 -> "Server is down...Please try again later"
                         else -> {"Unknown error ${e.message()}"}
                     }
                 }

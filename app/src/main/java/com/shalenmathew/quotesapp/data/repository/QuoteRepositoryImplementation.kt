@@ -74,11 +74,11 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                 is HttpException -> {
                     when (e.code()) {
                         400 -> "Bad Request"
-                        401 -> "Unauthorized"
-                        403 -> "Forbidden"
+                        401 -> "Unauthorized Request"
+                        403 -> "Forbidden Request"
                         429 -> "To many request to the server please check back in some time"
                         500 -> "Server is down...Please try again later"
-                        else -> {"Unknown error ${e.message()}"}
+                        else -> {"Unknown error ${e.message()},Please try again."}
                     }
                 }
                 else -> "Something went wrong. Please try again."

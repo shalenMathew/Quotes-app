@@ -18,8 +18,8 @@ android {
         applicationId = "com.shalenmathew.quotesapp"
         minSdk = 24
         targetSdk = 36
-        versionCode = 35
-        versionName = "4.0"
+        versionCode = 36
+        versionName = "4.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

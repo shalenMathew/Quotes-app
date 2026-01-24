@@ -141,8 +141,8 @@ private fun BottomNavItem(
                     .align(Alignment.CenterVertically)
                     .fillMaxHeight()
                     .padding(start = 11.dp)
-                    .alpha(animatedAlpha)  // <-------
-                    .size(animatedIconSize),  // <-------
+                    .alpha(animatedAlpha)
+                    .size(animatedIconSize),
                 isActive = isSelected,
                 activeIcon = item.activeIcon,
                 inactiveIcon = item.inactiveIcon,
@@ -197,6 +197,7 @@ sealed class Screen(
     object Share: Screen("Share",false)
     object Settings: Screen("Settings",true)
     object AboutLibraries: Screen("AboutLibraries",false)
+    object MoreApps : Screen("MoreApps",false)
     object AddCustomQuote: Screen("AddCustomQuote",false)
     companion object{
         val values:List<Screen> = listOf(Home,Fav,Splash,Share, Settings, AboutLibraries)

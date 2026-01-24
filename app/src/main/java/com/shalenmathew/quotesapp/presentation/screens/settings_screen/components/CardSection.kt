@@ -54,14 +54,33 @@ fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
                     color = Color.Black,
                     shape = RectangleShape )
                 .clickable {
-                    if (card.url == "navigate") {
-                        // Navigate to AboutLibraries screen
-                        navHost.navigate(Screen.AboutLibraries.route)
-                    } else {
-                        // Open external URL
-                        val intent = Intent(Intent.ACTION_VIEW, card.url.toUri())
-                        context.startActivity(intent)
+
+                    when(card.url){
+
+                        "navigate" -> {
+                            navHost.navigate(Screen.AboutLibraries.route)
+                        }
+
+                        "moreApps" -> {
+                            navHost.navigate(Screen.MoreApps.route)
+                        }
+
+                        else ->{
+                            // Open external URL
+                            val intent = Intent(Intent.ACTION_VIEW, card.url.toUri())
+                            context.startActivity(intent)
+                        }
+
                     }
+
+//                    if (card.url == "navigate") {
+//                        // Navigate to AboutLibraries screen
+//                        navHost.navigate(Screen.AboutLibraries.route)
+//                    } else {
+//                        // Open external URL
+//                        val intent = Intent(Intent.ACTION_VIEW, card.url.toUri())
+//                        context.startActivity(intent)
+//                    }
                 }
                 .clip(shape)
 //                .background(Color(0xFF1C1C1E))
@@ -101,6 +120,7 @@ fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
 
 
 val cardsRow = listOf<CardRow>(
+    CardRow(icon = R.drawable.ic_more_apps, name = "More Apps u might like", url = "moreApps" ),
     CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew" ),
     CardRow(icon = R.drawable.ic_github, name = "Github", url = "https://github.com/shalenMathew/Quotes-app" ),
     CardRow(icon = R.drawable.ic_discord, name = "Discord", url = "https://discord.gg/QpDJh3rT4q" ),

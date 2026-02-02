@@ -45,7 +45,7 @@
 - **Kotlin**: primary language for modern Android development  
 - **Jetpack Compose**: declarative UI framework  
 - **Coroutines & Flow**: asynchronous and reactive programming for smooth, non-blocking operations  
-- **Clean Architecture (MVVM)**: separation of concerns between UI, business logic, and data  
+- **Clean Architecture (MVI)**: separation of concerns between UI, business logic, and data  
 - **Hilt**: dependency injection  
 - **Retrofit**: networking and API integration  
 - **Room**: local database for offline-first data persistence  

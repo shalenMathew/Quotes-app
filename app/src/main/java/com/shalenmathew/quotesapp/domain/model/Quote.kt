@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity
 data class Quote(
-    @PrimaryKey()
+    @PrimaryKey
     val id:Int?=null,
     val quote: String,
     val author:String,

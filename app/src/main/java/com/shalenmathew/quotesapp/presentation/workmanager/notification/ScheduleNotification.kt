@@ -16,7 +16,7 @@ class ScheduleNotification @Inject constructor(@ApplicationContext private val c
 
     fun scheduleNotification(){
 
-        val workRequest = PeriodicWorkRequestBuilder<NotificationWorkManager>(48, TimeUnit.HOURS)
+        val workRequest = PeriodicWorkRequestBuilder<NotificationWorkManager>(5, TimeUnit.MINUTES)
             .setConstraints(
                 Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.NOT_REQUIRED)

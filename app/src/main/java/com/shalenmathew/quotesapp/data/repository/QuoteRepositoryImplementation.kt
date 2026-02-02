@@ -18,18 +18,19 @@ import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import java.io.IOException
 
-class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:QuoteDatabase):QuoteRepository {
+class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: QuoteDatabase) :
+    QuoteRepository {
 
 
     override fun getQuote(): Flow<Resource<QuoteHome>> {
 
         return flow {
 
-            var quoteHome:QuoteHome? = null
+            var quoteHome: QuoteHome?
 
             emit(Resource.Loading())
 
-            Log.d("TAG",Thread.currentThread().name)
+            Log.d("TAG", Thread.currentThread().name)
 
             coroutineScope {
 
@@ -37,29 +38,32 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                 // before moving forward
 
                 val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
-                val qotDef =  async { api.getQuoteOfTheDay().map { it.toQuote() } }
+                val qotDef = async { api.getQuoteOfTheDay().map { it.toQuote() } }
 
                 val currList = db.getQuoteDao().getAllQuotes()
 
                 currList.onEach {
-                    if(!it.liked){
-                        db.getQuoteDao().deleteQuote(it)  // here u dont need to launch a coroutine as ...
+                    if (!it.liked) {
+                        db.getQuoteDao()
+                            .deleteQuote(it)  // here u dont need to launch a coroutine as ...
                         // launch keyword is used to launch a coroutine and flow already have a running coroutine under its hood ...
                         // so u don't need to launch another coroutine
                     }
                 }
 
                 val quotesList = quotesListDef.await()
-                val qot=qotDef.await()
+                val qot = qotDef.await()
 
-                quotesList.let { list->
-                    db.getQuoteDao().insertQuoteList(quotesList)
+                quotesList.let { list ->
+                    db.getQuoteDao().insertQuoteList(list)
                 }
 
-                Log.d("TAG","QuoteImpl inside try - Size of all list="
-                        + db.getQuoteDao().getAllQuotes().size)
+                Log.d(
+                    "TAG", "QuoteImpl inside try - Size of all list="
+                            + db.getQuoteDao().getAllQuotes().size
+                )
 
-                quoteHome= QuoteHome(
+                quoteHome = QuoteHome(
                     quotesList = db.getQuoteDao().getAllQuotes(),
                     quotesOfTheDay = qot
                 )
@@ -70,7 +74,7 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
         }.catch { e ->
 
             val errorMessage = when (e) {
-                is IOException-> "No internet connection. Please try again."
+                is IOException -> "No internet connection. Please try again."
                 is HttpException -> {
                     when (e.code()) {
                         400 -> "Bad Request"
@@ -78,9 +82,12 @@ class QuoteRepositoryImplementation(private val api:QuoteApi, private val db:Quo
                         403 -> "Forbidden Request"
                         429 -> "To many request to the server please check back in some time"
                         500 -> "Server is down...Please try again later"
-                        else -> {"Unknown error ${e.message()},Please try again."}
+                        else -> {
+                            "Unknown error ${e.message()},Please try again."
+                        }
                     }
                 }
+
                 else -> "Something went wrong. Please try again."
             }
 

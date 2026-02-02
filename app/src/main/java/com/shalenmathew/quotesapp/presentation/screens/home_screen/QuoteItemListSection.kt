@@ -1,6 +1,5 @@
 package com.shalenmathew.quotesapp.presentation.screens.home_screen
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,7 +25,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.TileMode
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -49,11 +47,8 @@ import com.shalenmathew.quotesapp.presentation.widget.AnimatedHeartButton
 
 
 @Composable
-fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostController){
+fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostController) {
 
-    val context = LocalContext.current
-    val activity = context as ComponentActivity
-    
     // Observe the current state to get the updated quote with correct liked status
     val currentState = quoteViewModel.quoteState.value
     val currentQuote = currentState.dataList.find { it.id == data.id } ?: data
@@ -70,26 +65,32 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
             .padding(horizontal = 10.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(gradient)
-            .fillMaxSize()){
+            .fillMaxSize()
+    ) {
 
 
         Image(
             painter = painterResource(R.drawable.quotation),
             contentDescription = null,
-            modifier= Modifier
+            modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(start=12.dp,top = 15.dp)
-                .size(30.dp))
+                .padding(start = 12.dp, top = 15.dp)
+                .size(30.dp)
+        )
 
-        Column(modifier = Modifier.wrapContentSize()
-            .background(Color.Transparent)
-            .align(Alignment.Center)
+        Column(
+            modifier = Modifier
+                .wrapContentSize()
+                .background(Color.Transparent)
+                .align(Alignment.Center)
         ) {
-            Text(text = currentQuote.quote,
+            Text(
+                text = currentQuote.quote,
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Normal,
                 fontSize = 19.sp,
-                modifier = Modifier.padding(horizontal = 15.dp)
+                modifier = Modifier
+                    .padding(horizontal = 15.dp)
                     .fillMaxWidth(),
                 color = White,
                 style = TextStyle(
@@ -97,16 +98,21 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                 )
             )
 
-            Spacer(modifier= Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(50.dp))
 
-            Text(text = currentQuote.author,
+            Text(
+                text = currentQuote.author,
                 color = Color.Gray,
-                modifier = Modifier.padding(horizontal = 15.dp))
+                modifier = Modifier.padding(horizontal = 15.dp)
+            )
         }
 
-        Column(modifier= Modifier.wrapContentSize()
-            .align(Alignment.BottomEnd)
-            .padding(horizontal = 20.dp,vertical=28.dp)) {
+        Column(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.BottomEnd)
+                .padding(horizontal = 20.dp, vertical = 28.dp)
+        ) {
 
 
             AnimatedHeartButton(
@@ -116,18 +122,19 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                 }
             )
 
-            Spacer(modifier= Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(25.dp))
 
-            AsyncImage(model = R.drawable.send,
+            AsyncImage(
+                model = R.drawable.send,
                 contentDescription = null,
-                modifier= Modifier.size(35.dp).testTag("share").clickable
-                {
-
-                    navHost.currentBackStackEntry?.savedStateHandle?.set("quote",currentQuote)
-                    navHost.navigate(Screen.Share.route)
-
-
-                })
+                modifier = Modifier
+                    .size(35.dp)
+                    .testTag("share")
+                    .clickable {
+                        navHost.currentBackStackEntry?.savedStateHandle?.set("quote", currentQuote)
+                        navHost.navigate(Screen.Share.route)
+                    }
+            )
         }
     }
 }
@@ -141,28 +148,32 @@ fun QuoteItemListSection(
 
     val state = quoteViewModel.quoteState.value
 
-    if(state.isLoading)
-    {
+    if (state.isLoading) {
 
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Transparent)
-            , contentAlignment = Alignment.Center){
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.Transparent), contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator(color = White)
         }
-    }
-    else if (state.error.isNotEmpty())
-    {
-        Box(modifier = Modifier
-            .padding(5.dp)
-            .fillMaxSize()
-            .background(color = Color.Transparent)
-            , contentAlignment = Alignment.Center){
+    } else if (state.error.isNotEmpty()) {
+        Box(
+            modifier = Modifier
+                .padding(5.dp)
+                .fillMaxSize()
+                .background(color = Color.Transparent), contentAlignment = Alignment.Center
+        ) {
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                Text(text = state.error,color = White, modifier = Modifier.fillMaxWidth(),textAlign = TextAlign.Center)
+                Text(
+                    text = state.error,
+                    color = White,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -172,31 +183,33 @@ fun QuoteItemListSection(
                     quoteViewModel.onEvent(QuoteEvent.Retry)
 
                 }, colors = ButtonDefaults.buttonColors(White)) {
-                    Text("Refresh",
+                    Text(
+                        "Refresh",
                         color = Color.Black, fontSize = 15.sp,
-                        modifier = Modifier.padding(5.dp))
+                        modifier = Modifier.padding(5.dp)
+                    )
                 }
             }
         }
 
-    }
-    else
-    {
+    } else {
 
-            LazySwipeCards(cardColor = Color.Transparent,
-                cardShadowElevation = 0.dp,
-                translateSize = 8.dp,
-                swipeThreshold = 0.3f) {
+        LazySwipeCards(
+            cardColor = Color.Transparent,
+            cardShadowElevation = 0.dp,
+            translateSize = 8.dp,
+            swipeThreshold = 0.3f
+        ) {
 
-                items(state.dataList) {it->
-                    QuoteItem(it,quoteViewModel,navHost)
-                }
-                onSwiped { item, _ ->
-                    quoteViewModel.onEvent(QuoteEvent.Swipe(item as Quote))
-                }
+            items(state.dataList) {
+                QuoteItem(it, quoteViewModel, navHost)
             }
+            onSwiped { item, _ ->
+                quoteViewModel.onEvent(QuoteEvent.Swipe(item as Quote))
+            }
+        }
     }
-    }
+}
 
 
 

@@ -73,7 +73,10 @@ fun BottomNavAnimation(
             ) {
                 for (screen in tabItem) {
                     val isSelected = screen.route == currentRoute
-                    val animatedWeight by animateFloatAsState(targetValue = if (isSelected) 1.5f else 1f, label = "")
+                    val animatedWeight by animateFloatAsState(
+                        targetValue = if (isSelected) 1.5f else 1f,
+                        label = ""
+                    )
                     Box(
                         modifier = Modifier.weight(animatedWeight),
                         contentAlignment = Alignment.Center,
@@ -99,6 +102,7 @@ fun BottomNavAnimation(
         }
     }
 }
+
 @Composable
 private fun BottomNavItem(
     modifier: Modifier = Modifier,
@@ -130,7 +134,7 @@ private fun BottomNavItem(
                     spotColor = Color.White
                 )
                 .background(
-                    color = if(isSelected) bottomNavItem else Color.Black,  // customize
+                    color = if (isSelected) bottomNavItem else Color.Black,  // customize
                     shape = RoundedCornerShape(20.dp),
                 ),
             verticalAlignment = Alignment.CenterVertically,
@@ -146,7 +150,8 @@ private fun BottomNavItem(
                 isActive = isSelected,
                 activeIcon = item.activeIcon,
                 inactiveIcon = item.inactiveIcon,
-                contentDescription = "Null")
+                contentDescription = "Null"
+            )
             AnimatedVisibility(visible = isSelected) {
                 Text(
                     text = item.route,
@@ -158,6 +163,7 @@ private fun BottomNavItem(
         }
     }
 }
+
 @Composable
 fun FlipIcon(
     modifier: Modifier = Modifier,
@@ -165,8 +171,7 @@ fun FlipIcon(
     activeIcon: ImageVector,
     inactiveIcon: ImageVector,
     contentDescription: String,
-)
-{
+) {
     val animationRotation by animateFloatAsState(
         targetValue = if (isActive) 180f else 0f,
         animationSpec = spring(
@@ -186,30 +191,30 @@ fun FlipIcon(
         )
     }
 }
+
 sealed class Screen(
     val route: String,
-    val needBottomNav:Boolean
-)
-{
-    object Home: Screen("Home",true)
-    object Fav: Screen("Favourites",true)
-    object Splash: Screen("Splash",false)
-    object Share: Screen("Share",false)
-    object Settings: Screen("Settings",true)
-    object AboutLibraries: Screen("AboutLibraries",false)
-    object MoreApps : Screen("MoreApps",false)
-    object AddCustomQuote: Screen("AddCustomQuote",false)
-    companion object{
-        val values:List<Screen> = listOf(Home,Fav,Splash,Share, Settings, AboutLibraries)
+    val needBottomNav: Boolean
+) {
+    object Home : Screen("Home", true)
+    object Fav : Screen("Favourites", true)
+    object Splash : Screen("Splash", false)
+    object Share : Screen("Share", false)
+    object Settings : Screen("Settings", true)
+    object AboutLibraries : Screen("AboutLibraries", false)
+    object MoreApps : Screen("MoreApps", false)
+    object AddCustomQuote : Screen("AddCustomQuote", false)
+    companion object {
+        val values: List<Screen> = listOf(Home, Fav, Splash, Share, Settings, AboutLibraries)
     }
 }
+
 sealed class BottomNav(
     val route: String,
     val activeIcon: ImageVector,
     val inactiveIcon: ImageVector
-)
-{
-    object Home: BottomNav(Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home)
-    object Fav: BottomNav(Screen.Fav.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
-    object Settings: BottomNav(Screen.Settings.route, Icons.Filled.Person,Icons.Outlined.Person)
+) {
+    object Home : BottomNav(Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home)
+    object Fav : BottomNav(Screen.Fav.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
+    object Settings : BottomNav(Screen.Settings.route, Icons.Filled.Person, Icons.Outlined.Person)
 }

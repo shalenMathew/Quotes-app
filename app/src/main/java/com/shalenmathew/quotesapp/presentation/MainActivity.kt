@@ -11,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,14 +42,20 @@ import javax.inject.Inject
 // so the activities or fragments which needs to be injected by hilt should be annotated using this annotation
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var scheduleNotification:ScheduleNotification
-    @Inject lateinit var scheduleWidget: ScheduleWidgetRefresh
+    @Inject
+    lateinit var scheduleNotification: ScheduleNotification
+
+    @Inject
+    lateinit var scheduleWidget: ScheduleWidgetRefresh
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge(
-            navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+            navigationBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            )
         )
         setContent {
             QuotesAppTheme {
@@ -72,29 +79,28 @@ class MainActivity : ComponentActivity() {
 
                 /* REQUESTING NECESSARY PERMISSIONS  */
                 requestNecessaryPermissions()
-                checkWorkManagerStatus(this,this)
+                checkWorkManagerStatus(this, this)
 
                 val navHost = rememberNavController()
 
                 Scaffold(
-                    containerColor = androidx.compose.ui.graphics.Color.Black, bottomBar = {
+                    containerColor = androidx.compose.ui.graphics.Color.Black,
+                    bottomBar = {
+                        val currentBackStackEntry by navHost.currentBackStackEntryAsState()
+                        val currentDestination = currentBackStackEntry?.destination?.route
 
-                    val currentBackStackEntry by navHost.currentBackStackEntryAsState()
-                    val currentDestination = currentBackStackEntry?.destination?.route
-
-                 val currentScreen = Screen.values.firstOrNull{ it->
-                        it.route==currentDestination
-                    }
-
-                    currentScreen?.let {
-                        if (it.needBottomNav){
-                            BottomNavAnimation(navHost)
+                        val currentScreen = Screen.values.firstOrNull { it ->
+                            it.route == currentDestination
                         }
-                    }?:run {
-                        Log.d("TAG","currentScreen = $currentScreen")
-                    }
 
-                })
+                        currentScreen?.let {
+                            if (it.needBottomNav) {
+                                BottomNavAnimation(navHost)
+                            }
+                        } ?: run {
+                            Log.d("TAG", "currentScreen = $currentScreen")
+                        }
+                    })
                 { paddingValues ->
                     // CHANGE APP NAVIGATION
                     val startDestination =
@@ -103,9 +109,13 @@ class MainActivity : ComponentActivity() {
                         } else if (intent.getStringExtra("shortcut_nav") == "favourite") {
                             Screen.Fav.route
                         } else Screen.Splash.route
-                    AppNavigation(navHost = navHost, paddingValues = paddingValues , startDestination = startDestination)
+                    AppNavigation(
+                        navHost = navHost,
+                        paddingValues = paddingValues,
+                        startDestination = startDestination,
+                        intent = intent
+                    )
                 }
-
             }
         }
     }
@@ -127,15 +137,22 @@ class MainActivity : ComponentActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.REQUEST_CODE_WRITE_STORAGE)
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                Constants.REQUEST_CODE_WRITE_STORAGE
+            )
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), Constants.REQUEST_CODE_NOTIFICATION)
+            requestPermissions(
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                Constants.REQUEST_CODE_NOTIFICATION
+            )
         }
     }
 

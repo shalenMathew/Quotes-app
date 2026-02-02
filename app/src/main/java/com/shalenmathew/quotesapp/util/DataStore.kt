@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.google.gson.Gson
+import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetReceiver
 import com.shalenmathew.quotesapp.util.Constants.NO_QUOTE_SAVED_YET
 import kotlinx.coroutines.flow.Flow
@@ -18,8 +20,7 @@ import kotlinx.coroutines.flow.map
 val Context.dataStore by preferencesDataStore("quote_prefs")
 
 val WIDGET_QUOTE_KEY = stringPreferencesKey("widgetQuote")
-val NOTIFICATION_QUOTE_KEY = stringPreferencesKey("notificationQuote")
-val NOTIFICATION_AUTHOR_KEY = stringPreferencesKey("notificationAuthor")
+val NOTIFICATION_QUOTE_MODEL = stringPreferencesKey("notificationQuoteModel")
 
 val IS_FIRST_LAUNCH_KEY = booleanPreferencesKey("is_first_launch")
 val LAST_ALARM_SET_MILLIS_KEY = longPreferencesKey("last_alarm_set_millis")
@@ -50,17 +51,19 @@ suspend fun Context.saveWidgetQuote(quote: String) {
     sendBroadcast(intent)
 }
 
-suspend fun Context.saveNotificationQuote(quote: String,author: String){
+suspend fun Context.saveNotificationQuote(quote: Quote){
     dataStore.edit { preferences ->
-        preferences[NOTIFICATION_QUOTE_KEY] = quote
-        preferences[NOTIFICATION_AUTHOR_KEY] = author
+        preferences[NOTIFICATION_QUOTE_MODEL] = Gson().toJson(quote)
     }
 }
 
-fun Context.getSavedNotificationQuote(): Flow<String> {
+fun Context.getSavedNotificationQuote(): Flow<Quote?> {
     return dataStore.data.map { preferences ->
-        preferences[NOTIFICATION_QUOTE_KEY] ?: "No quote saved yet..."
-        preferences[NOTIFICATION_AUTHOR_KEY] ?: "No author saved yet..."
+        if (preferences[NOTIFICATION_QUOTE_MODEL].isNullOrEmpty()) {
+            return@map null
+        } else {
+            return@map Gson().fromJson(preferences[NOTIFICATION_QUOTE_MODEL], Quote::class.java)
+        }
     }
 }
 

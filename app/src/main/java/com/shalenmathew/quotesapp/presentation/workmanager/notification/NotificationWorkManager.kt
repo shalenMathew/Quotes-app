@@ -16,14 +16,14 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.google.gson.Gson
 import com.shalenmathew.quotesapp.R
+import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.Constants
-import com.shalenmathew.quotesapp.util.NOTIFICATION_AUTHOR_KEY
-import com.shalenmathew.quotesapp.util.NOTIFICATION_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.Resource
-import com.shalenmathew.quotesapp.util.dataStore
+import com.shalenmathew.quotesapp.util.getSavedNotificationQuote
 import com.shalenmathew.quotesapp.util.saveNotificationQuote
 
 import dagger.assisted.Assisted
@@ -35,11 +35,10 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 @HiltWorker
 class NotificationWorkManager @AssistedInject constructor(
-    @Assisted private val  context: Context,
+    @Assisted private val context: Context,
     @Assisted private val params: WorkerParameters,
     private val quoteUseCase: QuoteUseCase
-) : CoroutineWorker(context, params)
-{
+) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
 
@@ -49,22 +48,23 @@ class NotificationWorkManager @AssistedInject constructor(
 
             val response = fetchQuotes(context)
 
-            if (!response){
+            if (!response) {
                 return Result.retry()
             }
+            val quote = context.getSavedNotificationQuote().first()
 
-
-            val savedQuote = context.dataStore.data.first()[NOTIFICATION_QUOTE_KEY] ?: "No quote saved yet!!!"
-            val savedAuthor= context.dataStore.data.first()[NOTIFICATION_AUTHOR_KEY] ?: "No quote saved yet!!!"
-
-            Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Saved Quote in DataStore work manager: $savedQuote")
+            Log.d(
+                Constants.WORK_MANAGER_STATUS_NOTIFY,
+                "Saved Quote in DataStore work manager: $quote"
+            )
 
             createNotificationChannel()
-            createNotification(context,savedQuote,savedAuthor)
+            quote?.let {
+                createNotification(context, it)
+            }
 
             return Result.success()
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Exception in doWork", e)
             Result.failure()
         }
@@ -79,27 +79,31 @@ class NotificationWorkManager @AssistedInject constructor(
             val descriptionText = "Channel for vital logging reminders"
             val importance = NotificationManager.IMPORTANCE_HIGH
 
-            val channel = NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance).apply {
-                description = descriptionText
+            val channel =
+                NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, name, importance).apply {
+                    description = descriptionText
 //                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            }
+                }
 
-            val notificationWorkManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationWorkManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationWorkManager.createNotificationChannel(channel)
 
         }
 
     }
 
-    private fun createNotification(context: Context, quote: String, author: String) {
+    private fun createNotification(context: Context, quote: Quote) {
 
         val notificationLayout = RemoteViews(context.packageName, R.layout.notification_view)
 
-        notificationLayout.setTextViewText(R.id.nv_title, quote)
-        notificationLayout.setTextViewText(R.id.nv_author, author)
+        notificationLayout.setTextViewText(R.id.nv_title, quote.quote)
+        notificationLayout.setTextViewText(R.id.nv_author, quote.author)
 
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("shortcut_nav", "share")
+            putExtra("quote", Gson().toJson(quote))
         }
 
         val pendingIntent = PendingIntent.getActivity(
@@ -121,15 +125,19 @@ class NotificationWorkManager @AssistedInject constructor(
             .build()
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-            ContextCompat.checkSelfPermission(applicationContext,
-                Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
 
-            NotificationManagerCompat.from(applicationContext).notify(Constants.NOTIFICATION_ID, notification)
+            NotificationManagerCompat.from(applicationContext)
+                .notify(Constants.NOTIFICATION_ID, notification)
         }
 
     }
 
-    private suspend fun fetchQuotes(context: Context):Boolean {
+    private suspend fun fetchQuotes(context: Context): Boolean {
 
         return try {
 
@@ -141,32 +149,37 @@ class NotificationWorkManager @AssistedInject constructor(
                         .filter { it is Resource.Success || it is Resource.Error }
                         .first()
                 }
-            when(response){
+            when (response) {
 
-                is Resource.Success->{
-                    val quote =  response.data?.quotesList?.getOrNull(1)
+                is Resource.Success -> {
+                    val quote = response.data?.quotesList?.getOrNull(1)
 
-                    if(quote!=null){
+                    if (quote != null) {
                         Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Fetched Quote: $quote")
-                        context.saveNotificationQuote(quote.quote, quote.author)
+                        context.saveNotificationQuote(quote)
                         true
-                    }else{
+                    } else {
                         Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Quote is null")
                         false
                     }
 
                 }
-                is Resource.Error-> {
-                    Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Error from fetchQuotes: ${response.message}")
+
+                is Resource.Error -> {
+                    Log.d(
+                        Constants.WORK_MANAGER_STATUS_NOTIFY,
+                        "Error from fetchQuotes: ${response.message}"
+                    )
                     false
                 }
+
                 else -> {
                     Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "No response from fetchQuotes")
                     false
                 }
             }
 
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Exception in fetchQuotes", e)
             false
         }

@@ -9,16 +9,20 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.shalenmathew.quotesapp.BuildConfig
 import com.shalenmathew.quotesapp.data.local.AnimationPreferencesImpl
 import com.shalenmathew.quotesapp.data.local.DefaultQuoteStylePreferencesImpl
+import com.shalenmathew.quotesapp.data.local.GlanceWidgetManagerImpl
 import com.shalenmathew.quotesapp.data.local.QuoteDatabase
 import com.shalenmathew.quotesapp.data.remote.QuoteApi
 import com.shalenmathew.quotesapp.data.repository.CustomQuoteRepositoryImpl
 import com.shalenmathew.quotesapp.data.repository.FavQuoteRepositoryImpl
 import com.shalenmathew.quotesapp.data.repository.QuoteRepositoryImplementation
+import com.shalenmathew.quotesapp.data.repository.WidgetRepositoryImpl
 import com.shalenmathew.quotesapp.domain.repository.AnimationPreferences
 import com.shalenmathew.quotesapp.domain.repository.CustomQuoteRepository
 import com.shalenmathew.quotesapp.domain.repository.DefaultQuoteStylePreferences
 import com.shalenmathew.quotesapp.domain.repository.FavQuoteRepository
+import com.shalenmathew.quotesapp.domain.repository.GlanceWidgetManager
 import com.shalenmathew.quotesapp.domain.repository.QuoteRepository
+import com.shalenmathew.quotesapp.domain.repository.WidgetRepository
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.DeleteCustomQuote
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.GetCustomQuotes
@@ -26,6 +30,7 @@ import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.SaveCust
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.GetFavQuote
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLatestQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuote
@@ -52,9 +57,19 @@ object AppModule {
 
     @Singleton
     @Provides
-fun providesQuoteUsecase(getQuote: GetQuote, likedQuote: LikedQuote, getLikedQuotes: GetLikedQuotes): QuoteUseCase {
-return QuoteUseCase(getQuote = getQuote, likedQuote = likedQuote, getLikedQuotes = getLikedQuotes)
-}
+    fun providesQuoteUsecase(
+            getQuote: GetQuote,
+            likedQuote: LikedQuote,
+            getLikedQuotes: GetLikedQuotes,
+            getLatestQuote: GetLatestQuote
+    ): QuoteUseCase {
+        return QuoteUseCase(
+            getQuote = getQuote,
+            likedQuote = likedQuote,
+            getLikedQuotes = getLikedQuotes,
+            getLatestQuote = getLatestQuote
+        )
+    }
 
     @Singleton
     @Provides
@@ -190,5 +205,17 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
         deleteCustomQuote: DeleteCustomQuote
     ): CustomQuoteUseCases {
         return CustomQuoteUseCases(getCustomQuotes, saveCustomQuote, deleteCustomQuote)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWidgetManager(@ApplicationContext context: Context): GlanceWidgetManager {
+        return GlanceWidgetManagerImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWidgetRepository(glanceWidgetManager: GlanceWidgetManager): WidgetRepository {
+        return WidgetRepositoryImpl(glanceWidgetManager)
     }
 }

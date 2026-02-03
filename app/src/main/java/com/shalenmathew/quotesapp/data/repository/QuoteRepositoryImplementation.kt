@@ -40,6 +40,9 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
                 val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
                 val qotDef = async { api.getQuoteOfTheDay().map { it.toQuote() } }
 
+                val quotesList = quotesListDef.await()
+                val qot = qotDef.await()
+
                 val currList = db.getQuoteDao().getAllQuotes()
 
                 currList.onEach {
@@ -50,9 +53,6 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
                         // so u don't need to launch another coroutine
                     }
                 }
-
-                val quotesList = quotesListDef.await()
-                val qot = qotDef.await()
 
                 quotesList.let { list ->
                     db.getQuoteDao().insertQuoteList(list)
@@ -108,5 +108,9 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
         return db.getQuoteDao().getAllLikedQuotes()
     }
 
+    override suspend fun getQuoteById(id: Int): Quote? =
+        db.getQuoteDao().getQuoteById(id)
 
+    override suspend fun getLatestQuote(): Quote? =
+        db.getQuoteDao().getLatestQuote()
 }

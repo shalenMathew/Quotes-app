@@ -9,6 +9,7 @@ import junit.framework.ComparisonFailure
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -123,7 +124,15 @@ class QuotesDaoTest {
 
     }
 
+    @Test
+    fun test_getQuoteById() = runTest {
+        val quote = Quote(1, "quote", "author", false)
+        quoteDao.insertQuoteList(listOf(quote))
 
+        val result = quoteDao.getQuoteById(1)
+
+        assertEquals("quote", result?.quote)
+    }
 
     @After
     fun tearDown(){

@@ -14,4 +14,9 @@ class LikedQuote @Inject constructor(val quoteRepository: QuoteRepository) {
 
         return updatedQuote
     }
+
+    suspend operator fun invoke(quoteId: Int): Quote? {
+        val quote = quoteRepository.getQuoteById(quoteId) ?: return null
+        return invoke(quote)
+    }
 }

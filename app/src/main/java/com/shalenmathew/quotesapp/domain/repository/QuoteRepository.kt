@@ -9,8 +9,11 @@ interface QuoteRepository {
 
     fun getQuote(): Flow<Resource<QuoteHome>>
 
-     suspend  fun saveLikedQuote(quote: Quote)
+    suspend fun saveLikedQuote(quote: Quote)
 
     fun getAllLikedQuotes(): Flow<List<Quote>>
 
+    suspend fun getQuoteById(id: Int): Quote?
+
+    suspend fun getLatestQuote(): Quote?
 }

@@ -39,7 +39,7 @@ class WidgetWorkManager @AssistedInject constructor(
 
 
             val refreshInterval =
-                context.getWidgetRefreshInterval().first() ?: DEFAULT_WIDGET_REFRESH_INTERVAL
+                context.getWidgetRefreshInterval().first() ?: DEFAULT_REFRESH_INTERVAL
             val isCacheStale = context.isWidgetCacheStale(refreshInterval)
 
             val success = if (isCacheStale) {

@@ -54,11 +54,7 @@ fun Context.createNotificationChannel() {
     }
 }
 
-fun Context.createOrUpdateNotification(quote: Quote) {
-//    val notificationLayout = RemoteViews(packageName, R.layout.notification_view)
-//    notificationLayout.setTextViewText(R.id.nv_title, quote.quote)
-//    notificationLayout.setTextViewText(R.id.nv_author, quote.author)
-
+fun Context.createOrUpdateNotification(quote: Quote, isUpdate: Boolean = false) {
     val intent = Intent(applicationContext, MainActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         putExtra("shortcut_nav", "share")
@@ -87,6 +83,7 @@ fun Context.createOrUpdateNotification(quote: Quote) {
             .setAutoCancel(true)
             .setContentTitle(quote.quote)
             .setSubText(quote.author)
+            .setSilent(isUpdate)
 
     notificationCompatBuilder.addAction(applicationContext.getNotificationAction(quote))
 

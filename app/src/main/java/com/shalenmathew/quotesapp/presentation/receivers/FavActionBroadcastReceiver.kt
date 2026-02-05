@@ -34,7 +34,7 @@ class FavActionBroadcastReceiver : BroadcastReceiver() {
                             Quote::class.java
                         )
                         val updatedQuote = quoteUseCase.likedQuote.invoke(quote)
-                        context?.createOrUpdateNotification(updatedQuote)
+                        context?.createOrUpdateNotification(updatedQuote, isUpdate = true)
                     }
                 }
             }

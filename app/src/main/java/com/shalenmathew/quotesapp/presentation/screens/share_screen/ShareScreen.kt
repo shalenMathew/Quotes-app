@@ -40,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -53,13 +52,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.CaptureBitmap
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ArtisanCardTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BookLookTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.BratScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
@@ -69,7 +69,6 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.YoutubeStyleTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
-import com.shalenmathew.quotesapp.util.Constants.ArtisanCardTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +76,7 @@ import com.shalenmathew.quotesapp.util.Constants.ArtisanCardTheme
 fun ShareScreen(
     paddingValues: PaddingValues,
     navHost: NavHostController,
-    viewModel: ShareQuoteViewModel= hiltViewModel()
+    viewModel: ShareQuoteViewModel = hiltViewModel()
 ) {
 
 
@@ -101,15 +100,24 @@ fun ShareScreen(
         artisanImageUri = uri
     }
 
-    var travelImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
-    val pickTravelImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> travelImageUri = uri }
+    var travelImageUri by remember { mutableStateOf<Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickTravelImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            travelImageUri = uri
+        }
 
-    var diceDreamsImageUri by remember { mutableStateOf<android.net.Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
-    val pickDiceImage = rememberLauncherForActivityResult( contract = ActivityResultContracts.GetContent() ) { uri -> diceDreamsImageUri = uri }
+    var diceDreamsImageUri by remember { mutableStateOf<Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickDiceImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            diceDreamsImageUri = uri
+        }
 
 
-    var youtubeThumbnailUri by remember { mutableStateOf<android.net.Uri?>(null) }
-    val pickYoutubeThumbnail = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri -> youtubeThumbnailUri = uri }
+    var youtubeThumbnailUri by remember { mutableStateOf<Uri?>(null) }
+    val pickYoutubeThumbnail =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            youtubeThumbnailUri = uri
+        }
 
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
@@ -119,15 +127,17 @@ fun ShareScreen(
 
     val quote = navHost.previousBackStackEntry?.savedStateHandle?.get<Quote>("quote")
 
-    Column (
-        modifier = Modifier.padding(paddingValues)
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
             .background(color = Color.Black)
             .fillMaxSize(),
     )
     {
 
-        Box(modifier = Modifier
-            .weight(.9f),
+        Box(
+            modifier = Modifier
+                .weight(.9f),
             contentAlignment = Alignment.Center
         ) {
 
@@ -140,6 +150,7 @@ fun ShareScreen(
                             "download" -> {
                                 saveImgInGallery(context, capturedBitmap.asAndroidBitmap())
                             }
+
                             "share" -> {
                                 shareImg(context, capturedBitmap.asAndroidBitmap())
                             }
@@ -152,22 +163,31 @@ fun ShareScreen(
                         QuoteStyle.DefaultTheme -> DefaultQuoteCard(Modifier, quote)
                         QuoteStyle.CodeSnippetTheme -> CodeSnippetStyleQuoteCard(Modifier, quote)
                         QuoteStyle.DiceDreamsTheme -> DiceDreamsStyleQuoteCard(
-                            Modifier, quote, color = diceDreamColor, imageUri = diceDreamsImageUri, onPickImage = { pickDiceImage.launch("image/*")}
+                            Modifier,
+                            quote,
+                            color = diceDreamColor,
+                            imageUri = diceDreamsImageUri,
+                            onPickImage = { pickDiceImage.launch("image/*") }
                         )
-                        QuoteStyle.bratTheme -> BratScreen(Modifier, quote)
-                        QuoteStyle.igorTheme -> IgorScreen(Modifier, quote)
+
+                        QuoteStyle.BratTheme -> BratScreen(Modifier, quote)
+                        QuoteStyle.IgorTheme -> IgorScreen(Modifier, quote)
                         QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
                             modifier = Modifier,
                             quote = quote,
                             color1 = liquidStartColor,  // from ShareScreen state
                             color2 = liquidEndColor     // from ShareScreen state
                         )
-                        QuoteStyle.FliplingoesTheme -> FliplingoesTheme(quote = quote)
+
+                        QuoteStyle.FlippingGoesTheme -> FliplingoesTheme(quote = quote)
 
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
 
                         QuoteStyle.TravelCardTheme -> TravelCardTheme(
-                            modifier = Modifier, quote = quote, imageUri = travelImageUri, onPickImage = { pickTravelImage.launch("image/*") }
+                            modifier = Modifier,
+                            quote = quote,
+                            imageUri = travelImageUri,
+                            onPickImage = { pickTravelImage.launch("image/*") }
                         )
 
                         QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
@@ -178,8 +198,13 @@ fun ShareScreen(
                             thumbnailUri = youtubeThumbnailUri,
                             onPickImage = { pickYoutubeThumbnail.launch("image/*") }
                         )
+
                         QuoteStyle.BookLookTheme -> BookLookTheme(quote = quote)
-                        QuoteStyle.ArtisanCardTheme -> ArtisanCardTheme(Modifier, quote, artisanImageUri)
+                        QuoteStyle.ArtisanCardTheme -> ArtisanCardTheme(
+                            Modifier,
+                            quote,
+                            artisanImageUri
+                        )
                     }
                 }
 
@@ -191,7 +216,8 @@ fun ShareScreen(
         }
 
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .weight(.1f)
                 .background(color = Color.Black),
             contentAlignment = Alignment.BottomEnd
@@ -245,7 +271,7 @@ fun ShareScreen(
                                 containerColor = diceDreamColor
                             ),
                             content = {},
-                            modifier = Modifier.padding(10.dp,0.dp)
+                            modifier = Modifier.padding(10.dp, 0.dp)
                         )
 
                         Image(
@@ -287,12 +313,13 @@ fun ShareScreen(
                     )
                 }
 
-                AnimatedVisibility(quoteStyleState ==  QuoteStyle.ArtisanCardTheme) {
+                AnimatedVisibility(quoteStyleState == QuoteStyle.ArtisanCardTheme) {
                     Image(
                         painter = painterResource(R.drawable.upload),
                         contentDescription = "Pick background image",
                         colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier
+                            .size(28.dp)
                             .clickable {
                                 // Launch image picker
                                 pickArtisanImage.launch("image/*")
@@ -304,7 +331,8 @@ fun ShareScreen(
                 Image(
                     painter = painterResource(R.drawable.custom), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier
+                        .size(28.dp)
                         .clickable {
                             showSheet = true
                         })
@@ -312,14 +340,17 @@ fun ShareScreen(
                 Image(
                     painter = painterResource(R.drawable.downloads), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
-                    modifier = Modifier.size(28.dp).clickable {
-                        captureRequest = "download"
-                    })
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable {
+                            captureRequest = "download"
+                        })
 
                 Image(
                     painter = painterResource(R.drawable.share), contentDescription = null,
                     colorFilter = ColorFilter.tint(Color.White),
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier
+                        .size(28.dp)
                         .clickable {
                             captureRequest = "share"
                         }
@@ -334,15 +365,15 @@ fun ShareScreen(
 
 
     // COLOR PICKER DIALOG
-    if (showColorPicker){
+    if (showColorPicker) {
         CustomPickerDialog(
             initialColor = if (editTarget == "start") liquidStartColor else if (editTarget == "end") liquidEndColor else diceDreamColor,
             onSelect = { selectedColor ->
                 if (editTarget == "start") {
                     liquidStartColor = selectedColor
-                } else if (editTarget == "end")  {
+                } else if (editTarget == "end") {
                     liquidEndColor = selectedColor
-                } else  {
+                } else {
                     diceDreamColor = selectedColor
                 }
             },
@@ -411,14 +442,14 @@ fun ShareScreen(
                 ThemeItem(
                     title = "brat Theme",
                     drawableRes = R.drawable.sample_brat_theme,
-                    quoteStyle = QuoteStyle.bratTheme,
-                    isSelected = defaultQuoteStyle == QuoteStyle.bratTheme,
+                    quoteStyle = QuoteStyle.BratTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.BratTheme,
                     onThemeClick = {
-                        quoteStyleState = QuoteStyle.bratTheme
+                        quoteStyleState = QuoteStyle.BratTheme
                         showSheet = false
                     },
                     onSetDefault = {
-                        defaultQuoteStyle = QuoteStyle.bratTheme
+                        defaultQuoteStyle = QuoteStyle.BratTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
@@ -427,14 +458,14 @@ fun ShareScreen(
                 ThemeItem(
                     title = "IGOR Theme",
                     drawableRes = R.drawable.sample_igor,
-                    quoteStyle = QuoteStyle.igorTheme,
-                    isSelected = defaultQuoteStyle == QuoteStyle.igorTheme,
+                    quoteStyle = QuoteStyle.IgorTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.IgorTheme,
                     onThemeClick = {
-                        quoteStyleState = QuoteStyle.igorTheme
+                        quoteStyleState = QuoteStyle.IgorTheme
                         showSheet = false
                     },
                     onSetDefault = {
-                        defaultQuoteStyle = QuoteStyle.igorTheme
+                        defaultQuoteStyle = QuoteStyle.IgorTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
@@ -506,14 +537,14 @@ fun ShareScreen(
                 ThemeItem(
                     title = "Fliplingoes Theme",
                     drawableRes = R.drawable.sample_fliplingoes,
-                    quoteStyle = QuoteStyle.FliplingoesTheme,
-                    isSelected = defaultQuoteStyle == QuoteStyle.FliplingoesTheme,
+                    quoteStyle = QuoteStyle.FlippingGoesTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.FlippingGoesTheme,
                     onThemeClick = {
-                        quoteStyleState = QuoteStyle.FliplingoesTheme
+                        quoteStyleState = QuoteStyle.FlippingGoesTheme
                         showSheet = false
                     },
                     onSetDefault = {
-                        defaultQuoteStyle = QuoteStyle.FliplingoesTheme
+                        defaultQuoteStyle = QuoteStyle.FlippingGoesTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

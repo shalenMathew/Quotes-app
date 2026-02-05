@@ -87,9 +87,11 @@ fun HomeScreen(
         }
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    )
     {
 
         val painter = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {

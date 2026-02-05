@@ -58,11 +58,12 @@ fun QuotesAppTheme(
     }
 
     val view = LocalView.current
-    if(!view.isInEditMode){
+    if (!view.isInEditMode) {
         SideEffect {
             val window = ((view.context) as Activity).window
             //status bar and navigation colors
-            window.navigationBarColor = Color.Black.compositeOver(colorScheme.surface.copy()).toArgb()
+            window.navigationBarColor =
+                Color.Black.compositeOver(colorScheme.surface.copy()).toArgb()
 
             //always display light theme icons on bar
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false

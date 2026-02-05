@@ -27,29 +27,25 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.MainActivity
-import com.shalenmathew.quotesapp.presentation.workmanager.widget.WidgetWorkManager
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.dataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.TimeUnit
 
-object QuotesWidgetObj: GlanceAppWidget() {
+object QuotesWidgetObj : GlanceAppWidget() {
 
     override suspend fun provideGlance(
         context: Context,
         id: GlanceId
     ) {
         val savedQuote = runBlocking {
-            context.dataStore.data.first()[WIDGET_QUOTE_KEY] ?: "widget is refreshing, will be updated in some time.Or try rebooting the device"
+            context.dataStore.data.first()[WIDGET_QUOTE_KEY]
+                ?: "widget is refreshing, will be updated in some time.Or try rebooting the device"
         }
 
-        Log.d("WID,","quote $savedQuote")
+        Log.d("WID,", "quote $savedQuote")
 
         provideContent {
             QuoteWidget(savedQuote)
@@ -85,12 +81,13 @@ fun QuoteWidget(savedQuote: String) {
                 color = ColorProvider(Color.White),
                 fontWeight = FontWeight.Normal,
             ),
-            modifier = GlanceModifier.wrapContentSize().padding(horizontal = 15.dp, vertical = 15.dp)
+            modifier = GlanceModifier.wrapContentSize()
+                .padding(horizontal = 15.dp, vertical = 15.dp)
         )
     }
 }
 
-class QuotesWidgetReceiver: GlanceAppWidgetReceiver() {
+class QuotesWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget
         get() = QuotesWidgetObj
 

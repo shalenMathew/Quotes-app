@@ -5,14 +5,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 @Entity
 data class Quote(
     @PrimaryKey
-    val id:Int?=null,
+    val id: Int? = null,
     val quote: String,
-    val author:String,
-    var liked:Boolean,
-    var updatedAt:Long=System.currentTimeMillis(),
-): Parcelable
+    val author: String,
+    var liked: Boolean,
+    var updatedAt: Long = System.currentTimeMillis(),
+) : Parcelable

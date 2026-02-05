@@ -1,7 +1,6 @@
 package com.shalenmathew.quotesapp.presentation.screens.fav_screen.util
 
 
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
@@ -31,6 +30,7 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -165,30 +165,14 @@ fun GlowingTriangle(pullRefreshState: PullToRefreshState, isRefreshing: Boolean)
 
 }
 
-
-//private val TriangleShape = Triangle()
-//
-//private class Triangle : Shape() {
-//    fun createOutline(
-//        size: Size,
-//        layoutDirection: LayoutDirection,
-//        density: Density
-//    ): Outline = Outline.Generic(size.createTrianglePath())
-//
-//    override fun draw(canvas: Canvas?, paint: Paint?) {
-//        TODO("Not yet implemented")
-//    }
-//}
-
 private val TriangleShape = Triangle()
 
-private class Triangle : Shape{
+private class Triangle : Shape {
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
         density: Density
     ): Outline = Outline.Generic(size.createTrianglePath())
-
 }
 
 

@@ -8,20 +8,14 @@ import javax.inject.Inject
 
 
 @HiltAndroidApp
-class QuoteApplication:Application(), Configuration.Provider {
+class QuoteApplication : Application(), Configuration.Provider {
 
-   @Inject
-   lateinit var hiltWorkerFactory: HiltWorkerFactory
-
+    @Inject
+    lateinit var hiltWorkerFactory: HiltWorkerFactory
 
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().setWorkerFactory(hiltWorkerFactory).build()
-
-
-    override fun onCreate() {
-        super.onCreate()
-    }
 
 
 }

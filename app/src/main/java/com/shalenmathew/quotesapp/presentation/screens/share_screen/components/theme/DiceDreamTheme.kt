@@ -1,6 +1,8 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme
 
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,19 +30,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.decodeBitmap
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.Grey
 import com.shalenmathew.quotesapp.presentation.theme.Poppins
-import com.shalenmathew.quotesapp.presentation.theme.RobotoFont
-import com.shalenmathew.quotesapp.presentation.theme.sugarPie
 
 /** Dice Dreams STYLE */
 @Composable
 fun DiceDreamsStyleQuoteCard(
     modifier: Modifier,
-    quote: Quote = Quote(quote = "The man who moves a mountain begins by carrying away small stones", author = "Unknown", liked = true),
+    quote: Quote = Quote(
+        quote = "The man who moves a mountain begins by carrying away small stones",
+        author = "Unknown",
+        liked = true
+    ),
     color: Color = Grey,
     imageUri: Uri? = null,
     onPickImage: () -> Unit = {}
@@ -51,8 +55,13 @@ fun DiceDreamsStyleQuoteCard(
     val painter: Painter = remember(imageUri) {
         if (imageUri != null) {
             val bitmap = try {
-                MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-            } catch (e: Exception) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val source = ImageDecoder.createSource(context.contentResolver, imageUri)
+                    ImageDecoder.decodeBitmap(source)
+                } else {
+                    MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+                }
+            } catch (_: Exception) {
                 null
             }
             if (bitmap != null) {
@@ -65,7 +74,7 @@ fun DiceDreamsStyleQuoteCard(
         }
     }
 
-    Box (
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight()

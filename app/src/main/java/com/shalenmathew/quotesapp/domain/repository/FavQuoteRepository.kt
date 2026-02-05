@@ -7,5 +7,5 @@ interface FavQuoteRepository {
 
     fun getAllLikedQuotes(query: String): Flow<List<Quote>>
 
-    suspend  fun saveLikedQuote(quote: Quote)
+    suspend fun saveLikedQuote(quote: Quote)
 }

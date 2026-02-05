@@ -1,42 +1,34 @@
 package com.shalenmathew.quotesapp.util
 
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.QuoteStyle
-
 object Constants {
+    const val BASE_URL = "https://zenquotes.io/api/"
+    const val NOTIFICATION_ID = 100
+    const val NOTIFICATION_CHANNEL_ID = "quote_channel"
+    const val NOTIFICATION_CHANNEL_ID_NEW = "quote_channel_new"
+    const val REQUEST_CODE_NOTIFICATION = 101
+    const val REQUEST_CODE_WRITE_STORAGE = 102
 
-
-    val BASE_URL = "https://zenquotes.io/api/"
-    val NOTIFICATION_ID = 100
-    val NOTIFICATION_CHANNEL_ID = "quote_channel"
-    val REQUEST_CODE_NOTIFICATION = 101
-    val REQUEST_CODE_WRITE_STORAGE = 102
-
-    val WORK_MANAGER_STATUS_NOTIFY =  "WorkManagerStatusNotify"
+    const val WORK_MANAGER_STATUS_NOTIFY = "WorkManagerStatusNotify"
     const val SHARED_PREFERENCES_NAME = "quotes_app_preferences"
-    const val DEFAULT_WIDGET_REFRESH_INTERVAL = 24 // in hours
+    const val DEFAULT_REFRESH_INTERVAL = 24 // in hours
     const val REQUEST_CODE_ALARM_WIDGET_REFRESH = 103
+    const val REQUEST_CODE_NOTIFICATION_REFRESH = 104
     const val QUOTES_WIDGET_UPDATE_NAME = "quotes_widget_update"
+    const val QUOTES_NOTIFICATION = "quotes_notification"
     const val NO_QUOTE_SAVED_YET = "No quote saved yet..."
 
-
-    const val DefaultTheme = "DefaultTheme"
-    const val CodeSnippetTheme = "CodeSnippetTheme"
-    const val DiceDreamsTheme = "DiceDreamsTheme"
-    const val LiquidGlassTheme = "LiquidGlassTheme"
-    const val bratTheme = "bratTheme"
-    const val igorTheme = "igorTheme"
-    const val ReminderTheme = "ReminderTheme"
-    const val FliplingoesTheme = "FliplingoesTheme"
-    const val MinimalBlackTheme = "MinimalBlackTheme"
-    const val MinimalBrownTheme = "MinimalBrownTheme"
-
-    const val TravelTheme = "TravelCardTheme"
-    const val YoutubeTheme = "YoutubeTheme"
-
-    const val ArtisanCardTheme = "ArtisanCardTheme"
-
-    const val BookLookTheme = "BookLookTheme"
-
-
-
+    const val DEFAULT_THEME = "DefaultTheme"
+    const val CODE_SNIPPET_THEME = "CodeSnippetTheme"
+    const val DICE_DREAMS_THEME = "DiceDreamsTheme"
+    const val LIQUID_GLASS_THEME = "LiquidGlassTheme"
+    const val BRAT_THEME = "BratTheme"
+    const val IGOR_THEME = "IgorTheme"
+    const val REMINDER_THEME = "ReminderTheme"
+    const val FLIPPING_GOES_THEME = "FlippingGoesTheme"
+    const val MINIMAL_BLACK_THEME = "MinimalBlackTheme"
+    const val MINIMAL_BROWN_THEME = "MinimalBrownTheme"
+    const val TRAVEL_CARD_THEME = "TravelCardTheme"
+    const val YOUTUBE_THEME = "YoutubeTheme"
+    const val ARTISAN_CARD_THEME = "ArtisanCardTheme"
+    const val BOOK_LOOK_THEME = "BookLookTheme"
 }

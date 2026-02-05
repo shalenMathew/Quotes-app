@@ -9,7 +9,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetObj
-import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.dataStore
@@ -26,95 +26,100 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 @HiltWorker
 class WidgetWorkManager @AssistedInject constructor(
-    @Assisted private val  context: Context,
+    @Assisted private val context: Context,
     @Assisted private val params: WorkerParameters,
     private val quoteUseCase: QuoteUseCase,
-    private val scheduleWidgetRefresh : ScheduleWidgetRefresh
-) : CoroutineWorker(context, params)
-{
+    private val scheduleWidgetRefresh: ScheduleWidgetRefresh
+) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
 
-      return  try {
+        return try {
 
-          Log.d("WorkManagerStatus", "Work started")
+            Log.d("WorkManagerStatus", "Work started")
 
-          val response = fetchQuotes(context)
+            val response = fetchQuotes(context)
 
-          if (!response){
-              return Result.retry()
-          }
+            if (!response) {
+                return Result.retry()
+            }
 
-          val savedQuote = context.dataStore.data.first()[WIDGET_QUOTE_KEY] ?: "No quote saved yet!!!"
-          Log.d("WorkManagerStatus", "Saved Quote in DataStore work manager: $savedQuote")
+            val savedQuote =
+                context.dataStore.data.first()[WIDGET_QUOTE_KEY] ?: "No quote saved yet!!!"
+            Log.d("WorkManagerStatus", "Saved Quote in DataStore work manager: $savedQuote")
 
-          val glanceAppWidgetManager = GlanceAppWidgetManager(applicationContext)
-          val widgetIds = glanceAppWidgetManager.getGlanceIds(QuotesWidgetObj::class.java)
+            val glanceAppWidgetManager = GlanceAppWidgetManager(applicationContext)
+            val widgetIds = glanceAppWidgetManager.getGlanceIds(QuotesWidgetObj::class.java)
 
-          if(widgetIds.isNotEmpty()){
-              widgetIds.forEach { it->
-                  QuotesWidgetObj.updateAll(applicationContext)
-              }
-          }
+            if (widgetIds.isNotEmpty()) {
+                repeat(widgetIds.size) {
+                    QuotesWidgetObj.updateAll(applicationContext)
+                }
+            }
 
-          context.setLastAlarmTriggerMillis(System.currentTimeMillis())
+            context.setLastAlarmTriggerMillis(System.currentTimeMillis())
 
-          return Result.success()
-
-        }
-      catch (e: Exception) {
-          Log.d("WorkManagerStatus", "Exception in doWork", e)
+            Result.success()
+        } catch (e: Exception) {
+            Log.d("WorkManagerStatus", "Exception in doWork", e)
             Result.failure()
         }
 
     }
 
 
-    private suspend fun fetchQuotes(context: Context):Boolean {
+    private suspend fun fetchQuotes(context: Context): Boolean {
 
-   return try {
+        return try {
 
-       Log.d("WorkManagerStatus", "inside fetchQuotes")
+            Log.d("WorkManagerStatus", "inside fetchQuotes")
 
-     val response =
-         withTimeoutOrNull(5000) {
-             val refreshInterval = context.getWidgetRefreshInterval().first() ?: DEFAULT_WIDGET_REFRESH_INTERVAL
-             scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(getMillisFromNow(refreshInterval))
-             quoteUseCase.getQuote()
-                 .filter { it is Resource.Success || it is Resource.Error }
-                 .first()
-         }
-        when(response){
+            val response =
+                withTimeoutOrNull(5000) {
+                    val refreshInterval =
+                        context.getWidgetRefreshInterval().first() ?: DEFAULT_REFRESH_INTERVAL
+                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(
+                        getMillisFromNow(
+                            refreshInterval
+                        )
+                    )
+                    quoteUseCase.getQuote()
+                        .filter { it is Resource.Success || it is Resource.Error }
+                        .first()
+                }
+            when (response) {
 
-            is Resource.Success->{
-                val quote =  response.data?.quotesList?.getOrNull(0)?.quote
+                is Resource.Success -> {
+                    val quote = response.data?.quotesList?.getOrNull(0)?.quote
 
-                if(quote!=null){
-                    Log.d("WorkManagerStatus", "Fetched Quote: $quote")
-                    context.saveWidgetQuote(quote)
-                     true
-                }else{
-                    Log.d("WorkManagerStatus", "Quote is null")
+                    if (quote != null) {
+                        Log.d("WorkManagerStatus", "Fetched Quote: $quote")
+                        context.saveWidgetQuote(quote)
+                        true
+                    } else {
+                        Log.d("WorkManagerStatus", "Quote is null")
+                        false
+                    }
+
+                }
+
+                is Resource.Error -> {
+                    Log.d("WorkManagerStatus", "Error from fetchQuotes: ${response.message}")
                     false
                 }
 
+                else -> {
+                    Log.d("WorkManagerStatus", "No response from fetchQuotes")
+                    false
+                }
             }
-            is Resource.Error-> {
-                Log.d("WorkManagerStatus", "Error from fetchQuotes: ${response.message}")
-                false
-            }
-            else -> {
-                Log.d("WorkManagerStatus", "No response from fetchQuotes")
-                false
-            }
+
+        } catch (e: Exception) {
+            Log.d("WorkManagerStatus", "Exception in fetchQuotes", e)
+            false
         }
 
-    } catch (e: Exception){
-        Log.d("WorkManagerStatus", "Exception in fetchQuotes", e)
-      false
     }
-
-}
 
     @AssistedFactory
     interface Factory {

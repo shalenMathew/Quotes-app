@@ -26,10 +26,12 @@ import com.shalenmathew.quotesapp.presentation.theme.QuotesAppTheme
 import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.Constants
-import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
 import com.shalenmathew.quotesapp.util.getMillisFromNow
+import com.shalenmathew.quotesapp.util.getNotificationInterval
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.setNotificationInterval
 import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -59,18 +61,28 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             QuotesAppTheme {
-
-                scheduleNotification.scheduleNotification()
                 val context = LocalContext.current
 
                 LaunchedEffect(Unit) {
                     val widgetRefreshInterval = context.getWidgetRefreshInterval().first()
                     if (widgetRefreshInterval == null) {
-                        context.setWidgetRefreshInterval(DEFAULT_WIDGET_REFRESH_INTERVAL)
+                        context.setWidgetRefreshInterval(DEFAULT_REFRESH_INTERVAL)
                         Handler(Looper.getMainLooper()).postDelayed({
                             scheduleWidget.scheduleWidgetRefreshWorkAlarm(
                                 getMillisFromNow(
-                                    DEFAULT_WIDGET_REFRESH_INTERVAL
+                                    DEFAULT_REFRESH_INTERVAL
+                                )
+                            )
+                        }, 5000)
+                    }
+
+                    val notificationRefreshInterval = context.getNotificationInterval().first()
+                    if (notificationRefreshInterval == null) {
+                        context.setNotificationInterval(DEFAULT_REFRESH_INTERVAL)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            scheduleNotification.scheduleNotificationWorkAlarm(
+                                getMillisFromNow(
+                                    DEFAULT_REFRESH_INTERVAL
                                 )
                             )
                         }, 5000)

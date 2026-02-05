@@ -1,10 +1,34 @@
 package com.shalenmathew.quotesapp.presentation.screens.intro_screen
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.EaseOutExpo
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,11 +42,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
-import kotlinx.coroutines.delay
-
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.util.isFirstLaunch
 import com.shalenmathew.quotesapp.util.setFirstLaunchDone
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,14 +62,6 @@ fun SplashScreen(navHost: NavHostController) {
     val fadeAlpha by animateFloatAsState(
         targetValue = if (startAnim) 1f else 0f,
         animationSpec = tween(durationMillis = 1200, easing = FastOutSlowInEasing)
-    )
-    val scaleAnim by animateFloatAsState(
-        targetValue = if (startAnim) 1f else 0.85f,
-        animationSpec = tween(durationMillis = 1800, easing = FastOutSlowInEasing)
-    )
-    val offsetYAnim by animateDpAsState(
-        targetValue = if (startAnim) 0.dp else 40.dp,
-        animationSpec = tween(durationMillis = 1800, easing = EaseOutExpo)
     )
 
     val infiniteGlow = rememberInfiniteTransition(label = "")
@@ -121,7 +136,10 @@ fun SplashScreen(navHost: NavHostController) {
 
 @Composable
 fun AnimatedTagline(words: List<String>, fontFamily: FontFamily) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         words.forEachIndexed { index, word ->
             var showWord by remember { mutableStateOf(false) }
 

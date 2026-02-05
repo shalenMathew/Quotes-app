@@ -2,46 +2,30 @@ package com.shalenmathew.quotesapp.presentation.screens.share_screen.components
 
 import android.app.Activity
 import android.graphics.Bitmap
-import android.graphics.Picture
 import android.graphics.Rect
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.PixelCopy
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.draw
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.layer.drawLayer
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.graphics.createBitmap
-import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.QuoteStyle
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import androidx.core.graphics.createBitmap
 
 
 /** older way to capture bitmap */
@@ -113,24 +97,24 @@ import kotlin.coroutines.resume
 //
 //
 //    when(quoteStyleState){
-//        is QuoteStyle.DefaultTheme->{
+//        is QuoteStyle.DEFAULT_THEME->{
 //            DefaultQuoteCard(modifier = modifier,quoteData)
 //        }
-//        QuoteStyle.CodeSnippetTheme -> {
+//        QuoteStyle.CODE_SNIPPET_THEME -> {
 //            CodeSnippetStyleQuoteCard(modifier = modifier,quoteData)
 //        }
 ////        QuoteStyle.SpotifyTheme -> {
 ////            SolidColorQuoteCard(modifier = modifier,quoteData)
 ////        }
-//        QuoteStyle.bratTheme -> {
+//        QuoteStyle.BRAT_THEME -> {
 //            BratScreen(modifier = modifier,quoteData)
 //        }
 //
-//        QuoteStyle.igorTheme -> {
+//        QuoteStyle.IGOR_THEME -> {
 //            IgorScreen(modifier = modifier,quoteData)
 //        }
 //
-//        QuoteStyle.LiquidGlassTheme -> {
+//        QuoteStyle.LIQUID_GLASS_THEME -> {
 //            LiquidGlassScreen(modifier = modifier,quoteData)
 //        }
 //    }
@@ -191,7 +175,6 @@ import kotlin.coroutines.resume
 //}
 
 
-
 //@Composable
 //fun CaptureBitmap(
 //    quoteData: Quote,
@@ -247,23 +230,23 @@ import kotlin.coroutines.resume
 //        }
 //    ) {
 //        when(quoteStyleState) {
-//            is QuoteStyle.DefaultTheme -> {
+//            is QuoteStyle.DEFAULT_THEME -> {
 //                DefaultQuoteCard(modifier = Modifier, quoteData)
 //            }
-//            QuoteStyle.CodeSnippetTheme -> {
+//            QuoteStyle.CODE_SNIPPET_THEME -> {
 //                CodeSnippetStyleQuoteCard(modifier = Modifier, quoteData)
 //            }
-//            QuoteStyle.bratTheme -> {
+//            QuoteStyle.BRAT_THEME -> {
 //                BratScreen(modifier = Modifier, quoteData)
 //            }
-//            QuoteStyle.igorTheme -> {
+//            QuoteStyle.IGOR_THEME -> {
 //                IgorScreen(modifier = Modifier, quoteData)
 //            }
-//            QuoteStyle.LiquidGlassTheme -> {
+//            QuoteStyle.LIQUID_GLASS_THEME -> {
 //                LiquidGlassScreen(modifier = Modifier, quoteData)
 //            }
 //
-//            QuoteStyle.ReminderTheme -> {
+//            QuoteStyle.REMINDER_THEME -> {
 //                ReminderStyle(modifier = Modifier, quoteData)
 //            }
 //        }
@@ -324,7 +307,7 @@ private suspend fun captureView(
             return@suspendCancellableCoroutine
         }
 
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(width, height)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -372,7 +355,7 @@ private fun fallbackCapture(
     height: Int
 ): Bitmap? {
     return try {
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(width, height)
         val canvas = android.graphics.Canvas(bitmap)
 
 

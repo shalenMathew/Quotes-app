@@ -19,15 +19,22 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
@@ -36,8 +43,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,18 +67,9 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -80,6 +80,7 @@ import com.shalenmathew.quotesapp.domain.model.toQuote
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.screens.custom_quote.CustomQuoteItem
 import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.CustomQuoteEvent
+import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.DeleteConfirmationDialog
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.GlowingTriangle
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.RainbowRays
@@ -90,14 +91,15 @@ import com.shalenmathew.quotesapp.presentation.viewmodel.CustomQuoteViewModel
 import com.shalenmathew.quotesapp.presentation.viewmodel.FavQuoteViewModel
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
-import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.DeleteConfirmationDialog
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavScreen(paddingValues: PaddingValues,
-              navHost: NavHostController,
-              quoteViewModel:FavQuoteViewModel= hiltViewModel()) {
+fun FavScreen(
+    paddingValues: PaddingValues,
+    navHost: NavHostController,
+    quoteViewModel: FavQuoteViewModel = hiltViewModel()
+) {
 
     val state = quoteViewModel.favQuoteState.value
     val customViewModel: CustomQuoteViewModel = hiltViewModel()
@@ -113,12 +115,16 @@ fun FavScreen(paddingValues: PaddingValues,
     var clickedSearch by remember {
         mutableStateOf(false)
     }
-    val progress by animateFloatAsState(targetValue = if(clickedSearch) 1f else 0f, label = "", animationSpec = tween(2000))
+    val progress by animateFloatAsState(
+        targetValue = if (clickedSearch) 1f else 0f,
+        label = "",
+        animationSpec = tween(2000)
+    )
 
 
     // fields related to custom refresh
     val pullRefreshState = rememberPullToRefreshState()
-    val isRefreshing = quoteViewModel.favQuoteState.value.isRefreshing
+    quoteViewModel.favQuoteState.value.isRefreshing
 
     val willRefresh by remember {
         derivedStateOf {
@@ -130,7 +136,7 @@ fun FavScreen(paddingValues: PaddingValues,
         mutableIntStateOf(0)
     }
 
-    var pagerState = rememberPagerState {
+    val pagerState = rememberPagerState {
         tabItems.size
     }
 
@@ -139,37 +145,38 @@ fun FavScreen(paddingValues: PaddingValues,
     }
 
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress){
+        if (!pagerState.isScrollInProgress) {
             selectedTabIndex = pagerState.currentPage
         }
 
     }
 
 
-
     val cardOffset by animateIntAsState(
-        targetValue = when{
+        targetValue = when {
             state.isRefreshing -> 250
-            pullRefreshState.distanceFraction in 0f..1f -> (250*pullRefreshState.distanceFraction).roundToInt()
+            pullRefreshState.distanceFraction in 0f..1f -> (250 * pullRefreshState.distanceFraction).roundToInt()
             pullRefreshState.distanceFraction > 1f -> (250 + ((pullRefreshState.distanceFraction - 1f) * .1f) * 100).roundToInt()
             else -> 0
         },
-        label = "cardOffset" )
+        label = "cardOffset"
+    )
 
     val cardRotation by animateFloatAsState(
-        targetValue = when{
-            state.isRefreshing || pullRefreshState.distanceFraction>1f -> 5f
+        targetValue = when {
+            state.isRefreshing || pullRefreshState.distanceFraction > 1f -> 5f
             pullRefreshState.distanceFraction > 0f -> 5 * pullRefreshState.distanceFraction
             else -> 0f
-        } ,
-        label = "cardRotation"  )
+        },
+        label = "cardRotation"
+    )
 
     // vibration on pull
     val hapticFeedback = LocalHapticFeedback.current
     val keyboardController = LocalSoftwareKeyboardController.current
     LaunchedEffect(key1 = willRefresh) {
-        when{
-            willRefresh->{
+        when {
+            willRefresh -> {
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                 delay(70)
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
@@ -185,33 +192,35 @@ fun FavScreen(paddingValues: PaddingValues,
     // --
 
 
-
-    Box(modifier=Modifier
-        .padding(paddingValues)
-        .fillMaxSize()
-        .pullToRefresh(
-            isRefreshing = quoteViewModel.favQuoteState.value.isRefreshing,
-            onRefresh = {},
-            state = pullRefreshState
+    Box(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+            .pullToRefresh(
+                isRefreshing = quoteViewModel.favQuoteState.value.isRefreshing,
+                onRefresh = {},
+                state = pullRefreshState
             )
-        .background(color = Color.Black)){
+            .background(color = Color.Black)
+    ) {
 
-            if (state.isLoading) {
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Transparent), contentAlignment = Alignment.Center
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(color = Color.Transparent), contentAlignment = Alignment.Center
                 ) {
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.Transparent)
-                        , contentAlignment = Alignment.Center){
-                        Text(state.error, color = White)
-                    }
+                    Text(state.error, color = White)
                 }
             }
+        }
 
-        Column(modifier=Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
 
 
             OutlinedTextField(
@@ -243,10 +252,10 @@ fun FavScreen(paddingValues: PaddingValues,
                 shape = MaterialTheme.shapes.extraLarge,
                 placeholder = {
                     Text(
-                    text = if (selectedTabIndex == 0)
-                        "Search your favorite quotes..."
-                    else
-                        "Search your custom quotes..."
+                        text = if (selectedTabIndex == 0)
+                            "Search your favorite quotes..."
+                        else
+                            "Search your custom quotes..."
                     )
                 },
 
@@ -267,7 +276,8 @@ fun FavScreen(paddingValues: PaddingValues,
                     unfocusedLeadingIconColor = Color.Gray,
                 ),
                 trailingIcon = {
-                    val hasQuery = if (selectedTabIndex == 0) state.query.isNotEmpty() else customState.query.isNotEmpty()
+                    val hasQuery =
+                        if (selectedTabIndex == 0) state.query.isNotEmpty() else customState.query.isNotEmpty()
                     if (hasQuery) {
                         WhiteCancelIcon(onClick = {
                             if (selectedTabIndex == 0) {
@@ -329,7 +339,8 @@ fun FavScreen(paddingValues: PaddingValues,
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .weight(1f)
             ) { index ->
 
@@ -351,10 +362,12 @@ fun FavScreen(paddingValues: PaddingValues,
                                         modifier = Modifier
                                             .zIndex((state.dataList.size - index).toFloat())
                                             .graphicsLayer {
-                                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
-                                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
-                                                    .roundToPx()
-                                                    .toFloat()
+                                                rotationZ =
+                                                    cardRotation * if (index % 2 == 0) 1 else -1
+                                                translationY =
+                                                    (cardOffset * ((5f - (index + 1)) / 5f)).dp
+                                                        .roundToPx()
+                                                        .toFloat()
                                             }
                                     )
                                 }
@@ -372,6 +385,7 @@ fun FavScreen(paddingValues: PaddingValues,
                             }
                         }
                     }
+
                     1 -> {
                         // Custom Tab Content
 
@@ -398,7 +412,10 @@ fun FavScreen(paddingValues: PaddingValues,
                                         CustomQuoteItem(
                                             quote = customQuote,
                                             onShareClick = { quoteToShare ->
-                                                navHost.currentBackStackEntry?.savedStateHandle?.set("quote", quoteToShare.toQuote())
+                                                navHost.currentBackStackEntry?.savedStateHandle?.set(
+                                                    "quote",
+                                                    quoteToShare.toQuote()
+                                                )
                                                 navHost.navigate(Screen.Share.route)
                                             },
                                             onDeleteClick = { quoteForDeletion ->
@@ -407,11 +424,13 @@ fun FavScreen(paddingValues: PaddingValues,
                                             modifier = Modifier
                                                 .zIndex((customState.customQuotes.size - index).toFloat())
                                                 .graphicsLayer {
-                                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
-                                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
-                                                    .roundToPx()
-                                                    .toFloat()
-                                            }
+                                                    rotationZ =
+                                                        cardRotation * if (index % 2 == 0) 1 else -1
+                                                    translationY =
+                                                        (cardOffset * ((5f - (index + 1)) / 5f)).dp
+                                                            .roundToPx()
+                                                            .toFloat()
+                                                }
                                         )
                                     }
                                 }
@@ -453,7 +472,11 @@ fun FavScreen(paddingValues: PaddingValues,
                                         scaleY = dialogScale
                                     },
                                     onConfirm = {
-                                        customViewModel.onEvent(CustomQuoteEvent.DeleteQuote(quoteToDelete!!))
+                                        customViewModel.onEvent(
+                                            CustomQuoteEvent.DeleteQuote(
+                                                quoteToDelete!!
+                                            )
+                                        )
                                         quoteToDelete = null
                                     },
                                     onDismiss = {
@@ -498,11 +521,11 @@ fun FavScreen(paddingValues: PaddingValues,
 
         }
 
-        CustomIndicator(quoteViewModel.favQuoteState.value.isRefreshing,pullRefreshState)
-
-        }
+        CustomIndicator(quoteViewModel.favQuoteState.value.isRefreshing, pullRefreshState)
 
     }
+
+}
 
 
 @Composable
@@ -520,7 +543,7 @@ fun WhiteCancelIcon(onClick: () -> Unit) {
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = "Cancel",
-            tint = Color.White
+            tint = White
         )
     }
 }
@@ -549,18 +572,19 @@ fun CustomIndicator(isRefreshing: Boolean, pullRefreshState: PullToRefreshState)
     ) {
 
         WhiteBeam(pullRefreshState, isRefreshing)
-        RainbowRays(isRefreshing,pullRefreshState)
+        RainbowRays(isRefreshing, pullRefreshState)
         GlowingTriangle(pullRefreshState, isRefreshing)
 
-        }
+    }
 
 
 }
 
-fun Modifier.animatedBorder
-            (provideProgress: () -> Float,
-             colorFocused: Color,
-             colorUnfocused: Color) = this.drawWithCache {
+fun Modifier.animatedBorder(
+    provideProgress: () -> Float,
+    colorFocused: Color,
+    colorUnfocused: Color
+) = this.drawWithCache {
     val width = size.width
     val height = size.height
 
@@ -626,4 +650,4 @@ fun Modifier.animatedBorder
     }
 }
 
-data class TabItem(val tabTitle : String)
+data class TabItem(val tabTitle: String)

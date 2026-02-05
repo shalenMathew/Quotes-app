@@ -24,7 +24,10 @@ val NOTIFICATION_QUOTE_MODEL = stringPreferencesKey("notificationQuoteModel")
 
 val IS_FIRST_LAUNCH_KEY = booleanPreferencesKey("is_first_launch")
 val LAST_ALARM_SET_MILLIS_KEY = longPreferencesKey("last_alarm_set_millis")
+val LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY =
+    longPreferencesKey("last_alarm_set_for_notification_millis")
 val USER_PREF_WIDGET_REFRESH_INTERVAL_KEY = intPreferencesKey("user_pref_widget_refresh_interval")
+val USER_PREF_NOTIFICATION_INTERVAL_KEY = intPreferencesKey("user_pref_notification_interval")
 
 suspend fun Context.setFirstLaunchDone() {
     dataStore.edit { prefs ->
@@ -51,7 +54,7 @@ suspend fun Context.saveWidgetQuote(quote: String) {
     sendBroadcast(intent)
 }
 
-suspend fun Context.saveNotificationQuote(quote: Quote){
+suspend fun Context.saveNotificationQuote(quote: Quote) {
     dataStore.edit { preferences ->
         preferences[NOTIFICATION_QUOTE_MODEL] = Gson().toJson(quote)
     }
@@ -86,6 +89,18 @@ suspend fun Context.setWidgetRefreshInterval(interval: Int) {
     }
 }
 
+fun Context.getNotificationInterval(): Flow<Int?> {
+    return dataStore.data.map { preferences ->
+        preferences[USER_PREF_NOTIFICATION_INTERVAL_KEY]
+    }
+}
+
+suspend fun Context.setNotificationInterval(interval: Int) {
+    dataStore.edit { preferences ->
+        preferences[USER_PREF_NOTIFICATION_INTERVAL_KEY] = interval
+    }
+}
+
 suspend fun Context.setLastAlarmTriggerMillis(interval: Long) {
     dataStore.edit { preferences ->
         preferences[LAST_ALARM_SET_MILLIS_KEY] = interval
@@ -95,5 +110,17 @@ suspend fun Context.setLastAlarmTriggerMillis(interval: Long) {
 fun Context.getLastAlarmTriggerMillis(): Flow<Long> {
     return dataStore.data.map { preferences ->
         preferences[LAST_ALARM_SET_MILLIS_KEY] ?: System.currentTimeMillis()
+    }
+}
+
+suspend fun Context.setLastNotificationAlarmTriggerMillis(interval: Long) {
+    dataStore.edit { preferences ->
+        preferences[LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY] = interval
+    }
+}
+
+fun Context.getLastNotificationAlarmTriggerMillis(): Flow<Long> {
+    return dataStore.data.map { preferences ->
+        preferences[LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY] ?: System.currentTimeMillis()
     }
 }

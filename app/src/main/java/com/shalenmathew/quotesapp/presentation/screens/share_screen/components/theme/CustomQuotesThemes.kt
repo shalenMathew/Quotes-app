@@ -1,21 +1,15 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme
 
-import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -27,13 +21,9 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,33 +38,25 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.mikepenz.hypnoticcanvas.shaderBackground
 import com.mikepenz.hypnoticcanvas.shaders.MeshGradient
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.DarkerGrey
-import com.shalenmathew.quotesapp.presentation.theme.GIFont
-import com.shalenmathew.quotesapp.presentation.theme.Grey
-import com.shalenmathew.quotesapp.presentation.theme.RobotoFont
 import com.shalenmathew.quotesapp.presentation.theme.bratGreen
 import com.shalenmathew.quotesapp.presentation.theme.bratTheme
 import com.shalenmathew.quotesapp.presentation.theme.handWritten
@@ -161,13 +143,13 @@ fun DefaultQuoteCard(modifier: Modifier, quote: Quote) {
 
 /** CODE SNIPPET STYLE */
 @Composable
-fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
+fun CodeSnippetStyleQuoteCard(modifier: Modifier, quote: Quote) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background( Color.LightGray)
+            .background(Color.LightGray)
     ) {
-        Card (
+        Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp, vertical = 50.dp)
@@ -176,8 +158,7 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
                     shape = RoundedCornerShape(8.dp),
                     ambientColor = Color.Black.copy(alpha = 1f),
                     spotColor = Color.Black.copy(alpha = 1f)
-                )
-            ,
+                ),
             shape = RoundedCornerShape(5.dp),
             elevation = CardDefaults.cardElevation(5.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Black)
@@ -210,7 +191,12 @@ fun CodeSnippetStyleQuoteCard(modifier: Modifier,quote: Quote) {
                     text = quote.author,
                     color = Color(0xFF00E0FF),
                     fontSize = 13.sp,
-                    modifier = Modifier.padding(top = 15.dp, start = 18.dp, end = 18.dp, bottom = 6.dp)
+                    modifier = Modifier.padding(
+                        top = 15.dp,
+                        start = 18.dp,
+                        end = 18.dp,
+                        bottom = 6.dp
+                    )
                 )
 
                 Text(
@@ -238,7 +224,7 @@ fun CircleDot(color: Color) {
 
 /** brat THEME STYLE */
 @Composable
-fun BratScreen(modifier: Modifier,quote: Quote) {
+fun BratScreen(modifier: Modifier, quote: Quote) {
 
     Box(
         modifier = modifier
@@ -260,15 +246,13 @@ fun BratScreen(modifier: Modifier,quote: Quote) {
 
 
 //@Preview
-@RequiresApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 @Composable
 fun LiquidGlassScreen(
     modifier: Modifier,
     quote: Quote,
     color1: Color,
     color2: Color
-)
-{
+) {
 //
 //    val gradLight = color1.lighten(2f)
 //    val gradDark = color2.darken(2f)
@@ -280,11 +264,11 @@ fun LiquidGlassScreen(
     val density = LocalDensity.current
 
 
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
-    val screenWidth = configuration.screenWidthDp.dp
+    val configuration = LocalWindowInfo.current
+    val screenHeight = configuration.containerSize.height.dp
+    val screenWidth = configuration.containerSize.width.dp
 
-    val horizontalPadding = screenWidth * 0.04f // 4% of screen width
+    screenWidth * 0.04f // 4% of screen width
     val verticalPadding = screenHeight * 0.04f   // 8% of screen height
     val cardHorizontalPadding = screenWidth * 0.06f // 6% of screen width
     val textPadding = screenWidth * 0.04f // 4% of screen width
@@ -293,7 +277,6 @@ fun LiquidGlassScreen(
     /** we need to maintain two box where votrh boxes are above the other one and their properties are
      * exactly the same just one box will apply the blur effect other will take care
      * of displaying the text */
-
 
 
 //    val col1: Color = Color(0xFF0030CC)
@@ -344,7 +327,6 @@ fun LiquidGlassScreen(
         )
 
     }
-
 
 
     /** box with text  */
@@ -509,8 +491,7 @@ fun IgorScreen(modifier: Modifier, quote: Quote) {
                 color = Color.Black,
                 fontFamily = handWritten,
                 fontWeight = FontWeight.Bold
-            )
-            ,
+            ),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .align(Alignment.Center)
@@ -521,12 +502,16 @@ fun IgorScreen(modifier: Modifier, quote: Quote) {
 }
 
 @Composable
-fun ReminderStyle (
+fun ReminderStyle(
     modifier: Modifier = Modifier,
-    quote: Quote = Quote(quote = "Pausing for a moment to look to inspiring leaders", author = "Unknown", liked = true),
+    quote: Quote = Quote(
+        quote = "Pausing for a moment to look to inspiring leaders",
+        author = "Unknown",
+        liked = true
+    ),
     bgColor: Color = Color.LightGray,
     textColor: Color = Color(0xFF4B6AD1),
-    cardBgColor : Color = Color(0xFFE3EDFD)
+    cardBgColor: Color = Color(0xFFE3EDFD)
 ) {
 
 

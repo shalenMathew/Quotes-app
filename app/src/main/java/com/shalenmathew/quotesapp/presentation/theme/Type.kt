@@ -37,33 +37,33 @@ val Typography = Typography(
 )
 
 val Poppins = FontFamily(
-    Font(R.font.poppinsbold,FontWeight.Bold),
-    Font(R.font.poppinsregular,FontWeight.Medium)
-    )
+    Font(R.font.poppinsbold, FontWeight.Bold),
+    Font(R.font.poppinsregular, FontWeight.Medium)
+)
 
 val RobotoFont = FontFamily(
-    Font(R.font.roboto_condensed_bold,FontWeight.Bold),
-    Font(R.font.roboto_condensed_regular,FontWeight.Normal),
-    Font(R.font.roboto_condensed_medium,FontWeight.Medium)
+    Font(R.font.roboto_condensed_bold, FontWeight.Bold),
+    Font(R.font.roboto_condensed_regular, FontWeight.Normal),
+    Font(R.font.roboto_condensed_medium, FontWeight.Medium)
 )
 
 val GIFont = FontFamily(
-    Font(R.font.glaciaiindifference_bold,FontWeight.Bold),
-    Font(R.font.glaciaiindifference_regular,FontWeight.Medium),
-    Font(R.font.glaciaiindifference_itallic,FontWeight.Thin)
+    Font(R.font.glaciaiindifference_bold, FontWeight.Bold),
+    Font(R.font.glaciaiindifference_regular, FontWeight.Medium),
+    Font(R.font.glaciaiindifference_itallic, FontWeight.Thin)
 )
 
 val bratTheme = FontFamily(
-    Font(R.font.arialnarrow,FontWeight.Medium),
+    Font(R.font.arialnarrow, FontWeight.Medium),
 )
 
 val handWritten = FontFamily(
-    Font(R.font.hand_made_bold,FontWeight.Bold),
-    Font(R.font.hand_made_medium,FontWeight.Medium),
+    Font(R.font.hand_made_bold, FontWeight.Bold),
+    Font(R.font.hand_made_medium, FontWeight.Medium),
 )
 
 
 val sugarPie = FontFamily(
-    Font(R.font.suagr_pie,FontWeight.Medium),
+    Font(R.font.suagr_pie, FontWeight.Medium),
 )
 

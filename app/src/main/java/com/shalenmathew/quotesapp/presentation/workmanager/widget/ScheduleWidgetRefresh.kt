@@ -19,10 +19,11 @@ import javax.inject.Singleton
 
 
 @Singleton
-class ScheduleWidgetRefresh @Inject constructor(@ApplicationContext private val context: Context)  {
+class ScheduleWidgetRefresh @Inject constructor(
+    @param:ApplicationContext private val context: Context
+) {
 
     suspend fun scheduleWidgetRefreshWorkManager() {
-
         val workRequest = OneTimeWorkRequestBuilder<WidgetWorkManager>()
             .setConstraints(
                 Constraints.Builder()
@@ -38,11 +39,9 @@ class ScheduleWidgetRefresh @Inject constructor(@ApplicationContext private val 
         )
 
         context.setLastAlarmTriggerMillis(System.currentTimeMillis())
-
     }
 
     fun scheduleWidgetRefreshWorkAlarm(triggerAtMillis: Long) {
-
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val pendingIntent = PendingIntent.getBroadcast(
@@ -59,9 +58,5 @@ class ScheduleWidgetRefresh @Inject constructor(@ApplicationContext private val 
             triggerAtMillis,
             pendingIntent
         )
-
     }
-
-
-
 }

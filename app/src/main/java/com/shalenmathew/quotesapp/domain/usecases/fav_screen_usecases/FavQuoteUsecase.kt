@@ -1,6 +1,6 @@
 package com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases
 
-data class FavQuoteUseCase (
+data class FavQuoteUseCase(
     val getFavQuote: GetFavQuote,
-    val  favLikedQuote: FavLikedQuote
+    val favLikedQuote: FavLikedQuote
 )

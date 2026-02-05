@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.domain.model.Quote
 
 
-
 /** MINIMAl BROWN THEME */
 @Preview
 @Composable

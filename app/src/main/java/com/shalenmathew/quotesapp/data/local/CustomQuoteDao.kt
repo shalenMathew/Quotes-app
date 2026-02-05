@@ -20,11 +20,13 @@ interface CustomQuoteDao {
     @Query("SELECT * FROM custom_quotes ORDER BY createdAt DESC")
     fun getAllCustomQuotes(): Flow<List<CustomQuote>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM custom_quotes 
         WHERE LOWER(quote) LIKE '%' || LOWER(:query) || '%'
         OR LOWER(author) LIKE '%' || LOWER(:query) || '%'
         ORDER BY createdAt DESC
-    """)
+    """
+    )
     fun searchCustomQuotes(query: String): Flow<List<CustomQuote>>
 }

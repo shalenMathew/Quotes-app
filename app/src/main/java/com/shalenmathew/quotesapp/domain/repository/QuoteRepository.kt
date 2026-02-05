@@ -13,4 +13,7 @@ interface QuoteRepository {
 
     fun getAllLikedQuotes(): Flow<List<Quote>>
 
+    suspend fun getQuoteById(id: Int): Quote?
+
+    suspend fun getLatestQuote(): Quote?
 }

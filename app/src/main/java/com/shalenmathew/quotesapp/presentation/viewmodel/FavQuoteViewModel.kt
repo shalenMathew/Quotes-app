@@ -1,9 +1,11 @@
 package com.shalenmathew.quotesapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
+import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetIfSameOrEmptyUseCase
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,9 +15,15 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class FavQuoteViewModel @Inject constructor(private val favQuoteUseCase: FavQuoteUseCase) :
+class FavQuoteViewModel @Inject constructor(
+    private val favQuoteUseCase: FavQuoteUseCase,
+    private val updateWidgetIfSameOrEmptyUseCase: UpdateWidgetIfSameOrEmptyUseCase
+) :
     ViewModel() {
 
+    companion object {
+        private const val TAG = "FavQuoteViewModel"
+    }
 
     private val _favQuoteState = mutableStateOf(FavQuoteState())
     val favQuoteState = _favQuoteState
@@ -44,6 +52,8 @@ class FavQuoteViewModel @Inject constructor(private val favQuoteUseCase: FavQuot
                 viewModelScope.launch {
 
                     val updatedQuote = favQuoteUseCase.favLikedQuote(quoteEvent.quote)
+                    updateWidgetIfSameOrEmptyUseCase(updatedQuote)
+                        .onFailure { Log.w(TAG, "Widget update failed: ${it.message}") }
 
                     _favQuoteState.value =
                         _favQuoteState.value.copy(dataList = _favQuoteState.value.dataList.map { quote ->

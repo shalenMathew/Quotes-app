@@ -18,6 +18,12 @@ interface QuoteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLikedQuote(quote: Quote)
 
+    @Query("SELECT * FROM Quote WHERE id = :id LIMIT 1")
+    suspend fun getQuoteById(id: Int): Quote?
+
+    @Query("SELECT * FROM Quote ORDER BY id DESC LIMIT 1")
+    suspend fun getLatestQuote(): Quote?
+
     @Delete
     suspend fun deleteQuote(quote: Quote)
 

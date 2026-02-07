@@ -54,4 +54,17 @@ interface QuoteDao {
 """
     )
     fun searchForQuotes(query: String): Flow<List<Quote>>
+
+    @Query("SELECT * FROM Quote WHERE displayed = 0 ORDER BY id DESC")
+    suspend fun getUndisplayedQuotes(): List<Quote>
+
+    @Query("SELECT COUNT(*) FROM Quote WHERE displayed = 0")
+    suspend fun getUndisplayedCount(): Int
+
+    @Query("UPDATE Quote SET displayed = 1 WHERE id = :quoteId")
+    suspend fun markAsDisplayed(quoteId: Int)
+
+    @Query("UPDATE Quote SET displayed = 0 WHERE liked = 0")
+    suspend fun resetDisplayedStatus()
+
 }

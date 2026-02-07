@@ -12,4 +12,5 @@ sealed class QuoteEvent {
     data class Like(val quote: Quote) : QuoteEvent()
     data class Swipe(val quote: Quote) : QuoteEvent()
     data object Retry : QuoteEvent()
+    data class MarkAsDisplayed(val quoteId: Int) : QuoteEvent()
 }

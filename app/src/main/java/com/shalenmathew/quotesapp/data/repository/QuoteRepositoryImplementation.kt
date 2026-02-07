@@ -113,4 +113,21 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
 
     override suspend fun getLatestQuote(): Quote? =
         db.getQuoteDao().getLatestQuote()
+
+    override suspend fun markAsDisplayed(quoteId: Int) {
+        db.getQuoteDao().markAsDisplayed(quoteId)
+    }
+
+    override suspend fun getUndisplayedCount(): Int {
+        return db.getQuoteDao().getUndisplayedCount()
+    }
+
+    override suspend fun refreshIfAllDisplayed(): Resource<List<Quote>> {
+        val undisplayedCount = db.getQuoteDao().getUndisplayedCount()
+        return if (undisplayedCount == 0) {
+            Resource.Success(emptyList())
+        } else {
+            Resource.Success(db.getQuoteDao().getUndisplayedQuotes())
+        }
+    }
 }

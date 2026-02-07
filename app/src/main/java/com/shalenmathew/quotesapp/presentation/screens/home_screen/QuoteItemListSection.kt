@@ -205,7 +205,11 @@ fun QuoteItemListSection(
                 QuoteItem(it, quoteViewModel, navHost)
             }
             onSwiped { item, _ ->
-                quoteViewModel.onEvent(QuoteEvent.Swipe(item as Quote))
+                val quote = item as Quote
+                quoteViewModel.onEvent(QuoteEvent.Swipe(quote))
+                quote.id?.let { id ->
+                    quoteViewModel.onEvent(QuoteEvent.MarkAsDisplayed(id))
+                }
             }
         }
     }

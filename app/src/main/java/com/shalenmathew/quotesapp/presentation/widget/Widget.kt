@@ -10,7 +10,6 @@ import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
@@ -49,7 +48,9 @@ object QuotesWidgetObj : GlanceAppWidget() {
         id: GlanceId
     ) {
         // Fallback for widgets that haven't updated to Glance state yet
-        val deprecatedQuote = context.dataStore.data.first()[WIDGET_QUOTE_KEY]
+        val deprecatedQuote =
+            context.dataStore.data.first()[WIDGET_QUOTE_KEY]
+
 
         val defaultMessage =
             "Widget is refreshing, will be updated in some time. Or try rebooting the device"
@@ -95,7 +96,8 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                 color = ColorProvider(Color.White),
                 fontWeight = FontWeight.Normal,
             ),
-            modifier = GlanceModifier.wrapContentSize().padding(horizontal = 15.dp, vertical = 15.dp)
+            modifier = GlanceModifier.wrapContentSize()
+                .padding(horizontal = 15.dp, vertical = 15.dp)
         )
 
         if (quoteId != -1) {

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,8 +38,7 @@ fun ArtisanCardTheme(modifier: Modifier, quote: Quote, imageModel: Any?) {
             .fillMaxWidth()
             .fillMaxHeight()
             .background(Color(0xFFE9E9EA)) // light grey background for the screen
-            .padding(12.dp)
-        , contentAlignment = Alignment.Center
+            .padding(12.dp), contentAlignment = Alignment.Center
     ) {
         Card(
             modifier = Modifier
@@ -69,9 +67,11 @@ fun ArtisanCardTheme(modifier: Modifier, quote: Quote, imageModel: Any?) {
                 )
 
                 // content area with quote and author
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(18.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(18.dp)
+                ) {
 
                     Text(
                         text = quote.quote.uppercase(),
@@ -96,12 +96,14 @@ fun ArtisanCardTheme(modifier: Modifier, quote: Quote, imageModel: Any?) {
                     Spacer(modifier = Modifier.height(12.dp))
 
 
-                    Image(painter = painterResource(id = R.drawable.barcode),
+                    Image(
+                        painter = painterResource(id = R.drawable.barcode),
                         contentDescription = null,
                         modifier = Modifier
                             .height(28.dp)
                             .width(160.dp),
-                        alignment =Alignment.BottomStart)
+                        alignment = Alignment.BottomStart
+                    )
                 }
             }
         }

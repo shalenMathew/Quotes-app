@@ -18,8 +18,7 @@ import javax.inject.Inject
 class QuoteViewModel @Inject constructor(
     private val quoteUseCase: QuoteUseCase,
     private val updateWidgetIfSameOrEmptyUseCase: UpdateWidgetIfSameOrEmptyUseCase,
-):ViewModel()
-{
+) : ViewModel() {
     companion object {
         private const val TAG = "QuoteViewModel"
     }
@@ -32,21 +31,26 @@ class QuoteViewModel @Inject constructor(
         observeLikedQuotes()
     }
 
-    private fun getQuote(){
+    private fun getQuote() {
 
-       viewModelScope.launch {
+        viewModelScope.launch {
 
-           quoteUseCase.getQuote().collect{it->
+            quoteUseCase.getQuote().collect {
 
-               when(it){
+                when (it) {
 
-                  is Resource.Success->{
-                      Log.d(TAG,"from viewmodel, fetched data successfully " + it.data?.quotesList[0].toString() )
+                    is Resource.Success -> {
+                        Log.d(
+                            TAG,
+                            "from viewmodel, fetched data successfully " + it.data?.quotesList[0].toString()
+                        )
 
-                      it.data?.let { data->
-                          // saving in state
-                          _quoteState.value = _quoteState.value.copy(dataList = data.quotesList.toMutableList(),
-                              qot = data.quotesOfTheDay[0], isLoading = false, error = "")
+                        it.data?.let { data ->
+                            // saving in state
+                            _quoteState.value = _quoteState.value.copy(
+                                dataList = data.quotesList.toMutableList(),
+                                qot = data.quotesOfTheDay[0], isLoading = false, error = ""
+                            )
 
                           val firstQuote = data.quotesList.firstOrNull()
                           firstQuote?.let { quote ->
@@ -54,21 +58,31 @@ class QuoteViewModel @Inject constructor(
                                   .onFailure { Log.w(TAG, "Widget update failed: ${it.message}") }
                           }
 
-                      } ?:{
-                          _quoteState.value = _quoteState.value.copy(dataList = mutableListOf(),
-                          qot =null , isLoading = false, error = "")
-                      }
-                  }
+                        } ?: {
+                            _quoteState.value = _quoteState.value.copy(
+                                dataList = mutableListOf(),
+                                qot = null, isLoading = false, error = ""
+                            )
+                        }
+                    }
 
-                   is Resource.Error -> {
-                     _quoteState.value = _quoteState.value.copy(error = it.message ?: "Something went wrong", isLoading = false)
-                   }
-                   is Resource.Loading -> {
-                       _quoteState.value =_quoteState.value.copy(isLoading = true, dataList = mutableListOf(), error = "")
-                   }
-               }
-           }
-       }
+                    is Resource.Error -> {
+                        _quoteState.value = _quoteState.value.copy(
+                            error = it.message ?: "Something went wrong",
+                            isLoading = false
+                        )
+                    }
+
+                    is Resource.Loading -> {
+                        _quoteState.value = _quoteState.value.copy(
+                            isLoading = true,
+                            dataList = mutableListOf(),
+                            error = ""
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun observeLikedQuotes() {
@@ -86,9 +100,9 @@ class QuoteViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(quoteEvent: QuoteEvent){
+    fun onEvent(quoteEvent: QuoteEvent) {
 
-        when(quoteEvent){
+        when (quoteEvent) {
 
             is QuoteEvent.Like -> {
                 viewModelScope.launch {
@@ -96,17 +110,21 @@ class QuoteViewModel @Inject constructor(
                     updateWidgetIfSameOrEmptyUseCase(updatedQuote)
                         .onFailure { Log.w(TAG, "Widget update failed: ${it.message}") }
 
-                    _quoteState.value=_quoteState.value.copy(dataList = _quoteState.value.dataList.map { quote->
-                        if(quote.id==updatedQuote.id) updatedQuote else quote
-                    }.toMutableList())
+                    _quoteState.value =
+                        _quoteState.value.copy(dataList = _quoteState.value.dataList.map { quote ->
+                            if (quote.id == updatedQuote.id) updatedQuote else quote
+                        }.toMutableList())
                 }
             }
+
             is QuoteEvent.Swipe -> {
                 // Move the swiped item to the back of the list
-                val currentList = _quoteState.value.dataList.toList() // Convert to immutable list first
+                val currentList =
+                    _quoteState.value.dataList.toList() // Convert to immutable list first
                 val newList = currentList.filter { it.id != quoteEvent.quote.id } + quoteEvent.quote
-                _quoteState.value=_quoteState.value.copy(dataList = newList.toMutableList())
+                _quoteState.value = _quoteState.value.copy(dataList = newList.toMutableList())
             }
+
             is QuoteEvent.Retry -> {
                 getQuote()
             }

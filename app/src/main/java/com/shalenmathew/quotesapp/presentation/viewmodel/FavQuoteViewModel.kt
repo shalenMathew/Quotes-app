@@ -18,7 +18,8 @@ import javax.inject.Inject
 class FavQuoteViewModel @Inject constructor(
     private val favQuoteUseCase: FavQuoteUseCase,
     private val updateWidgetIfSameOrEmptyUseCase: UpdateWidgetIfSameOrEmptyUseCase
-): ViewModel() {
+) :
+    ViewModel() {
 
     companion object {
         private const val TAG = "FavQuoteViewModel"
@@ -31,21 +32,21 @@ class FavQuoteViewModel @Inject constructor(
         getFavQuote()
     }
 
-    private fun getFavQuote(query: String = _favQuoteState.value.query){
+    private fun getFavQuote(query: String = _favQuoteState.value.query) {
 
-        _favQuoteState.value=_favQuoteState.value.copy(isLoading = true)
+        _favQuoteState.value = _favQuoteState.value.copy(isLoading = true)
 
         viewModelScope.launch {
-            favQuoteUseCase.getFavQuote(query).collect(){it->
-                _favQuoteState.value=_favQuoteState.value.copy(dataList = it, isLoading = false)
+            favQuoteUseCase.getFavQuote(query).collect {
+                _favQuoteState.value = _favQuoteState.value.copy(dataList = it, isLoading = false)
             }
         }
     }
 
 
-    fun onEvent(quoteEvent: FavQuoteEvent){
+    fun onEvent(quoteEvent: FavQuoteEvent) {
 
-        when(quoteEvent){
+        when (quoteEvent) {
 
             is FavQuoteEvent.Like -> {
                 viewModelScope.launch {
@@ -54,19 +55,20 @@ class FavQuoteViewModel @Inject constructor(
                     updateWidgetIfSameOrEmptyUseCase(updatedQuote)
                         .onFailure { Log.w(TAG, "Widget update failed: ${it.message}") }
 
-                    _favQuoteState.value=_favQuoteState.value.copy(dataList = _favQuoteState.value.dataList.map { quote->
-                        if(quote.id==updatedQuote.id) updatedQuote else quote
-                    }.toMutableList(), isLoading = true)
+                    _favQuoteState.value =
+                        _favQuoteState.value.copy(dataList = _favQuoteState.value.dataList.map { quote ->
+                            if (quote.id == updatedQuote.id) updatedQuote else quote
+                        }.toMutableList(), isLoading = true)
 
                     delay(100)
-                    _favQuoteState.value=_favQuoteState.value.copy(isLoading = false)
+                    _favQuoteState.value = _favQuoteState.value.copy(isLoading = false)
 
                 }
 
             }
 
             is FavQuoteEvent.onSearchQueryChanged -> {
-               _favQuoteState.value = _favQuoteState.value.copy(query = quoteEvent.query)
+                _favQuoteState.value = _favQuoteState.value.copy(query = quoteEvent.query)
                 getFavQuote()
             }
 

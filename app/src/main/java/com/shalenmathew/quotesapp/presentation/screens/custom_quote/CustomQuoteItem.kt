@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -95,9 +98,10 @@ fun CustomQuoteItem(
 
                 Spacer(modifier = Modifier.width(15.dp))
 
-                AsyncImage(
-                    model = R.drawable.heart_filled,
+                Icon(
+                    imageVector = Icons.Rounded.Delete,
                     contentDescription = "Delete",
+                    tint = Color.White,
                     modifier = Modifier
                         .padding(end = 12.dp, bottom = 10.dp)
                         .size(35.dp)

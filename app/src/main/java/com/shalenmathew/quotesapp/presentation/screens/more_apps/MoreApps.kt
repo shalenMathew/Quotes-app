@@ -23,23 +23,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
-
+import androidx.core.net.toUri
 
 
 @Composable
 fun MoreApps(
-    paddingValues: PaddingValues,
-    navHost: NavHostController
-){
+    paddingValues: PaddingValues
+) {
 
     Column {
         AppListItem(
             paddingValues,
-            navHost,
             imageRes = R.drawable.mf_logo,
             title = "MovieFlix",
             description = "An entertainment app to track and save your fav shows and movies",
@@ -55,7 +51,6 @@ fun MoreApps(
 @Composable
 fun AppListItem(
     paddingValues: PaddingValues,
-    navHost: NavHostController,
     imageRes: Int,
     title: String,
     description: String,
@@ -69,7 +64,7 @@ fun AppListItem(
             .fillMaxWidth()
             .padding(paddingValues)
             .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(repoUrl))
+                val intent = Intent(Intent.ACTION_VIEW, repoUrl.toUri())
                 context.startActivity(intent)
             },
         verticalAlignment = Alignment.CenterVertically

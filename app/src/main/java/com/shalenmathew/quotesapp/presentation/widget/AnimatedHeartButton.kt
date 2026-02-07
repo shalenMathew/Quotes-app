@@ -25,13 +25,13 @@ fun AnimatedHeartButton(
 ) {
     var isAnimating by remember { mutableStateOf(false) }
     var wasLiked by remember { mutableStateOf(isLiked) }
-    
+
     // Trigger animation when like status changes
     if (wasLiked != isLiked) {
         isAnimating = true
         wasLiked = isLiked
     }
-    
+
     // Scale animation for the bounce effect
     val scale by animateFloatAsState(
         targetValue = if (isAnimating) 1.4f else 1f,
@@ -41,7 +41,7 @@ fun AnimatedHeartButton(
         ),
         finishedListener = { isAnimating = false }
     )
-    
+
     // Rotation animation for extra flair
     val rotation by animateFloatAsState(
         targetValue = if (isAnimating && isLiked) 15f else 0f,
@@ -50,7 +50,7 @@ fun AnimatedHeartButton(
             stiffness = 300f
         )
     )
-    
+
     Box(
         modifier = modifier
             .scale(scale)

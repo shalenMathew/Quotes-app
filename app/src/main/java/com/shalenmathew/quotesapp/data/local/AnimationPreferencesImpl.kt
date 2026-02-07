@@ -3,7 +3,7 @@ package com.shalenmathew.quotesapp.data.local
 import com.shalenmathew.quotesapp.domain.repository.AnimationPreferences
 import jakarta.inject.Inject
 
-class AnimationPreferencesImpl @Inject constructor(): AnimationPreferences {
+class AnimationPreferencesImpl @Inject constructor() : AnimationPreferences {
 
     @Volatile
     private var hasShown: Boolean = false

@@ -49,8 +49,7 @@ fun AppNavigation(
         }
         composable(Screen.MoreApps.route) {
             MoreApps(
-                paddingValues = paddingValues,
-                navHost = navHost
+                paddingValues = paddingValues
             )
         }
         composable(Screen.AddCustomQuote.route) {

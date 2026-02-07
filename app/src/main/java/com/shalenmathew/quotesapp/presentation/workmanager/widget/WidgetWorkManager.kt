@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetUseCase
-import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
@@ -31,11 +31,15 @@ class WidgetWorkManager @AssistedInject constructor(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+
         return try {
+
             Log.d(TAG, "Work started")
 
+
+
             val refreshInterval =
-                context.getWidgetRefreshInterval().first() ?: DEFAULT_WIDGET_REFRESH_INTERVAL
+                context.getWidgetRefreshInterval().first() ?: DEFAULT_REFRESH_INTERVAL
             val isCacheStale = context.isWidgetCacheStale(refreshInterval)
 
             val success = if (isCacheStale) {

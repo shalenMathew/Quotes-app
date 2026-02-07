@@ -41,22 +41,25 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import java.io.File
 
 /**  this util scope  limited to share screen */
-fun saveImgInGallery(context: Context , bitmap: Bitmap) {
+fun saveImgInGallery(context: Context, bitmap: Bitmap) {
 
     val fileName = "quote_${System.currentTimeMillis()}.png"
 
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-        val contentValues  = ContentValues().apply {
+        val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
             put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Quotes")
         }
 
-        val imageUri  = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues)
+        val imageUri = context.contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            contentValues
+        )
 
-        imageUri?.let { uri->
+        imageUri?.let { uri ->
             context.contentResolver.openOutputStream(uri)?.use { stream ->
 
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -64,14 +67,14 @@ fun saveImgInGallery(context: Context , bitmap: Bitmap) {
                 Toast.makeText(context, "Saved to Gallery", Toast.LENGTH_SHORT).show()
             }
 
-        }?:run {
+        } ?: run {
             Toast.makeText(context, "Failed to save image", Toast.LENGTH_SHORT).show()
         }
 
-    }
-    else{
+    } else {
 
-        val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val picturesDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val quotesFolder = File(picturesDir, "Quotes")
 
         if (!quotesFolder.exists()) quotesFolder.mkdirs()
@@ -100,7 +103,7 @@ fun saveImgInGallery(context: Context , bitmap: Bitmap) {
 
 }
 
-fun shareImg(context: Context , bitmap: Bitmap){
+fun shareImg(context: Context, bitmap: Bitmap) {
 
     val file = File(context.cacheDir, "shared_image.png")
     file.outputStream().use {
@@ -116,25 +119,30 @@ fun shareImg(context: Context , bitmap: Bitmap){
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
-    context.startActivity(Intent.createChooser(intent,"Share Quotes via"))
+    context.startActivity(Intent.createChooser(intent, "Share Quotes via"))
 
 
 }
 
-sealed class QuoteStyle()
-{
+sealed class QuoteStyle() {
 
     object DefaultTheme : QuoteStyle()
+
     object CodeSnippetTheme : QuoteStyle()
+
     object DiceDreamsTheme : QuoteStyle()
+
     object LiquidGlassTheme : QuoteStyle()
+
     //    object SpotifyTheme: QuoteStyle()
-    object bratTheme : QuoteStyle()
-    object igorTheme : QuoteStyle()
+
+    object BratTheme : QuoteStyle()
+
+    object IgorTheme : QuoteStyle()
 
     object ReminderTheme : QuoteStyle()
 
-    object FliplingoesTheme : QuoteStyle()
+    object FlippingGoesTheme : QuoteStyle()
 
     object TravelCardTheme : QuoteStyle()
 
@@ -147,8 +155,6 @@ sealed class QuoteStyle()
     object ArtisanCardTheme : QuoteStyle()
 
     object BookLookTheme : QuoteStyle()
-
- 
 }
 
 @Composable

@@ -4,12 +4,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
+import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
-import com.shalenmathew.quotesapp.util.getLastAlarmTriggerMillis
+import com.shalenmathew.quotesapp.util.getLastNotificationAlarmTriggerMillis
 import com.shalenmathew.quotesapp.util.getMillisFromNow
-import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
-import com.shalenmathew.quotesapp.util.setLastAlarmTriggerMillis
+import com.shalenmathew.quotesapp.util.getNotificationInterval
+import com.shalenmathew.quotesapp.util.setLastNotificationAlarmTriggerMillis
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +19,10 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
-class WidgetRefreshReceiver() : BroadcastReceiver() {
+class NotificationRefreshReceiver() : BroadcastReceiver() {
     @Inject
-    lateinit var scheduleWidgetRefresh: ScheduleWidgetRefresh
+    lateinit var notificationScheduler: ScheduleNotification
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -34,28 +33,28 @@ class WidgetRefreshReceiver() : BroadcastReceiver() {
 
                 if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
                     val lastAlarmSetTimeMillis =
-                        context?.getLastAlarmTriggerMillis()?.first() ?: getMillisFromNow(
-                            DEFAULT_REFRESH_INTERVAL
-                        )
-                    val widgetRefreshInterval = context?.getWidgetRefreshInterval()?.first()
+                        context?.getLastNotificationAlarmTriggerMillis()?.first()
+                            ?: getMillisFromNow(
+                                DEFAULT_REFRESH_INTERVAL
+                            )
+                    val notificationRefreshInterval = context?.getNotificationInterval()?.first()
                         ?: DEFAULT_REFRESH_INTERVAL
                     var timeToTrigger =
-                        lastAlarmSetTimeMillis + TimeUnit.HOURS.toMillis(widgetRefreshInterval.toLong())
+                        lastAlarmSetTimeMillis + TimeUnit.HOURS.toMillis(notificationRefreshInterval.toLong())
 
                     if (timeToTrigger <= System.currentTimeMillis()) {
                         timeToTrigger = System.currentTimeMillis() + TimeUnit.HOURS.toMillis(
-                            widgetRefreshInterval.toLong()
+                            notificationRefreshInterval.toLong()
                         )
                     }
 
-                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(timeToTrigger)
-                    context?.setLastAlarmTriggerMillis(timeToTrigger)
+                    notificationScheduler.scheduleNotificationWorkAlarm(timeToTrigger)
+                    context?.setLastNotificationAlarmTriggerMillis(timeToTrigger)
                 } else {
-                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+                    notificationScheduler.scheduleNotification()
                 }
-
             } catch (e: Exception) {
-                Log.e("WidgetRefreshReceiver", "onReceive Exception: ${e.message}")
+                Log.e("NotificationRefreshReceiver", "onReceive Exception: ${e.message}")
             } finally {
                 pendingResult.finish()
             }

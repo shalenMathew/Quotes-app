@@ -47,11 +47,13 @@ class CustomQuoteViewModel @Inject constructor(
                     customQuoteUseCases.saveCustomQuote(customQuote)
                 }
             }
+
             is CustomQuoteEvent.DeleteQuote -> {
                 viewModelScope.launch {
                     customQuoteUseCases.deleteCustomQuote(event.quote)
                 }
             }
+
             is CustomQuoteEvent.OnSearchQueryChanged -> {
                 _state.value = _state.value.copy(query = event.query)
                 getCustomQuotes(event.query)

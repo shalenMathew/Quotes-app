@@ -36,13 +36,14 @@ interface QuoteDao {
 
 
     @Query(" SELECT * FROM Quote ORDER BY id DESC ")
-    suspend fun getAllQuotes():List<Quote>
+    suspend fun getAllQuotes(): List<Quote>
     // BUG FIXED - > the issue was i was not wrapping the list in any flow or live data causing it to not observe the changes
     // and made the simple idea of fetching data from db...
     // Resource<> are mostly used along with remote api than room
 
 
-    @Query("""
+    @Query(
+        """
   SELECT * FROM Quote
   WHERE liked == 1
     AND (
@@ -50,7 +51,7 @@ interface QuoteDao {
       OR LOWER(author) LIKE '%' || LOWER(:query) || '%'
     )
     ORDER BY updatedAt DESC
-""")
-    fun searchForQuotes(query:String): Flow<List<Quote> >
-
+"""
+    )
+    fun searchForQuotes(query: String): Flow<List<Quote>>
 }

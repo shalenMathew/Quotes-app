@@ -5,14 +5,14 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.repository.FavQuoteRepository
 import kotlinx.coroutines.flow.Flow
 
-class FavQuoteRepositoryImpl (private val db: QuoteDatabase):FavQuoteRepository {
+class FavQuoteRepositoryImpl(private val db: QuoteDatabase) : FavQuoteRepository {
 
     override fun getAllLikedQuotes(query: String): Flow<List<Quote>> {
 
-        return if (query.isNotBlank()){
+        return if (query.isNotBlank()) {
             db.getQuoteDao().searchForQuotes(query)
 
-        }else{
+        } else {
             db.getQuoteDao().getAllLikedQuotes()
         }
     }

@@ -73,8 +73,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesQuoteDatabase(application: Application):QuoteDatabase{
-        return Room.databaseBuilder(application,QuoteDatabase::class.java,"quote_db")
+    fun providesQuoteDatabase(application: Application): QuoteDatabase {
+        return Room.databaseBuilder(application, QuoteDatabase::class.java, "quote_db")
             .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5)
 //            .fallbackToDestructiveMigration(true)
             .build()
@@ -88,52 +88,56 @@ object AppModule {
 
     val DB_MIGRATION_4_5 = object : Migration(4, 5) {
         override fun migrate(db: SupportSQLiteDatabase) {
-            db.execSQL("""
+            db.execSQL(
+                """
             CREATE TABLE IF NOT EXISTS custom_quotes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 quote TEXT NOT NULL,
                 author TEXT NOT NULL,
                 createdAt INTEGER NOT NULL
             )
-        """)
+        """
+            )
         }
     }
 
-@Singleton
-@Provides
-fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
-        return QuoteRepositoryImplementation(api,db)
-}
+    @Singleton
+    @Provides
+    fun providesQuoteRepository(api: QuoteApi, db: QuoteDatabase): QuoteRepository {
+        return QuoteRepositoryImplementation(api, db)
+    }
 
     @Singleton
     @Provides
-    fun providesFavQuoteRepository(db:QuoteDatabase): FavQuoteRepository {
+    fun providesFavQuoteRepository(db: QuoteDatabase): FavQuoteRepository {
         return FavQuoteRepositoryImpl(db)
     }
 
 
     @Singleton
     @Provides
-    fun providesFavQuoteUseCase(getFavQuote: GetFavQuote,favLikedQuote: FavLikedQuote):FavQuoteUseCase{
-        return FavQuoteUseCase(getFavQuote,favLikedQuote)
+    fun providesFavQuoteUseCase(
+        getFavQuote: GetFavQuote,
+        favLikedQuote: FavLikedQuote
+    ): FavQuoteUseCase {
+        return FavQuoteUseCase(getFavQuote, favLikedQuote)
     }
 
     @Provides
     @Singleton
-    fun providesOkhttpClient(@ApplicationContext context: Context):OkHttpClient
-    {
+    fun providesOkhttpClient(@ApplicationContext context: Context): OkHttpClient {
 
         return OkHttpClient
             .Builder()
-            .cache(Cache(context.cacheDir,(5 * 1024 * 1024).toLong()))
+            .cache(Cache(context.cacheDir, (5 * 1024 * 1024).toLong()))
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
-                    level =  if (BuildConfig.DEBUG) Level.BODY else Level.NONE
+                    level = if (BuildConfig.DEBUG) Level.BODY else Level.NONE
                 }
             )
-            .connectTimeout(10,TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
-            .readTimeout(10,TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
             .build()
 
 
@@ -141,8 +145,8 @@ fun providesQuoteRepository(api:QuoteApi,db:QuoteDatabase):QuoteRepository{
 
     @Singleton
     @Provides
-    fun providesQuotesApi(okHttpClient: OkHttpClient):QuoteApi{
-        return  Retrofit.Builder()
+    fun providesQuotesApi(okHttpClient: OkHttpClient): QuoteApi {
+        return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(Constants.BASE_URL)
             .client(okHttpClient)

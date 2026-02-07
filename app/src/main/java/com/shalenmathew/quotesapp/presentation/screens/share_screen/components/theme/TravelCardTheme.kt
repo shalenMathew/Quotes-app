@@ -42,7 +42,6 @@ import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 
 
-
 /** TRAVEL CARD THEME */
 @Suppress("DEPRECATION")
 @Composable
@@ -63,7 +62,7 @@ fun TravelCardTheme(
         if (imageUri != null) {
             val bitmap = try {
                 MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
             if (bitmap != null) {

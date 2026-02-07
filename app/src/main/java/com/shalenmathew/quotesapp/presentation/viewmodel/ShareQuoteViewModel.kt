@@ -9,13 +9,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ShareQuoteViewModel @Inject constructor(
     private val defaultQuoteStylePreferences: DefaultQuoteStylePreferences
-): ViewModel() {
+) : ViewModel() {
 
-    fun getDefaultQuoteStyle(): QuoteStyle{
+    fun getDefaultQuoteStyle(): QuoteStyle {
         return defaultQuoteStylePreferences.getDefaultQuoteStyle()
     }
 
-    fun changeDefaultQuoteStyle(quoteStyle: QuoteStyle){
+    fun changeDefaultQuoteStyle(quoteStyle: QuoteStyle) {
         defaultQuoteStylePreferences.saveDefaultQuoteStyle(quoteStyle)
     }
 }

@@ -3,6 +3,7 @@ package com.shalenmathew.quotesapp.presentation.screens.settings_screen
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -64,9 +66,13 @@ import com.shalenmathew.quotesapp.presentation.theme.customGrey3
 import com.shalenmathew.quotesapp.presentation.theme.customGrey4
 import com.shalenmathew.quotesapp.presentation.viewmodel.SettingsViewModel
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetReceiver
-import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.convertDaysToHrs
+import com.shalenmathew.quotesapp.util.convertHrsToDays
 import com.shalenmathew.quotesapp.util.getMillisFromNow
+import com.shalenmathew.quotesapp.util.getNotificationInterval
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.setNotificationInterval
 import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,10 +80,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 // Only Hr is allowed
-val timeOptions = listOf("1 hr", "6 hr", "12 hr", "24 hr")
+val widgetRefreshTimeOptions = listOf("1 hr", "6 hr", "12 hr", "24 hr")
+
+val notificationRefreshTimeOptions = listOf("1 hr", "6 hr", "12 hr", "24 hr", "2 days", "7 days")
 
 @Composable
-fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController , settingsViewModel : SettingsViewModel = hiltViewModel()) {
+fun SettingsScreen(
+    paddingValues: PaddingValues,
+    navHost: NavHostController,
+    settingsViewModel: SettingsViewModel = hiltViewModel()
+) {
 
     val context = LocalContext.current
     val coroutineScope = CoroutineScope(Dispatchers.IO)
@@ -143,7 +155,7 @@ fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController , se
 
                 item {
                     Text(
-                        text = "Widget Settings", color = Color.White,
+                        text = "Refresh Settings", color = Color.White,
                         modifier = Modifier.padding(15.dp),
                         fontSize = 20.sp,
                         fontFamily = GIFont, fontWeight = FontWeight.Medium
@@ -157,7 +169,7 @@ fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController , se
                                 color = Color.Black,
                                 shape = RectangleShape
                             )
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                             .background(customGrey2)
                             .padding(horizontal = 16.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -169,37 +181,100 @@ fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController , se
                                 .padding(end = 12.dp)
                                 .size(30.dp)
                         )
-                        Text(modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp),
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
                             text = "Widget Refresh Time",
                             color = Color.White,
                             fontFamily = GIFont,
                             fontWeight = FontWeight.Medium,
                             fontSize = 16.sp
                         )
-                        TimeDropdownMenu(modifier = Modifier.widthIn(max = 120.dp), onTimeSelected = {
-                            val interval = it.removeSuffix("hr").trim().toInt()
-                            coroutineScope.launch {
-                                context.setWidgetRefreshInterval(interval = interval)
-                            }
-                            settingsViewModel.scheduleWidgetRefreshWorkAlarm(getMillisFromNow(interval))
-                        },isEnable = isQuotesWidgetEnabled)
+                        TimeDropdownMenu(
+                            modifier = Modifier.widthIn(max = 120.dp),
+                            onTimeSelected = {
+                                val interval = it.removeSuffix("hr").trim().toInt()
+                                coroutineScope.launch {
+                                    context.setWidgetRefreshInterval(interval = interval)
+                                }
+                                settingsViewModel.scheduleWidgetRefreshWorkAlarm(
+                                    getMillisFromNow(
+                                        interval
+                                    )
+                                )
+                            },
+                            isEnable = isQuotesWidgetEnabled,
+                            refreshType = RefreshType.WIDGET
+                        )
                     }
 
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 0.6.dp,
+                                color = Color.Black,
+                                shape = RectangleShape
+                            )
+                            .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
+                            .background(customGrey2)
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_notifications),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .size(30.dp)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            text = "Notification Time",
+                            color = Color.White,
+                            fontFamily = GIFont,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        TimeDropdownMenu(
+                            modifier = Modifier.widthIn(max = 120.dp),
+                            onTimeSelected = {
+                                val interval = if (it.contains("days")) {
+                                    convertDaysToHrs(it.removeSuffix("days").trim().toInt())
+                                } else {
+                                    it.removeSuffix("hr").trim().toInt()
+                                }
+                                Log.d("SettingsScreen", "onTimeSelected: $interval")
+                                coroutineScope.launch {
+                                    context.setNotificationInterval(interval = interval)
+                                }
+                                settingsViewModel.scheduleNotificationWorkAlarm(
+                                    getMillisFromNow(
+                                        interval
+                                    )
+                                )
+                            },
+                            isEnable = true,
+                            refreshType = RefreshType.NOTIFICATION
+                        )
+                    }
                 }
 
                 item {
                     if (BuildConfig.DEBUG) {
 
-                        Box(modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                            contentAlignment = Alignment.Center)
+                        Box(
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                            contentAlignment = Alignment.Center
+                        )
                         {
                             Text(
-//                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
                                 text = "made with ❤\uFE0F by Shalen Mathew (debug.mode)",
                                 fontSize = 12.sp,
                                 color = Color.White,
@@ -209,16 +284,16 @@ fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController , se
 
                         }
 
-                    }
-                    else {
+                    } else {
 
-                        Box(modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth(),
-                            contentAlignment = Alignment.Center)
+                        Box(
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        )
                         {
                             Text(
-//                        text = "made with \uD83E\uDD75 by Shalen Mathew",
                                 text = "made with ❤\uFE0F by Shalen Mathew",
                                 fontSize = 12.sp,
                                 color = Color.White,
@@ -233,48 +308,13 @@ fun SettingsScreen(paddingValues: PaddingValues, navHost: NavHostController , se
             }
 
             Spacer(Modifier.weight(1f))
-
-//            if (BuildConfig.DEBUG) {
-//
-//                Box(modifier = Modifier
-//                    .wrapContentHeight()
-//                    .fillMaxWidth(),
-//                    contentAlignment = Alignment.Center)
-//                {
-//                    Text(
-////                        text = "made with \uD83E\uDD75 by Shalen Mathew (debug.mode)",
-//                        text = "made with ❤\uFE0F by Shalen Mathew (debug.mode)",
-//                        fontSize = 12.sp,
-//                        color = Color.White,
-//                        fontFamily = Poppins,
-//                        fontWeight = FontWeight.Medium
-//                    )
-//
-//                }
-//
-//            }
-//            else {
-//
-//                Box(modifier = Modifier
-//                    .wrapContentHeight()
-//                    .fillMaxWidth(),
-//                    contentAlignment = Alignment.Center)
-//                {
-//                    Text(
-////                        text = "made with \uD83E\uDD75 by Shalen Mathew",
-//                        text = "made with ❤\uFE0F by Shalen Mathew",
-//                        fontSize = 12.sp,
-//                        color = Color.White,
-//                        fontFamily = Poppins,
-//                        fontWeight = FontWeight.Medium
-//                    )
-//
-//                }
-//            }
-
         }
 
     }
+}
+
+enum class RefreshType {
+    WIDGET, NOTIFICATION
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -283,13 +323,25 @@ fun TimeDropdownMenu(
     modifier: Modifier = Modifier,
     onTimeSelected: (String) -> Unit = {},
     isEnable: Boolean,
+    refreshType: RefreshType = RefreshType.WIDGET
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-    var selectedOption by remember { mutableStateOf("-") }
+    var widgetSelectedOption by remember { mutableStateOf("-") }
     LaunchedEffect(Unit) {
-        selectedOption = "${getSelectedWidgetRefreshInterval(context)} hr"
+        widgetSelectedOption = "${getSelectedWidgetRefreshInterval(context)} hr"
+    }
+
+    var notificationSelectedOption by remember { mutableStateOf("-") }
+    LaunchedEffect(Unit) {
+        getSelectedNotificationInterval(context) { interval, isDays ->
+            notificationSelectedOption = if (isDays) {
+                "$interval days"
+            } else {
+                "$interval hr"
+            }
+        }
     }
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -297,16 +349,20 @@ fun TimeDropdownMenu(
         modifier = modifier.height(50.dp)
     ) {
         TextField(
-            value = selectedOption,
+            value = if (refreshType == RefreshType.WIDGET) widgetSelectedOption else notificationSelectedOption,
             onValueChange = {},
             readOnly = true,
+            enabled = false,
+            shape = OutlinedTextFieldDefaults.shape,
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
                 focusedContainerColor = customGrey3,
-                unfocusedContainerColor = customGrey3
+                unfocusedContainerColor = customGrey3,
+                disabledContainerColor = customGrey3,
+                errorContainerColor = customGrey3,
             ),
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
@@ -326,14 +382,19 @@ fun TimeDropdownMenu(
             onDismissRequest = { expanded = false },
             modifier = Modifier.background(customGrey4)
         ) {
-            timeOptions.forEach { option ->
+            val finalOptions =
+                if (refreshType == RefreshType.WIDGET) widgetRefreshTimeOptions else notificationRefreshTimeOptions
+            finalOptions.forEach { option ->
                 DropdownMenuItem(
                     text = { Text(option) },
                     onClick = {
                         if (!isEnable) {
-                            Toast.makeText(context,"Not Widgets Detected" , Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Not Widgets Detected", Toast.LENGTH_SHORT)
+                                .show()
                         } else {
-                            selectedOption = option
+                            if (refreshType == RefreshType.WIDGET)
+                                widgetSelectedOption = option
+                            else notificationSelectedOption = option
                             expanded = false
                             onTimeSelected(option)
                         }
@@ -353,11 +414,31 @@ fun TimeDropdownMenu(
 }
 
 private suspend fun getSelectedWidgetRefreshInterval(context: Context): Int {
-    var selectedInterval = context.getWidgetRefreshInterval().first()?:DEFAULT_WIDGET_REFRESH_INTERVAL
-    if(!timeOptions.contains("$selectedInterval hr")){
-        selectedInterval = DEFAULT_WIDGET_REFRESH_INTERVAL
+    var selectedInterval = context.getWidgetRefreshInterval().first() ?: DEFAULT_REFRESH_INTERVAL
+    if (!widgetRefreshTimeOptions.contains("$selectedInterval hr")) {
+        selectedInterval = DEFAULT_REFRESH_INTERVAL
     }
     return selectedInterval
+}
+
+private suspend fun getSelectedNotificationInterval(
+    context: Context,
+    onTimeSelected: (Int, Boolean) -> Unit
+) {
+    var selectedInterval = context.getNotificationInterval().first() ?: DEFAULT_REFRESH_INTERVAL
+    if (selectedInterval > 24) {
+        selectedInterval = convertHrsToDays(selectedInterval)
+    }
+    if (!notificationRefreshTimeOptions.contains("$selectedInterval hr") && !notificationRefreshTimeOptions.contains(
+            "$selectedInterval days"
+        )
+    ) {
+        selectedInterval = DEFAULT_REFRESH_INTERVAL
+    }
+    onTimeSelected(
+        selectedInterval,
+        notificationRefreshTimeOptions.contains("$selectedInterval days")
+    )
 }
 
 fun isQuotesWidgetEnabled(context: Context): Boolean {

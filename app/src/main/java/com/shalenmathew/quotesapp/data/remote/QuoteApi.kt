@@ -6,9 +6,9 @@ import retrofit2.http.GET
 interface QuoteApi {
 
     @GET("quotes")
-   suspend fun getQuotesList():QuotesDto
+    suspend fun getQuotesList(): QuotesDto
 
     @GET("today")
-   suspend fun getQuoteOfTheDay():QuotesDto
+    suspend fun getQuoteOfTheDay(): QuotesDto
 
 }

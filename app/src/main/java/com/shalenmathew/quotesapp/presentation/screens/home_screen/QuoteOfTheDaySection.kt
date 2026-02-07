@@ -23,24 +23,32 @@ fun QuoteOfTheDaySection(
 
     val state = quoteViewModel.quoteState.value
 
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentHeight()
-        .background(Color.Transparent)){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(Color.Transparent)
+    ) {
 
-        Column(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
-            Text(text = "Quote of the day",
+        Column(modifier = Modifier
+            .wrapContentHeight()
+            .fillMaxWidth()) {
+            Text(
+                text = "Quote of the day",
                 fontFamily = GIFont,
                 fontSize = 35.sp,
                 modifier = Modifier.padding(start = 15.dp),
-                color = Color.White)
+                color = Color.White
+            )
 
-            Text(text = state.qot?.quote ?: "",
+            Text(
+                text = state.qot?.quote ?: "",
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Thin,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(start = 15.dp, top = 5.dp, end = 15.dp),
-                color = Color.White)
+                color = Color.White
+            )
         }
     }
 }

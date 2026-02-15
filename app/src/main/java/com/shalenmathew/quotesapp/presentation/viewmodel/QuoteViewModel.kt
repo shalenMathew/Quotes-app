@@ -141,7 +141,7 @@ class QuoteViewModel @Inject constructor(
 
     private fun checkAndRefreshQuotes() {
         viewModelScope.launch {
-            when (val result = quoteUseCase.refreshIfAllDisplayed()) {
+            when (val result = quoteUseCase.getUndisplayedQuotes()) {
                 is Resource.Success -> {
                     val quotes = result.data ?: emptyList()
                     if (quotes.isEmpty()) {

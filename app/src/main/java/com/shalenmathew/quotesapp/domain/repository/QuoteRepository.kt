@@ -19,6 +19,6 @@ interface QuoteRepository {
 
     suspend fun markAsDisplayed(quoteId: Int)
     suspend fun getUndisplayedCount(): Int
-    suspend fun refreshIfAllDisplayed(): Resource<List<Quote>>
+    suspend fun getUndisplayedQuotes(): Resource<List<Quote>>
 
 }

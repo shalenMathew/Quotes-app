@@ -5,8 +5,8 @@ import com.shalenmathew.quotesapp.domain.repository.QuoteRepository
 import com.shalenmathew.quotesapp.util.Resource
 import javax.inject.Inject
 
-class RefreshIfAllDisplayed @Inject constructor(private val quoteRepository: QuoteRepository) {
+class GetUndisplayedQuotes @Inject constructor(private val quoteRepository: QuoteRepository) {
     suspend operator fun invoke(): Resource<List<Quote>> {
-        return quoteRepository.refreshIfAllDisplayed()
+        return quoteRepository.getUndisplayedQuotes()
     }
 }

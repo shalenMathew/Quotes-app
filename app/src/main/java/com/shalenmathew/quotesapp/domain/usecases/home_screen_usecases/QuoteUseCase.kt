@@ -6,5 +6,5 @@ data class QuoteUseCase(
     val getLikedQuotes: GetLikedQuotes,
     val getLatestQuote: GetLatestQuote,
     val markAsDisplayed: MarkAsDisplayed,
-    val refreshIfAllDisplayed: RefreshIfAllDisplayed,
+    val getUndisplayedQuotes: GetUndisplayedQuotes,
 )

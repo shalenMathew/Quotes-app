@@ -59,6 +59,7 @@ fun DiceDreamsStyleQuoteCard(
                     val source = ImageDecoder.createSource(context.contentResolver, imageUri)
                     ImageDecoder.decodeBitmap(source)
                 } else {
+                    @Suppress("DEPRECATION")
                     MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
                 }
             } catch (_: Exception) {

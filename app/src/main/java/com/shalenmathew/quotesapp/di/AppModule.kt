@@ -36,7 +36,7 @@ import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.MarkAsDisplayed
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
-import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.RefreshIfAllDisplayed
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetUndisplayedQuotes
 import com.shalenmathew.quotesapp.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -65,7 +65,7 @@ object AppModule {
             getLikedQuotes: GetLikedQuotes,
             getLatestQuote: GetLatestQuote,
             markAsDisplayed: MarkAsDisplayed,
-            refreshIfAllDisplayed: RefreshIfAllDisplayed
+            getUndisplayedQuotes: GetUndisplayedQuotes
     ): QuoteUseCase {
         return QuoteUseCase(
             getQuote = getQuote,
@@ -73,7 +73,7 @@ object AppModule {
             getLikedQuotes = getLikedQuotes,
             getLatestQuote = getLatestQuote,
             markAsDisplayed = markAsDisplayed,
-            refreshIfAllDisplayed = refreshIfAllDisplayed
+            getUndisplayedQuotes = getUndisplayedQuotes
         )
     }
 

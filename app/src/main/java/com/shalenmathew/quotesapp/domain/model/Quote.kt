@@ -13,5 +13,6 @@ data class Quote(
     val quote: String,
     val author: String,
     var liked: Boolean,
+    var displayed: Boolean = false,
     var updatedAt: Long = System.currentTimeMillis(),
 ) : Parcelable

@@ -129,9 +129,42 @@ class QuoteViewModel @Inject constructor(
                 getQuote()
             }
 
+            is QuoteEvent.MarkAsDisplayed -> {
+                    viewModelScope.launch {
+                        quoteUseCase.markAsDisplayed(quoteEvent.quoteId)
+                        checkAndRefreshQuotes()
+                    }
+            }
         }
 
     }
 
+    private fun checkAndRefreshQuotes() {
+        viewModelScope.launch {
+            when (val result = quoteUseCase.getUndisplayedQuotes()) {
+                is Resource.Success -> {
+                    val quotes = result.data ?: emptyList()
+                    if (quotes.isEmpty()) {
+                        // All displayed — fetch a fresh batch from API
+                        getQuote()
+                    } else {
+                        _quoteState.value = _quoteState.value.copy(
+                            dataList = quotes.toMutableList(),
+                            isLoading = false
+                        )
+                    }
+                }
+                is Resource.Error -> {
+                    _quoteState.value = _quoteState.value.copy(
+                        error = result.message ?: "Failed to refresh quotes",
+                        isLoading = false
+                    )
+                }
+                is Resource.Loading -> {
+                    _quoteState.value = _quoteState.value.copy(isLoading = true)
+                }
+            }
+        }
+    }
 
 }

@@ -16,4 +16,9 @@ interface QuoteRepository {
     suspend fun getQuoteById(id: Int): Quote?
 
     suspend fun getLatestQuote(): Quote?
+
+    suspend fun markAsDisplayed(quoteId: Int)
+    suspend fun getUndisplayedCount(): Int
+    suspend fun getUndisplayedQuotes(): Resource<List<Quote>>
+
 }

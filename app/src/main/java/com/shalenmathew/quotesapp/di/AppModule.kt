@@ -34,7 +34,9 @@ import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLatest
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuote
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.MarkAsDisplayed
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetUndisplayedQuotes
 import com.shalenmathew.quotesapp.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -61,13 +63,17 @@ object AppModule {
             getQuote: GetQuote,
             likedQuote: LikedQuote,
             getLikedQuotes: GetLikedQuotes,
-            getLatestQuote: GetLatestQuote
+            getLatestQuote: GetLatestQuote,
+            markAsDisplayed: MarkAsDisplayed,
+            getUndisplayedQuotes: GetUndisplayedQuotes
     ): QuoteUseCase {
         return QuoteUseCase(
             getQuote = getQuote,
             likedQuote = likedQuote,
             getLikedQuotes = getLikedQuotes,
-            getLatestQuote = getLatestQuote
+            getLatestQuote = getLatestQuote,
+            markAsDisplayed = markAsDisplayed,
+            getUndisplayedQuotes = getUndisplayedQuotes
         )
     }
 
@@ -75,7 +81,7 @@ object AppModule {
     @Provides
     fun providesQuoteDatabase(application: Application): QuoteDatabase {
         return Room.databaseBuilder(application, QuoteDatabase::class.java, "quote_db")
-            .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5)
+            .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5,MIGRATION_ADD_DISPLAYED)
 //            .fallbackToDestructiveMigration(true)
             .build()
     }
@@ -98,6 +104,12 @@ object AppModule {
             )
         """
             )
+        }
+    }
+
+    val MIGRATION_ADD_DISPLAYED = object : Migration(5, 6) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE Quote ADD COLUMN displayed INTEGER NOT NULL DEFAULT 0")
         }
     }
 

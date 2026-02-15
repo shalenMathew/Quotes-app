@@ -62,6 +62,7 @@ fun QuotesAppTheme(
         SideEffect {
             val window = ((view.context) as Activity).window
             //status bar and navigation colors
+            @Suppress("DEPRECATION")
             window.navigationBarColor =
                 Color.Black.compositeOver(colorScheme.surface.copy()).toArgb()
 

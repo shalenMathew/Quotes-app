@@ -59,7 +59,7 @@
 ## 🚀 Features
 - ✨ fresh motivational quotes daily
 - 📂 save favorites offline
-- 📤 share quotes with friends & family
+- 📤 customize & share quotes with friends & family
 - 🏠 home screen widget (auto-refreshes every 24hrs)
 - ✍️ create your own custom quotes
 - 🔔 daily inspiration via notifications

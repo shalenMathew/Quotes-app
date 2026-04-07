@@ -142,6 +142,28 @@ class QuotesDaoTest {
         Assert.assertEquals("quote", result?.quote)
     }
 
+    @Test
+    fun test_displayStatusLogic() = runTest {
+
+        val quote = Quote(1, "quote", "author", false, displayed = false)
+        quoteDao.insertQuoteList(listOf(quote))
+
+        assertEquals(1, quoteDao.getUndisplayedCount())
+
+        quoteDao.markAsDisplayed(1)
+        assertEquals(0, quoteDao.getUndisplayedCount())
+
+        val likedQuote = Quote(2, "liked", "author", liked = true, displayed = true)
+        val unlikedQuote = Quote(3, "unliked", "author", liked = false, displayed = true)
+        quoteDao.insertQuoteList(listOf(likedQuote, unlikedQuote))
+
+        quoteDao.resetDisplayedStatus()
+
+        val undisplayed = quoteDao.getUndisplayedQuotes()
+        assertEquals(1, undisplayed.size)
+        assertEquals(3, undisplayed[0].id)
+    }
+
     @After
     fun tearDown(){
         quoteDatabase.close()

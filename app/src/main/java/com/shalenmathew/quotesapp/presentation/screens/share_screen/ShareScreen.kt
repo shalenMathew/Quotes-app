@@ -66,6 +66,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TwitterStyleTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.YoutubeStyleTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.ShareQuoteViewModel
@@ -118,6 +119,13 @@ fun ShareScreen(
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             youtubeThumbnailUri = uri
         }
+
+    var twitterProfileUri by remember { mutableStateOf<Uri?>(null) }
+    val pickTwitterProfileImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            twitterProfileUri = uri
+        }
+
 
     LaunchedEffect(Unit) {
         val defaultStyle = viewModel.getDefaultQuoteStyle()
@@ -205,6 +213,11 @@ fun ShareScreen(
                             quote,
                             artisanImageUri
                         )
+
+                        QuoteStyle.TwitterTheme -> {
+                            TwitterStyleTheme(Modifier, quote, twitterProfileUri)
+
+                        }
                     }
                 }
 
@@ -230,6 +243,7 @@ fun ShareScreen(
                     .padding(horizontal = 50.dp, vertical = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(30.dp)
             ) {
+                // icons visible on Liquid theme
                 AnimatedVisibility(
                     visible = quoteStyleState == QuoteStyle.LiquidGlassTheme
                 ) {
@@ -259,6 +273,7 @@ fun ShareScreen(
                     }
                 }
 
+                // icons visible on Dice Dreams theme
                 AnimatedVisibility(visible = quoteStyleState == QuoteStyle.DiceDreamsTheme) {
                     Row {
                         IconButton(
@@ -287,6 +302,7 @@ fun ShareScreen(
                     }
                 }
 
+                // icons visible on Travel card theme
                 AnimatedVisibility(visible = quoteStyleState == QuoteStyle.TravelCardTheme) {
                     Image(
                         painter = painterResource(R.drawable.upload),
@@ -300,6 +316,7 @@ fun ShareScreen(
                     )
                 }
 
+                // icons visible on Youtube theme
                 AnimatedVisibility(visible = quoteStyleState == QuoteStyle.YoutubeTheme) {
                     Image(
                         painter = painterResource(R.drawable.upload),
@@ -313,6 +330,7 @@ fun ShareScreen(
                     )
                 }
 
+                // icons visible on Artisan theme
                 AnimatedVisibility(quoteStyleState == QuoteStyle.ArtisanCardTheme) {
                     Image(
                         painter = painterResource(R.drawable.upload),
@@ -323,6 +341,22 @@ fun ShareScreen(
                             .clickable {
                                 // Launch image picker
                                 pickArtisanImage.launch("image/*")
+                            }
+                    )
+                }
+
+
+                // icons visible on twitter theme
+                AnimatedVisibility(quoteStyleState == QuoteStyle.TwitterTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Pick background image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                pickTwitterProfileImage.launch("image/*")
                             }
                     )
                 }
@@ -621,6 +655,23 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.ArtisanCardTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+
+                ThemeItem(
+                    title = "Twitter Card",
+                    drawableRes = R.drawable.sample_artisian_theme,
+                    quoteStyle = QuoteStyle.TwitterTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.TwitterTheme,
+                    contentScale = ContentScale.Crop,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.TwitterTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.TwitterTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

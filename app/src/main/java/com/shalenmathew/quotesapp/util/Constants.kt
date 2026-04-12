@@ -31,4 +31,6 @@ object Constants {
     const val YOUTUBE_THEME = "YoutubeTheme"
     const val ARTISAN_CARD_THEME = "ArtisanCardTheme"
     const val BOOK_LOOK_THEME = "BookLookTheme"
+
+    const val TWITTER_CARD_THEME = "TwitterTheme"
 }

@@ -662,7 +662,7 @@ fun ShareScreen(
 
                 ThemeItem(
                     title = "Twitter Card",
-                    drawableRes = R.drawable.sample_artisian_theme,
+                    drawableRes = R.drawable.sample_twitter_theme,
                     quoteStyle = QuoteStyle.TwitterTheme,
                     isSelected = defaultQuoteStyle == QuoteStyle.TwitterTheme,
                     contentScale = ContentScale.Crop,

@@ -40,7 +40,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 
 
 /** YOUTUBE STYLE THEME */
-@Preview
+
 @Composable
 fun YoutubeStyleTheme(
     modifier: Modifier = Modifier,

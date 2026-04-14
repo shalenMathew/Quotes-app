@@ -155,6 +155,8 @@ sealed class QuoteStyle() {
     object ArtisanCardTheme : QuoteStyle()
 
     object BookLookTheme : QuoteStyle()
+
+    object TwitterTheme: QuoteStyle()
 }
 
 @Composable

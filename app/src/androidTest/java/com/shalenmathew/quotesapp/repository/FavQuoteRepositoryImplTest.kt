@@ -9,6 +9,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -39,7 +40,9 @@ class FavQuoteRepositoryImplTest {
 
 
     @Test
-    fun test_searchQuotesWithoutQuery() = runBlocking {
+    fun test_searchQuotesWithoutQuery() = runTest {
+
+
 
         /// CAUTION :  liked should be true for the test to pass or it will fail even when test logic is correct
 
@@ -56,7 +59,7 @@ class FavQuoteRepositoryImplTest {
 
 
     @Test
-    fun test_searchQuotesWithQuery() = runBlocking {
+    fun test_searchQuotesWithQuery() = runTest{
 
         val quote= Quote(0,"life is good","future",true)
         val quote2= Quote(1,"good is life","past",true)
@@ -71,8 +74,7 @@ class FavQuoteRepositoryImplTest {
 
 
     @Test
-    fun test_getAllLikedQuotes_returnsEmpty_whenNoQuotesAreLiked() = runBlocking {
-
+    fun test_getAllLikedQuotes_returnsEmpty_whenNoQuotesAreLiked() = runTest {
         val quote= Quote(0,"life is good","future",false)
         val quote2= Quote(1,"good is life","past",false)
 

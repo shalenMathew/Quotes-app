@@ -144,7 +144,7 @@ class QuoteViewModel @Inject constructor(
             when (val result = quoteUseCase.getUndisplayedQuotes()) {
                 is Resource.Success -> {
                     val quotes = result.data ?: emptyList()
-                    if (quotes.isEmpty()) {
+                    if (quotes.isEmpty()) { // only fetches new Quotes when db is not empty
                         // All displayed — fetch a fresh batch from API
                         getQuote()
                     } else {

@@ -58,7 +58,7 @@ class QuoteViewModel @Inject constructor(
                                   .onFailure { Log.w(TAG, "Widget update failed: ${it.message}") }
                           }
 
-                        } ?: {
+                        } ?: run  {
                             _quoteState.value = _quoteState.value.copy(
                                 dataList = mutableListOf(),
                                 qot = null, isLoading = false, error = ""

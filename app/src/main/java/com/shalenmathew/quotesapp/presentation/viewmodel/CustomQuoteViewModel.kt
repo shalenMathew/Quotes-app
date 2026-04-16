@@ -68,8 +68,8 @@ class CustomQuoteViewModel @Inject constructor(
         }
     }
 
-    fun getQuoteById(quoteId: Int): CustomQuote?{
-        return _state.value.customQuotes.find { it.id==quoteId }
-    }
+//    fun getQuoteById(quoteId: Int): CustomQuote?{
+//        return _state.value.customQuotes.find { it.id==quoteId }
+//    }
 
 }

@@ -37,7 +37,7 @@ class FavQuoteViewModel @Inject constructor(
         _favQuoteState.value = _favQuoteState.value.copy(isLoading = true)
 
         viewModelScope.launch {
-            favQuoteUseCase.getFavQuote(query).collect {
+            favQuoteUseCase.getFavQuote.getAllLikedQuotes(query).collect {
                 _favQuoteState.value = _favQuoteState.value.copy(dataList = it, isLoading = false)
             }
         }
@@ -51,7 +51,7 @@ class FavQuoteViewModel @Inject constructor(
             is FavQuoteEvent.Like -> {
                 viewModelScope.launch {
 
-                    val updatedQuote = favQuoteUseCase.favLikedQuote(quoteEvent.quote)
+                    val updatedQuote = favQuoteUseCase.favLikedQuote.saveLikedQuote(quoteEvent.quote)
                     updateWidgetIfSameOrEmptyUseCase(updatedQuote)
                         .onFailure { Log.w(TAG, "Widget update failed: ${it.message}") }
 

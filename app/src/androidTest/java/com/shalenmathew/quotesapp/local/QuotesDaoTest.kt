@@ -153,6 +153,9 @@ class QuotesDaoTest {
         quoteDao.markAsDisplayed(1)
         assertEquals(0, quoteDao.getUndisplayedCount())
 
+        // Reset the database to test logic in isolation
+        quoteDao.deleteAll()
+
         val likedQuote = Quote(2, "liked", "author", liked = true, displayed = true)
         val unlikedQuote = Quote(3, "unliked", "author", liked = false, displayed = true)
         quoteDao.insertQuoteList(listOf(likedQuote, unlikedQuote))

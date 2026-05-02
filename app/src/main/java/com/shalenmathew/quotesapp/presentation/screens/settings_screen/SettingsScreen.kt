@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,6 +23,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -57,6 +60,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.BuildConfig
 import com.shalenmathew.quotesapp.R
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.components.CardSection
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.components.cardsRow
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
@@ -258,6 +262,55 @@ fun SettingsScreen(
                             },
                             isEnable = true,
                             refreshType = RefreshType.NOTIFICATION
+                        )
+                    }
+                }
+
+                item {
+                    Text(
+                        text = "Miscellaneous", color = Color.White,
+                        modifier = Modifier.padding(15.dp),
+                        fontSize = 20.sp,
+                        fontFamily = GIFont, fontWeight = FontWeight.Medium
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 0.6.dp,
+                                color = Color.Black,
+                                shape = RectangleShape
+                            )
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(customGrey2)
+                            .clickable {
+                                navHost.navigate(Screen.WidgetSource.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_widgets),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .size(30.dp)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            text = "Fetch quotes for widget from",
+                            color = Color.White,
+                            fontFamily = GIFont,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
                 }

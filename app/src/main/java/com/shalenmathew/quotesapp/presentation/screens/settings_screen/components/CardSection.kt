@@ -118,7 +118,7 @@ fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
 val cardsRow = listOf<CardRow>(
     CardRow(icon = R.drawable.ic_troubleshooting, name = "Troubleshoot common issue", url = "troubleshoot"),
     CardRow(icon = R.drawable.ic_more_apps, name = "More Apps u might like", url = "moreApps"),
-        CardRow(icon = R.drawable.ic_site, name = "About Me", url = "https://shalenmathew.github.io/Portfolio-Website/"),
+        CardRow(icon = R.drawable.ic_site, name = "About Me", url = "https://shalenmathew.github.io/portfolio-eebsite/"),
     CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew"),
     CardRow(
         icon = R.drawable.ic_github,

@@ -37,7 +37,7 @@ class QuotesWidgetReceiver : GlanceAppWidgetReceiver() {
 
             WorkManager.getInstance(context).enqueueUniqueWork(
                 WIDGET_UPDATE_WORK_NAME,
-                ExistingWorkPolicy.KEEP,
+                ExistingWorkPolicy.REPLACE,
                 workRequest
             )
         }.onFailure { exception ->

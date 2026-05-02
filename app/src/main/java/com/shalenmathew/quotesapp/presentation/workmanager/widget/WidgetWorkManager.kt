@@ -6,12 +6,14 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetUseCase
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.getWidgetSource
 import com.shalenmathew.quotesapp.util.isWidgetCacheStale
 import com.shalenmathew.quotesapp.util.setLastAlarmTriggerMillis
 import dagger.assisted.Assisted
@@ -26,6 +28,7 @@ class WidgetWorkManager @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val params: WorkerParameters,
     private val quoteUseCase: QuoteUseCase,
+    private val customQuoteUseCases: CustomQuoteUseCases,
     private val scheduleWidgetRefresh: ScheduleWidgetRefresh,
     private val updateWidgetUseCase: UpdateWidgetUseCase
 ) : CoroutineWorker(context, params) {
@@ -87,24 +90,59 @@ class WidgetWorkManager @AssistedInject constructor(
 
     private suspend fun refreshAndUpdateWidget(refreshInterval: Int): Boolean {
         scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(getMillisFromNow(refreshInterval))
-//        val quote = fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
-        val quote = getRandomLikedQuote() ?: fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
+        val widgetSource = context.getWidgetSource().first()
+        Log.d(TAG, "refreshAndUpdateWidget: Current source is $widgetSource")
+
+        val quote = when (widgetSource) {
+            "favorites" -> getRandomLikedQuote() ?: fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
+            "custom" -> getRandomCustomQuote() ?: getRandomLikedQuote() ?: fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
+            "network" -> fetchQuoteFromNetwork() ?: getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+            else -> getRandomLikedQuote() ?: fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
+        }
+
         return pushQuoteToWidget(quote)
     }
 
     private suspend fun updateWidgetFromCache(): Boolean {
         Log.d(TAG, "Cache is fresh, reading from local DB")
-        return pushQuoteToWidget(getRandomLikedQuote() ?: quoteUseCase.getLatestQuote())
+        val widgetSource = context.getWidgetSource().first()
+        val quote = when (widgetSource) {
+            "favorites" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+            "custom" -> getRandomCustomQuote() ?: getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+            "network" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+            else -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+        }
+        return pushQuoteToWidget(quote)
     }
 
-    private suspend fun getRandomLikedQuote():Quote?{
-        return try{
-          quoteUseCase.getLikedQuotes().first().randomOrNull() // returns a random quote from the liked quotes list or null if the list is empty
-        }catch (e: Exception){
+    internal suspend fun getRandomLikedQuote(): Quote? {
+        return try {
+            val quotes = quoteUseCase.getLikedQuotes().first()
+            Log.d(TAG, "getRandomLikedQuote: Found ${quotes.size} liked quotes")
+            quotes.shuffled().firstOrNull()
+        } catch (e: Exception) {
             Log.d(TAG, "Exception in get Random Liked Quote", e)
             null
         }
 
+    }
+
+    internal suspend fun getRandomCustomQuote(): Quote? {
+        return try {
+            val quotes = customQuoteUseCases.getCustomQuotes("").first()
+            Log.d(TAG, "getRandomCustomQuote: Found ${quotes.size} custom quotes")
+            quotes.shuffled().firstOrNull()?.let { customQuote ->
+                Quote(
+                    id = customQuote.id,
+                    quote = customQuote.quote,
+                    author = customQuote.author,
+                    liked = false
+                )
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "Exception in get Random Custom Quote", e)
+            null
+        }
     }
     private suspend fun fetchQuoteFromNetwork(): Quote? {
         return try {

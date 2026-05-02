@@ -27,6 +27,7 @@ val LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY =
     longPreferencesKey("last_alarm_set_for_notification_millis")
 val USER_PREF_WIDGET_REFRESH_INTERVAL_KEY = intPreferencesKey("user_pref_widget_refresh_interval")
 val USER_PREF_NOTIFICATION_INTERVAL_KEY = intPreferencesKey("user_pref_notification_interval")
+val WIDGET_SOURCE_KEY = stringPreferencesKey("widget_source")
 
 suspend fun Context.setFirstLaunchDone() {
     dataStore.edit { prefs ->
@@ -103,6 +104,19 @@ fun Context.getLastNotificationAlarmTriggerMillis(): Flow<Long> {
         preferences[LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY] ?: System.currentTimeMillis()
     }
 }
+
+fun Context.getWidgetSource(): Flow<String> {
+    return dataStore.data.map { preferences ->
+        preferences[WIDGET_SOURCE_KEY] ?: "favorites"
+    }
+}
+
+suspend fun Context.setWidgetSource(source: String) {
+    dataStore.edit { preferences ->
+        preferences[WIDGET_SOURCE_KEY] = source
+    }
+}
+
 suspend fun Context.isWidgetCacheStale(refreshInterval: Int): Boolean {
     val lastTrigger = getLastAlarmTriggerMillis().first()
     val now = System.currentTimeMillis()

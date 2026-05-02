@@ -240,20 +240,21 @@ fun ShareScreen(
             Row(
                 modifier = Modifier
                     .background(Color.Black)
-                    .padding(horizontal = 50.dp, vertical = 18.dp),
-                horizontalArrangement = Arrangement.spacedBy(30.dp)
+                    .padding(horizontal = 20.dp, vertical = 18.dp),
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 // icons visible on Liquid theme
                 AnimatedVisibility(
                     visible = quoteStyleState == QuoteStyle.LiquidGlassTheme
                 ) {
-                    Row {
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         IconButton(
                             onClick = {
                                 editTarget = "start"
                                 showColorPicker = true
 
                             },
+                            modifier = Modifier.size(28.dp),
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = liquidStartColor
                             ),
@@ -265,6 +266,7 @@ fun ShareScreen(
                                 editTarget = "end"
                                 showColorPicker = true
                             },
+                            modifier = Modifier.size(28.dp),
                             colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = liquidEndColor
                             ),
@@ -275,7 +277,7 @@ fun ShareScreen(
 
                 // icons visible on Dice Dreams theme
                 AnimatedVisibility(visible = quoteStyleState == QuoteStyle.DiceDreamsTheme) {
-                    Row {
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         IconButton(
                             onClick = {
                                 editTarget = "diceDreamsColor"
@@ -286,7 +288,7 @@ fun ShareScreen(
                                 containerColor = diceDreamColor
                             ),
                             content = {},
-                            modifier = Modifier.padding(10.dp, 0.dp)
+                            modifier = Modifier.size(28.dp)
                         )
 
                         Image(
@@ -369,6 +371,17 @@ fun ShareScreen(
                         .size(28.dp)
                         .clickable {
                             showSheet = true
+                        })
+
+                Image(
+                    painter = painterResource(R.drawable.ic_copy), contentDescription = "Copy Quote",
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable {
+                            quote?.let {
+                                copyToClipboard(context, it.quote)
+                            }
                         })
 
                 Image(

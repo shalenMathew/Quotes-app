@@ -249,3 +249,10 @@ fun Color.darken(factor: Float = 0.7f): Color {
     hsv[2] = (hsv[2] * factor).coerceIn(0f, 1f)  // Decrease brightness
     return Color(android.graphics.Color.HSVToColor(hsv))
 }
+
+fun copyToClipboard(context: Context, text: String) {
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+    val clip = android.content.ClipData.newPlainText("Quote", text)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(context, "quotes have being copied", Toast.LENGTH_SHORT).show()
+}

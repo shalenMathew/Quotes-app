@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/shalenMathew/Quotes-app,94,67
+/shalenMathew/Quotes-app/releases,13,13
+/shalenMathew/Quotes-app/issues,7,5
+/shalenMathew/Quotes-app/releases/tag/v4.3,6,4
+/shalenMathew/Quotes-app/tree/master/app,4,4
+/shalenMathew/Quotes-app/commits/master,3,2
+/shalenMathew/Quotes-app/tree/master/gradle,3,2
+/shalenMathew/Quotes-app/blob/master/app/src/main/java/com/shalenmathew/quotesapp/domain/model/CustomQuote.kt,2,2
+/shalenMathew/Quotes-app/blob/master/app/src/main/java/com/shalenmathew/quotesapp/domain/model/FavQuote.kt,2,2
+/shalenMathew/Quotes-app/blob/master/app/src/main/java/com/shalenmathew/quotesapp/domain/repository/CustomQuoteRepository.kt,2,2

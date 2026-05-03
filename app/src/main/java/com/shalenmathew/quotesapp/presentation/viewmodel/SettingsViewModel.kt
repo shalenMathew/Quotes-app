@@ -16,8 +16,11 @@ class SettingsViewModel @Inject constructor(
         scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(triggerAtMillis)
     }
 
-    fun scheduleNotificationWorkAlarm(triggerAtMillis: Long) {
-        scheduleNotificationRefresh.scheduleNotificationWorkAlarm(triggerAtMillis)
+    fun applyFrequencyMode(intervalHours: Int) {
+        scheduleNotificationRefresh.applyFrequencyMode(intervalHours)
     }
 
+    fun applyDailyMode(hour: Int, minute: Int) {
+        scheduleNotificationRefresh.applyDailyMode(hour, minute)
+    }
 }

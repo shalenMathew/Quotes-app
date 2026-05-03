@@ -206,6 +206,7 @@ sealed class Screen(
     object Troubleshoot : Screen("Troubleshoot", false)
     object AddCustomQuote : Screen("AddCustomQuote", false)
     object WidgetSource : Screen("WidgetSource", false)
+    object NotificationTime : Screen("NotificationTime", false)
     companion object {
         val values: List<Screen> = listOf(Home, Fav, Splash, Share, Settings, AboutLibraries)
     }

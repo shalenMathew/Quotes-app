@@ -28,6 +28,10 @@ val LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY =
 val USER_PREF_WIDGET_REFRESH_INTERVAL_KEY = intPreferencesKey("user_pref_widget_refresh_interval")
 val USER_PREF_NOTIFICATION_INTERVAL_KEY = intPreferencesKey("user_pref_notification_interval")
 val WIDGET_SOURCE_KEY = stringPreferencesKey("widget_source")
+val USER_PREF_NOTIFICATION_MODE_KEY = stringPreferencesKey("user_pref_notification_mode")
+val USER_PREF_NOTIFICATION_DAILY_HOUR_KEY = intPreferencesKey("user_pref_notification_daily_hour")
+val USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY =
+    intPreferencesKey("user_pref_notification_daily_minute")
 
 suspend fun Context.setFirstLaunchDone() {
     dataStore.edit { prefs ->
@@ -121,4 +125,31 @@ suspend fun Context.isWidgetCacheStale(refreshInterval: Int): Boolean {
     val lastTrigger = getLastAlarmTriggerMillis().first()
     val now = System.currentTimeMillis()
     return lastTrigger == 0L || (now - lastTrigger >= refreshInterval * 60_000L)
+}
+
+fun Context.getNotificationMode(): Flow<NotificationMode> {
+    return dataStore.data.map { preferences ->
+        NotificationMode.fromName(preferences[USER_PREF_NOTIFICATION_MODE_KEY])
+    }
+}
+
+suspend fun Context.setNotificationMode(mode: NotificationMode) {
+    dataStore.edit { preferences ->
+        preferences[USER_PREF_NOTIFICATION_MODE_KEY] = mode.name
+    }
+}
+
+fun Context.getNotificationDailyTime(): Flow<Pair<Int, Int>?> {
+    return dataStore.data.map { preferences ->
+        val hour = preferences[USER_PREF_NOTIFICATION_DAILY_HOUR_KEY]
+        val minute = preferences[USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY]
+        if (hour != null && minute != null) hour to minute else null
+    }
+}
+
+suspend fun Context.setNotificationDailyTime(hour: Int, minute: Int) {
+    dataStore.edit { preferences ->
+        preferences[USER_PREF_NOTIFICATION_DAILY_HOUR_KEY] = hour
+        preferences[USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY] = minute
+    }
 }

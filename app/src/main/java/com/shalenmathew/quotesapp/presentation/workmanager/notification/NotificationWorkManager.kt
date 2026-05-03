@@ -65,7 +65,7 @@ class NotificationWorkManager @AssistedInject constructor(
             Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "inside fetchQuotes")
 
             try {
-                if (withTimeoutOrNull(2000) { scheduleNotification.rescheduleNext() } == null) {
+                if (withTimeoutOrNull(5000) { scheduleNotification.rescheduleNext() } == null) {
                     Log.w(
                         Constants.WORK_MANAGER_STATUS_NOTIFY,
                         "rescheduleNext timed out; using default-interval fallback"

@@ -44,22 +44,20 @@ class ScheduleNotification @Inject constructor(
     private val appScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     fun applyFrequencyMode(intervalHours: Int) {
+        scheduleNotificationWorkAlarm(getMillisFromNow(intervalHours))
         appScope.launch {
             context.setNotificationInterval(intervalHours)
             context.setNotificationMode(NotificationMode.FREQUENCY)
-
             context.setLastNotificationAlarmTriggerMillis(System.currentTimeMillis())
-            scheduleNotificationWorkAlarm(getMillisFromNow(intervalHours))
         }
     }
 
     fun applyDailyMode(hour: Int, minute: Int) {
+        scheduleNotificationWorkAlarm(nextDailyTriggerMillis(hour, minute))
         appScope.launch {
             context.setNotificationDailyTime(hour, minute)
             context.setNotificationMode(NotificationMode.DAILY_TIME)
-
             context.setLastNotificationAlarmTriggerMillis(System.currentTimeMillis())
-            scheduleNotificationWorkAlarm(nextDailyTriggerMillis(hour, minute))
         }
     }
 

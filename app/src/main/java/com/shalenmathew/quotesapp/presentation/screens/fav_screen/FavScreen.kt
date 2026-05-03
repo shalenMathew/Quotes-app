@@ -375,12 +375,14 @@ fun FavScreen(
                         } else {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
+                                contentAlignment = Alignment.Center,
+
                             ) {
                                 Text(
-                                    "Looks empty...",
+                                    "Looks empty... \n\nImport data if you have one from settings!",
                                     color = White,
                                     fontFamily = GIFont,
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         }
@@ -444,7 +446,7 @@ fun FavScreen(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        "No custom quotes yet.\nTap + to create one!",
+                                        "No custom quotes yet.\nTap + to create one!\n\n Import data if you have one from settings! ",
                                         color = White,
                                         fontFamily = GIFont,
                                         textAlign = TextAlign.Center
@@ -494,33 +496,6 @@ fun FavScreen(
 
             }
 
-//            if(state.dataList.isNotEmpty()){
-//
-//                LazyColumn(modifier=Modifier.fillMaxSize()) {
-//                    itemsIndexed(state.dataList) {  index, quoteItem ->
-//                        FavQuoteItem(quoteItem, quoteViewModel,navHost, modifier =  Modifier
-//                            .zIndex((state.dataList.size- index).toFloat())
-//                            .graphicsLayer {
-//                                rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
-//                                translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
-//                                    .roundToPx()
-//                                    .toFloat()
-//                            })
-//
-//                    }
-//                }
-//
-//
-//            }
-//            else{
-//
-//                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-//                    Text("Looks empty...",
-//                        color = White,
-//                        fontFamily = GIFont,
-//                    )
-//                }
-//            }
 
 
         }

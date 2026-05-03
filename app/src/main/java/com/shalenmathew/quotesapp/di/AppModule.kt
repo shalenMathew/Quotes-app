@@ -35,6 +35,7 @@ import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLatest
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuote
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.SaveLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.MarkAsDisplayed
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetUndisplayedQuotes
@@ -63,6 +64,7 @@ object AppModule {
     fun providesQuoteUsecase(
             getQuote: GetQuote,
             likedQuote: LikedQuote,
+            saveLikedQuote: SaveLikedQuote,
             getLikedQuotes: GetLikedQuotes,
             getLatestQuote: GetLatestQuote,
             markAsDisplayed: MarkAsDisplayed,
@@ -71,6 +73,7 @@ object AppModule {
         return QuoteUseCase(
             getQuote = getQuote,
             likedQuote = likedQuote,
+            saveLikedQuote = saveLikedQuote,
             getLikedQuotes = getLikedQuotes,
             getLatestQuote = getLatestQuote,
             markAsDisplayed = markAsDisplayed,
@@ -206,6 +209,12 @@ object AppModule {
     @Provides
     fun providesSaveCustomQuote(repository: CustomQuoteRepository): SaveCustomQuote {
         return SaveCustomQuote(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun providesSaveLikedQuote(repository: QuoteRepository): SaveLikedQuote {
+        return SaveLikedQuote(repository)
     }
 
     @Singleton

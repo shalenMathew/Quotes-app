@@ -7,6 +7,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.GetCustomQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQuotes
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.SaveLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetUseCase
 import kotlinx.coroutines.flow.flowOf
@@ -37,6 +38,9 @@ class WidgetWorkManagerTest {
     private lateinit var getLikedQuotes: GetLikedQuotes
 
     @Mock
+    private lateinit var saveLikedQuote: SaveLikedQuote
+
+    @Mock
     private lateinit var getCustomQuotes: GetCustomQuotes
 
     @Mock
@@ -55,6 +59,7 @@ class WidgetWorkManagerTest {
         quoteUseCase = QuoteUseCase(
             getQuote = mock(),
             likedQuote = mock(),
+            saveLikedQuote = saveLikedQuote,
             getLikedQuotes = getLikedQuotes,
             getLatestQuote = mock(),
             markAsDisplayed = mock(),

@@ -7,6 +7,7 @@ import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQ
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetUndisplayedQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuote
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.SaveLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.MarkAsDisplayed
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetIfSameOrEmptyUseCase
@@ -40,6 +41,7 @@ class QuoteViewModelTest {
     private lateinit var getQuote: GetQuote
     @Mock private lateinit var getLikedQuotes: GetLikedQuotes
     @Mock private lateinit var likedQuote: LikedQuote
+    @Mock private lateinit var saveLikedQuote: SaveLikedQuote
     @Mock private lateinit var getLatestQuote: GetLatestQuote
     @Mock private lateinit var markAsDisplayed: MarkAsDisplayed
     @Mock private lateinit var getUndisplayedQuotes: GetUndisplayedQuotes
@@ -55,7 +57,7 @@ class QuoteViewModelTest {
     fun setUp() {
 
         quoteUseCase = QuoteUseCase(
-            getQuote, likedQuote, getLikedQuotes, getLatestQuote, markAsDisplayed, getUndisplayedQuotes
+            getQuote, likedQuote, saveLikedQuote, getLikedQuotes, getLatestQuote, markAsDisplayed, getUndisplayedQuotes
         )
 
 

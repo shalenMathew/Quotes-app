@@ -16,6 +16,7 @@ import com.shalenmathew.quotesapp.presentation.screens.settings_screen.more_apps
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.SettingsScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.troubleshoot.Troubleshoot
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.widget_source.WidgetSourceScreen
+import com.shalenmathew.quotesapp.presentation.screens.settings_screen.backup.BackupScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.ShareScreen
 
 @Composable
@@ -75,6 +76,10 @@ fun AppNavigation(
 
         composable(Screen.WidgetSource.route) {
             WidgetSourceScreen(paddingValues = paddingValues)
+        }
+
+        composable(Screen.Backup.route) {
+            BackupScreen(paddingValues = paddingValues)
         }
 
 

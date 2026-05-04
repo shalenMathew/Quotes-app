@@ -105,7 +105,7 @@ fun NotificationTimeScreen(
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Medium,
                 color = Color.White,
-                fontSize = 35.sp,
+                fontSize = 30.sp,
                 modifier = Modifier.padding(start = 8.dp)
             )
         }

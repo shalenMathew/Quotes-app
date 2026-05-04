@@ -7,13 +7,15 @@ import com.shalenmathew.quotesapp.domain.model.CustomQuote
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.CustomQuoteEvent
 import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.CustomQuoteState
+import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CustomQuoteViewModel @Inject constructor(
-    private val customQuoteUseCases: CustomQuoteUseCases
+    private val customQuoteUseCases: CustomQuoteUseCases,
+    private val scheduleWidgetRefresh: ScheduleWidgetRefresh
 ) : ViewModel() {
 
     private val _state = mutableStateOf(CustomQuoteState())
@@ -45,12 +47,14 @@ class CustomQuoteViewModel @Inject constructor(
                         author = event.author.ifBlank { "Anonymous" }
                     )
                     customQuoteUseCases.saveCustomQuote(customQuote)
+                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
                 }
             }
 
             is CustomQuoteEvent.DeleteQuote -> {
                 viewModelScope.launch {
                     customQuoteUseCases.deleteCustomQuote(event.quote)
+                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
                 }
             }
 
@@ -63,6 +67,7 @@ class CustomQuoteViewModel @Inject constructor(
                 viewModelScope.launch {
                     customQuoteUseCases.updateCustomQuote(event.quote)
                     getCustomQuotes()
+                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
                 }
             }
         }

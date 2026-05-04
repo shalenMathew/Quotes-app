@@ -143,14 +143,6 @@ fun SettingsScreen(
                     .fillMaxSize()
             ) {
 
-                item {
-                    Text(
-                        text = "Socials", color = Color.White,
-                        modifier = Modifier.padding(start = 12.dp, bottom = 12.dp),
-                        fontSize = 20.sp,
-                        fontFamily = GIFont, fontWeight = FontWeight.Medium
-                    )
-                }
 
                 items(cardsRow.size) { cardRowIndex ->
                     CardSection(index = cardRowIndex, navHost = navHost)

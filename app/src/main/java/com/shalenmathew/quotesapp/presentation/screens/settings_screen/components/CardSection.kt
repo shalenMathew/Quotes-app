@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,12 +32,16 @@ import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 
 @Composable
-fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
+fun CardSection(
+    index: Int,
+    navHost: androidx.navigation.NavHostController,
+    cardsList: List<CardRow> = cardsRow
+) {
 
     val context = LocalContext.current
-    val card = cardsRow[index]
+    val card = cardsList[index]
     val isFirst = index == 0
-    val isLast = index == cardsRow.size - 1
+    val isLast = index == cardsList.size - 1
 
     val shape = when {
         isFirst -> RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
@@ -71,6 +74,14 @@ fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
                         navHost.navigate(Screen.MoreApps.route)
                     }
 
+                    "aboutMe" -> {
+                        navHost.navigate(Screen.AboutMe.route)
+                    }
+
+                    "donation" -> {
+                        navHost.navigate(Screen.Donation.route)
+                    }
+
                     else -> {
                         // Open external URL
                         val intent = Intent(Intent.ACTION_VIEW, card.url.toUri())
@@ -86,7 +97,7 @@ fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(card.icon),
                 contentDescription = null,
@@ -116,15 +127,33 @@ fun CardSection(index: Int, navHost: androidx.navigation.NavHostController) {
 
 
 val cardsRow = listOf<CardRow>(
-    CardRow(icon = R.drawable.ic_troubleshooting, name = "Troubleshoot common issue", url = "troubleshoot"),
+    CardRow(
+        icon = R.drawable.ic_troubleshooting,
+        name = "Troubleshoot common issue",
+        url = "troubleshoot"
+    ),
     CardRow(icon = R.drawable.ic_more_apps, name = "More Apps u might like", url = "moreApps"),
-        CardRow(icon = R.drawable.ic_site, name = "About Me", url = "https://shalenmathew.github.io/portfolio-website/"),
-    CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew"),
+    CardRow(icon = R.drawable.ic_about, name = "About me", url = "aboutMe"),
+    CardRow(
+        icon = R.drawable.ic_coffee,
+        name = "Your donations helps to keep the app free for other users",
+        url = "donation"
+    ),
     CardRow(
         icon = R.drawable.ic_github,
-        name = "Github",
+        name = "Source Code",
         url = "https://github.com/shalenMathew/Quotes-app"
     ),
+    CardRow(icon = R.drawable.ic_about, name = "About Libraries", url = "navigate"),
+)
+
+val aboutMeCardsRow = listOf<CardRow>(
+    CardRow(
+        icon = R.drawable.ic_site,
+        name = "Portfolio",
+        url = "https://shalenmathew.github.io/portfolio-website/"
+    ),
+    CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew"),
     CardRow(icon = R.drawable.ic_discord, name = "Discord", url = "https://discord.gg/QpDJh3rT4q"),
     CardRow(
         icon = R.drawable.ic_linkedin,
@@ -132,6 +161,9 @@ val cardsRow = listOf<CardRow>(
         url = "https://www.linkedin.com/in/shalen-mathew-3b566921b"
     ),
     CardRow(icon = R.drawable.ic_link, name = "LinkTree", url = "https://linktr.ee/shalenmathew"),
+)
+
+val donationCardsRow = listOf<CardRow>(
     CardRow(
         icon = R.drawable.ic_coffee,
         name = "buy me a coffee",
@@ -142,7 +174,6 @@ val cardsRow = listOf<CardRow>(
         name = "ko-fi",
         url = "https://ko-fi.com/shalenmathew"
     ),
-    CardRow(icon = R.drawable.ic_about, name = "About Libraries", url = "navigate"),
 )
 
 data class CardRow(val icon: Int, val name: String, val url: String)

@@ -27,7 +27,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
+import com.shalenmathew.quotesapp.presentation.viewmodel.SettingsViewModel
 import com.shalenmathew.quotesapp.util.getWidgetSource
 import com.shalenmathew.quotesapp.util.setWidgetSource
 import kotlinx.coroutines.flow.first
@@ -35,7 +37,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun WidgetSourceScreen(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -84,6 +87,7 @@ fun WidgetSourceScreen(
                                 selectedSource = option.value
                                 scope.launch {
                                     context.setWidgetSource(option.value)
+                                    settingsViewModel.scheduleWidgetRefreshWorkManager()
                                 }
                             },
                             role = Role.RadioButton

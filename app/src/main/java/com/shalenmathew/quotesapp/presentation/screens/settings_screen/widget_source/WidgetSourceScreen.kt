@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,7 +71,7 @@ fun WidgetSourceScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
-            text = "Choose where the widget fetches quotes from.",
+            text = "Choose which quotes to be displayed on widget.",
             color = Color.Gray,
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 24.dp)
@@ -119,6 +120,14 @@ fun WidgetSourceScreen(
                 }
             }
         }
+
+        Text(
+            text = "(The widget might not refresh if this app is battery optimized. Please make sure you're not keeping the app in battery saver mode for all features to work properly.)",
+            color = Color.Gray,
+            fontSize = 14.sp,
+            fontStyle = FontStyle.Italic,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
     }
 }
 

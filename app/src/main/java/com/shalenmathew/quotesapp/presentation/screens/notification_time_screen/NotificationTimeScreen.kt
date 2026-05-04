@@ -30,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -114,6 +115,7 @@ fun NotificationTimeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(78.dp)
+                .alpha(if (frequencyActive) 1f else 0.5f)
                 .clip(RoundedCornerShape(12.dp))
                 .background(customGrey2)
                 .padding(horizontal = 16.dp),
@@ -172,6 +174,7 @@ fun NotificationTimeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(78.dp)
+                .alpha(if (dailyActive) 1f else 0.5f)
                 .clip(RoundedCornerShape(12.dp))
                 .background(customGrey2)
                 .clickable {

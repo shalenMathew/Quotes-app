@@ -133,7 +133,7 @@ class WidgetWorkManager @AssistedInject constructor(
             Log.d(TAG, "getRandomCustomQuote: Found ${quotes.size} custom quotes")
             quotes.shuffled().firstOrNull()?.let { customQuote ->
                 Quote(
-                    id = customQuote.id,
+                    id = customQuote.id + 100000, // Offset to avoid ID collision with regular quotes
                     quote = customQuote.quote,
                     author = customQuote.author,
                     liked = false

@@ -6,6 +6,7 @@ import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.DeleteCu
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.GetCustomQuotes
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.SaveCustomQuote
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.UpdateCustomQuote
+import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.CustomQuoteEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -37,6 +38,8 @@ class CustomQuoteViewModelTest {
     private lateinit var deleteCustomQuote: DeleteCustomQuote
     @Mock
     private lateinit var updateCustomQuote: UpdateCustomQuote
+    @Mock
+    private lateinit var scheduleWidgetRefresh: ScheduleWidgetRefresh
 
     private lateinit var useCases: CustomQuoteUseCases
     private lateinit var viewModel: CustomQuoteViewModel
@@ -52,7 +55,7 @@ class CustomQuoteViewModelTest {
     @Test
     fun onEvent_SaveQuote_With_Blank_Author_Should_Save_As_Anonymous() = runTest {
         whenever(getCustomQuotes.invoke(any())).thenReturn(flowOf(emptyList()))
-        viewModel = CustomQuoteViewModel(useCases)
+        viewModel = CustomQuoteViewModel(useCases, scheduleWidgetRefresh)
         advanceUntilIdle()
 
         // Act
@@ -69,7 +72,7 @@ class CustomQuoteViewModelTest {
     @Test
     fun onEvent_OnSearchQueryChanged_Should_Update_Query_And_Refresh() = runTest {
         whenever(getCustomQuotes.invoke(any())).thenReturn(flowOf(emptyList()))
-        viewModel = CustomQuoteViewModel(useCases)
+        viewModel = CustomQuoteViewModel(useCases, scheduleWidgetRefresh)
         advanceUntilIdle()
 
         // Act
@@ -85,7 +88,7 @@ class CustomQuoteViewModelTest {
     @Test
     fun onEvent_DeleteQuote_Should_Call_UseCase() = runTest {
         whenever(getCustomQuotes.invoke(any())).thenReturn(flowOf(emptyList()))
-        viewModel = CustomQuoteViewModel(useCases)
+        viewModel = CustomQuoteViewModel(useCases, scheduleWidgetRefresh)
         advanceUntilIdle()
 
         val testQuote = CustomQuote(id = 1, quote = "Delete me", author = "tester")
@@ -101,7 +104,7 @@ class CustomQuoteViewModelTest {
     @Test
     fun onEvent_UpdateQuote_Should_Call_UseCase_And_Refresh() = runTest {
         whenever(getCustomQuotes.invoke(any())).thenReturn(flowOf(emptyList()))
-        viewModel = CustomQuoteViewModel(useCases)
+        viewModel = CustomQuoteViewModel(useCases, scheduleWidgetRefresh)
         advanceUntilIdle()
 
         val testQuote = CustomQuote(id = 1, quote = "Update me", author = "tester")

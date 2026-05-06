@@ -25,6 +25,13 @@
 ### This project will be best for you if ur someone who are looking to learn more about android development or
 ### Who are trying to find simpler projects to begin their contribution journey
 
+# Users Review 💖
+
+[Users just love the app](https://www.reddit.com/r/fossdroid/comments/1szrsdt/quotes_app_a_open_source_tinder_for_positive/)
+
+<img width="1004" height="714" alt="Screenshot 2026-05-04 154650" src="https://github.com/user-attachments/assets/c56fac83-812d-4ca0-ad34-5266f28caec3" />
+
+
 ## Trailer 📽️
 
 <img src="https://github.com/user-attachments/assets/d566613b-4bb8-43be-a4e6-f21ce8487b57" alt="Trailer GIF" width="700" >

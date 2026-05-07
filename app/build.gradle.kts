@@ -11,14 +11,14 @@ plugins {
 
 android {
     namespace = "com.shalenmathew.quotesapp"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.shalenmathew.quotesapp"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 39
-        versionName = "4.4"
+        targetSdk = 37
+        versionCode = 40
+        versionName = "5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

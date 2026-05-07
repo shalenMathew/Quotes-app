@@ -12,7 +12,6 @@ import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.createOrUpdateNotification
 import com.shalenmathew.quotesapp.util.createNotificationChannel
 import com.shalenmathew.quotesapp.util.getMillisFromNow
-import com.shalenmathew.quotesapp.util.getNotificationInterval
 import com.shalenmathew.quotesapp.util.getSavedNotificationQuote
 import com.shalenmathew.quotesapp.util.saveNotificationQuote
 import com.shalenmathew.quotesapp.util.setLastNotificationAlarmTriggerMillis
@@ -65,15 +64,28 @@ class NotificationWorkManager @AssistedInject constructor(
 
             Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "inside fetchQuotes")
 
+            try {
+                if (withTimeoutOrNull(5000) { scheduleNotification.rescheduleNext() } == null) {
+                    Log.w(
+                        Constants.WORK_MANAGER_STATUS_NOTIFY,
+                        "rescheduleNext timed out; using default-interval fallback"
+                    )
+                    scheduleNotification.scheduleNotificationWorkAlarm(
+                        getMillisFromNow(DEFAULT_REFRESH_INTERVAL)
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e(
+                    Constants.WORK_MANAGER_STATUS_NOTIFY,
+                    "rescheduleNext failed; using default-interval fallback",
+                    e
+                )
+                scheduleNotification.scheduleNotificationWorkAlarm(
+                    getMillisFromNow(DEFAULT_REFRESH_INTERVAL)
+                )
+            }
             val response =
                 withTimeoutOrNull(5000) {
-                    val refreshInterval =
-                        context.getNotificationInterval().first() ?: DEFAULT_REFRESH_INTERVAL
-                    scheduleNotification.scheduleNotificationWorkAlarm(
-                        getMillisFromNow(
-                            refreshInterval
-                        )
-                    )
                     quoteUseCase.getQuote()
                         .filter { it is Resource.Success || it is Resource.Error }
                         .first()

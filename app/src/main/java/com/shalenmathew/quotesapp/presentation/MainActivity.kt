@@ -27,11 +27,13 @@ import com.shalenmathew.quotesapp.presentation.workmanager.notification.Schedule
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.NotificationMode
 import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getNotificationInterval
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
 import com.shalenmathew.quotesapp.util.setNotificationInterval
+import com.shalenmathew.quotesapp.util.setNotificationMode
 import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -79,6 +81,7 @@ class MainActivity : ComponentActivity() {
                     val notificationRefreshInterval = context.getNotificationInterval().first()
                     if (notificationRefreshInterval == null) {
                         context.setNotificationInterval(DEFAULT_REFRESH_INTERVAL)
+                        context.setNotificationMode(NotificationMode.FREQUENCY)
                         Handler(Looper.getMainLooper()).postDelayed({
                             scheduleNotification.scheduleNotificationWorkAlarm(
                                 getMillisFromNow(

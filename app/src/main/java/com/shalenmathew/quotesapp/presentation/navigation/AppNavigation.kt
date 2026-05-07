@@ -12,6 +12,7 @@ import com.shalenmathew.quotesapp.presentation.screens.custom_quote.AddCustomQuo
 import com.shalenmathew.quotesapp.presentation.screens.fav_screen.FavScreen
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.HomeScreen
 import com.shalenmathew.quotesapp.presentation.screens.intro_screen.SplashScreen
+import com.shalenmathew.quotesapp.presentation.screens.notification_time_screen.NotificationTimeScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.more_apps.MoreApps
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.SettingsScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.troubleshoot.Troubleshoot
@@ -74,6 +75,12 @@ fun AppNavigation(
         }
         composable(Screen.Troubleshoot.route){
             Troubleshoot(paddingValues)
+        }
+        composable(Screen.NotificationTime.route) {
+            NotificationTimeScreen(
+                paddingValues = paddingValues,
+                navHost = navHost
+            )
         }
 
         composable(Screen.WidgetSource.route) {

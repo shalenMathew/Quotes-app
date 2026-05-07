@@ -11,6 +11,8 @@ object Constants {
     const val WORK_MANAGER_STATUS_NOTIFY = "WorkManagerStatusNotify"
     const val SHARED_PREFERENCES_NAME = "quotes_app_preferences"
     const val DEFAULT_REFRESH_INTERVAL = 24 // in hours
+    const val DEFAULT_DAILY_NOTIFICATION_HOUR = 8
+    const val DEFAULT_DAILY_NOTIFICATION_MINUTE = 0
     const val REQUEST_CODE_ALARM_WIDGET_REFRESH = 103
     const val REQUEST_CODE_NOTIFICATION_REFRESH = 104
     const val QUOTES_WIDGET_UPDATE_NAME = "quotes_widget_update"

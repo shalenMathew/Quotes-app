@@ -207,6 +207,7 @@ sealed class Screen(
     object AddCustomQuote : Screen("AddCustomQuote", false)
     object WidgetSource : Screen("WidgetSource", false)
     object Backup : Screen("Backup", false)
+    object NotificationTime : Screen("NotificationTime", false)
     object AboutMe : Screen("AboutMe", false)
     object Donation : Screen("Donation", false)
     companion object {

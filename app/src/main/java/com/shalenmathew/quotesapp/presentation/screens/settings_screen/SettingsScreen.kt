@@ -3,12 +3,12 @@ package com.shalenmathew.quotesapp.presentation.screens.settings_screen
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MenuAnchorType
@@ -72,12 +73,10 @@ import com.shalenmathew.quotesapp.presentation.theme.customGrey4
 import com.shalenmathew.quotesapp.presentation.viewmodel.SettingsViewModel
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetReceiver
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
-import com.shalenmathew.quotesapp.util.convertDaysToHrs
 import com.shalenmathew.quotesapp.util.convertHrsToDays
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getNotificationInterval
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
-import com.shalenmathew.quotesapp.util.setNotificationInterval
 import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -215,46 +214,33 @@ fun SettingsScreen(
                             )
                             .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
                             .background(customGrey2)
-                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                            .clickable {
+                                navHost.navigate(Screen.NotificationTime.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 18.dp),
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_notifications),
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(R.drawable.ic_notifications),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(end = 12.dp)
+                                    .size(30.dp)
+                            )
+                            Text(
+                                text = "Schedule When to get notified",
+                                color = Color.White,
+                                fontFamily = GIFont,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                             contentDescription = null,
-                            modifier = Modifier
-                                .padding(end = 12.dp)
-                                .size(30.dp)
-                        )
-                        Text(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp),
-                            text = "Notify me every",
-                            color = Color.White,
-                            fontFamily = GIFont,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 16.sp
-                        )
-                        TimeDropdownMenu(
-                            modifier = Modifier.widthIn(max = 120.dp),
-                            onTimeSelected = {
-                                val interval = if (it.contains("days")) {
-                                    convertDaysToHrs(it.removeSuffix("days").trim().toInt())
-                                } else {
-                                    it.removeSuffix("hr").trim().toInt()
-                                }
-                                Log.d("SettingsScreen", "onTimeSelected: $interval")
-                                coroutineScope.launch {
-                                    context.setNotificationInterval(interval = interval)
-                                }
-                                settingsViewModel.scheduleNotificationWorkAlarm(
-                                    getMillisFromNow(
-                                        interval
-                                    )
-                                )
-                            },
-                            isEnable = true,
-                            refreshType = RefreshType.NOTIFICATION
+                            tint = Color.White
                         )
                     }
                 }

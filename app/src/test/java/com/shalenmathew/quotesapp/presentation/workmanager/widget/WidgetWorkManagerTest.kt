@@ -117,7 +117,7 @@ class WidgetWorkManagerTest {
 
         assertNotNull(result)
         result?.let {
-            assertEquals(1, it.id)
+            assertEquals(100001, it.id)
             assertEquals("CQ1", it.quote)
             assertEquals("CA1", it.author)
             assertEquals(false, it.liked)

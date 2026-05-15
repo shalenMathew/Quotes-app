@@ -20,5 +20,7 @@ interface QuoteRepository {
     suspend fun markAsDisplayed(quoteId: Int)
     suspend fun getUndisplayedCount(): Int
     suspend fun getUndisplayedQuotes(): Resource<List<Quote>>
+    
+    suspend fun getRandomQuoteFromNetwork(): Resource<Quote>
 
 }

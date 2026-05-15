@@ -8,4 +8,5 @@ data class QuoteUseCase(
     val getLatestQuote: GetLatestQuote,
     val markAsDisplayed: MarkAsDisplayed,
     val getUndisplayedQuotes: GetUndisplayedQuotes,
+    val getRandomQuoteFromNetwork: GetRandomQuoteFromNetwork
 )

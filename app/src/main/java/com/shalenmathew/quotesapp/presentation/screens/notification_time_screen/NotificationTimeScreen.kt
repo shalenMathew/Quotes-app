@@ -18,16 +18,25 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,8 +64,12 @@ import com.shalenmathew.quotesapp.util.convertDaysToHrs
 import com.shalenmathew.quotesapp.util.formatDailyTime
 import com.shalenmathew.quotesapp.util.getNotificationDailyTime
 import com.shalenmathew.quotesapp.util.getNotificationMode
+import com.shalenmathew.quotesapp.util.getNotificationSource
+import com.shalenmathew.quotesapp.util.setNotificationSource
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationTimeScreen(
     paddingValues: PaddingValues,
@@ -63,14 +77,20 @@ fun NotificationTimeScreen(
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     var mode by rememberSaveable { mutableStateOf(NotificationMode.FREQUENCY) }
     var dailyHour by rememberSaveable { mutableIntStateOf(DEFAULT_DAILY_NOTIFICATION_HOUR) }
     var dailyMinute by rememberSaveable { mutableIntStateOf(DEFAULT_DAILY_NOTIFICATION_MINUTE) }
     var hasDailyTime by rememberSaveable { mutableStateOf(false) }
+    
+    var showSourceBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var selectedSource by remember { mutableStateOf("network") }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(Unit) {
         mode = context.getNotificationMode().first()
+        selectedSource = context.getNotificationSource().first()
         context.getNotificationDailyTime().first()?.let { (h, m) ->
             dailyHour = h
             dailyMinute = m
@@ -215,6 +235,129 @@ fun NotificationTimeScreen(
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp
             )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "source",
+                color = Color.White,
+                fontFamily = GIFont,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(78.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(customGrey2)
+                .clickable {
+                    showSourceBottomSheet = true
+                }
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_settings),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(30.dp)
+            )
+            Text(
+                modifier = Modifier.weight(1f),
+                text = "Notification Source: ${
+                    when (selectedSource) {
+                        "favorites" -> "Fav Quotes"
+                        "custom" -> "Custom Quotes"
+                        else -> "Network"
+                    }
+                }",
+                color = Color.White,
+                fontFamily = GIFont,
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp
+            )
+        }
+    }
+
+    if (showSourceBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showSourceBottomSheet = false },
+            sheetState = sheetState,
+            containerColor = customGrey2
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Notification Source",
+                    fontFamily = GIFont,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+
+                val options = listOf(
+                    Triple("Fav Quotes", "favorites", "Fetched from your favorites"),
+                    Triple("Custom Quotes", "custom", "Fetched from your own creations"),
+                    Triple("Network", "network", "Fetched fresh from the internet")
+                )
+
+                Column(Modifier.selectableGroup()) {
+                    options.forEach { option ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = (selectedSource == option.second),
+                                    onClick = {
+                                        selectedSource = option.second
+                                        scope.launch {
+                                            context.setNotificationSource(option.second)
+                                            showSourceBottomSheet = false
+                                        }
+                                    },
+                                    role = Role.RadioButton
+                                )
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (selectedSource == option.second),
+                                onClick = null,
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Color.White,
+                                    unselectedColor = Color.Gray
+                                )
+                            )
+                            Column(modifier = Modifier.padding(start = 16.dp)) {
+                                Text(
+                                    text = option.first,
+                                    color = Color.White,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Text(
+                                    text = option.third,
+                                    color = Color.Gray,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

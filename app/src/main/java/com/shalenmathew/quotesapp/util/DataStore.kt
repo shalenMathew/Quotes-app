@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.shalenmathew.quotesapp.domain.model.Quote
@@ -32,6 +33,7 @@ val USER_PREF_NOTIFICATION_MODE_KEY = stringPreferencesKey("user_pref_notificati
 val USER_PREF_NOTIFICATION_DAILY_HOUR_KEY = intPreferencesKey("user_pref_notification_daily_hour")
 val USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY =
     intPreferencesKey("user_pref_notification_daily_minute")
+val NOTIFICATION_SOURCES_KEY = stringSetPreferencesKey("notification_sources")
 
 suspend fun Context.setFirstLaunchDone() {
     dataStore.edit { prefs ->
@@ -151,5 +153,17 @@ suspend fun Context.setNotificationDailyTime(hour: Int, minute: Int) {
     dataStore.edit { preferences ->
         preferences[USER_PREF_NOTIFICATION_DAILY_HOUR_KEY] = hour
         preferences[USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY] = minute
+    }
+}
+
+fun Context.getNotificationSources(): Flow<Set<String>> {
+    return dataStore.data.map { preferences ->
+        preferences[NOTIFICATION_SOURCES_KEY] ?: setOf("network")
+    }
+}
+
+suspend fun Context.setNotificationSources(sources: Set<String>) {
+    dataStore.edit { preferences ->
+        preferences[NOTIFICATION_SOURCES_KEY] = sources
     }
 }

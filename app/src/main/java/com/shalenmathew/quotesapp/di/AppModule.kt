@@ -34,7 +34,6 @@ import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.GetFavQuot
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLatestQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetQuote
-import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetRandomQuoteFromNetwork
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.SaveLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.MarkAsDisplayed
@@ -56,19 +55,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 
-import okhttp3.EventListener
-import okhttp3.Call
-import java.net.InetAddress
-import java.net.InetSocketAddress
-import java.net.Proxy
-import okhttp3.Connection
-import okhttp3.Handshake
-import okhttp3.Protocol
-import okhttp3.Request
-import okhttp3.Response
-import java.io.IOException
-import android.util.Log
-
 @InstallIn(SingletonComponent::class)
 @Module
 object AppModule {
@@ -82,8 +68,7 @@ object AppModule {
             getLikedQuotes: GetLikedQuotes,
             getLatestQuote: GetLatestQuote,
             markAsDisplayed: MarkAsDisplayed,
-            getUndisplayedQuotes: GetUndisplayedQuotes,
-            getRandomQuoteFromNetwork: GetRandomQuoteFromNetwork
+            getUndisplayedQuotes: GetUndisplayedQuotes
     ): QuoteUseCase {
         return QuoteUseCase(
             getQuote = getQuote,
@@ -92,8 +77,7 @@ object AppModule {
             getLikedQuotes = getLikedQuotes,
             getLatestQuote = getLatestQuote,
             markAsDisplayed = markAsDisplayed,
-            getUndisplayedQuotes = getUndisplayedQuotes,
-            getRandomQuoteFromNetwork = getRandomQuoteFromNetwork
+            getUndisplayedQuotes = getUndisplayedQuotes
         )
     }
 
@@ -135,8 +119,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesQuoteRepository(api: QuoteApi, db: QuoteDatabase, @ApplicationContext context: Context): QuoteRepository {
-        return QuoteRepositoryImplementation(api, db, context)
+    fun providesQuoteRepository(api: QuoteApi, db: QuoteDatabase): QuoteRepository {
+        return QuoteRepositoryImplementation(api, db)
     }
 
     @Singleton
@@ -167,28 +151,6 @@ object AppModule {
                     level = if (BuildConfig.DEBUG) Level.BODY else Level.NONE
                 }
             )
-            .addNetworkInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
-                    .header("Cache-Control", "no-cache, no-store, must-revalidate")
-                    .build()
-                chain.proceed(request)
-            }
-            .protocols(listOf(Protocol.HTTP_1_1))
-            .eventListener(object : EventListener() {
-                override fun callStart(call: Call) { Log.d("OkHttp_Trace", "callStart: ${call.request().url}") }
-                override fun dnsStart(call: Call, domainName: String) { Log.d("OkHttp_Trace", "dnsStart: $domainName") }
-                override fun dnsEnd(call: Call, domainName: String, inetAddressList: List<InetAddress>) { Log.d("OkHttp_Trace", "dnsEnd: $inetAddressList") }
-                override fun connectStart(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy) { Log.d("OkHttp_Trace", "connectStart: $inetSocketAddress") }
-                override fun secureConnectStart(call: Call) { Log.d("OkHttp_Trace", "secureConnectStart") }
-                override fun secureConnectEnd(call: Call, handshake: Handshake?) { Log.d("OkHttp_Trace", "secureConnectEnd: ${handshake?.cipherSuite}") }
-                override fun connectEnd(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy, protocol: Protocol?) { Log.d("OkHttp_Trace", "connectEnd: $protocol") }
-                override fun connectFailed(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy, protocol: Protocol?, ioe: IOException) { Log.e("OkHttp_Trace", "connectFailed", ioe) }
-                override fun requestHeadersEnd(call: Call, request: Request) { Log.d("OkHttp_Trace", "requestHeadersEnd") }
-                override fun responseHeadersEnd(call: Call, response: Response) { Log.d("OkHttp_Trace", "responseHeadersEnd: ${response.code}") }
-                override fun callEnd(call: Call) { Log.d("OkHttp_Trace", "callEnd") }
-                override fun callFailed(call: Call, ioe: IOException) { Log.e("OkHttp_Trace", "callFailed", ioe) }
-            })
             .connectTimeout(10, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
             .readTimeout(10, TimeUnit.SECONDS)

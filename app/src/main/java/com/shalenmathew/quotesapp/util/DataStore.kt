@@ -28,7 +28,6 @@ val LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY =
 val USER_PREF_WIDGET_REFRESH_INTERVAL_KEY = intPreferencesKey("user_pref_widget_refresh_interval")
 val USER_PREF_NOTIFICATION_INTERVAL_KEY = intPreferencesKey("user_pref_notification_interval")
 val WIDGET_SOURCE_KEY = stringPreferencesKey("widget_source")
-val NOTIFICATION_SOURCE_KEY = stringPreferencesKey("notification_source")
 val USER_PREF_NOTIFICATION_MODE_KEY = stringPreferencesKey("user_pref_notification_mode")
 val USER_PREF_NOTIFICATION_DAILY_HOUR_KEY = intPreferencesKey("user_pref_notification_daily_hour")
 val USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY =
@@ -119,18 +118,6 @@ fun Context.getWidgetSource(): Flow<String> {
 suspend fun Context.setWidgetSource(source: String) {
     dataStore.edit { preferences ->
         preferences[WIDGET_SOURCE_KEY] = source
-    }
-}
-
-fun Context.getNotificationSource(): Flow<String> {
-    return dataStore.data.map { preferences ->
-        preferences[NOTIFICATION_SOURCE_KEY] ?: "network"
-    }
-}
-
-suspend fun Context.setNotificationSource(source: String) {
-    dataStore.edit { preferences ->
-        preferences[NOTIFICATION_SOURCE_KEY] = source
     }
 }
 

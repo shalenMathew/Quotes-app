@@ -40,19 +40,19 @@ class QuoteViewModel @Inject constructor(
                 when (it) {
 
                     is Resource.Success -> {
-                        val firstQuote = it.data?.quotesList?.firstOrNull()
                         Log.d(
                             TAG,
-                            "from viewmodel, fetched data successfully " + firstQuote.toString()
+                            "from viewmodel, fetched data successfully " + it.data?.quotesList[0].toString()
                         )
 
                         it.data?.let { data ->
                             // saving in state
                             _quoteState.value = _quoteState.value.copy(
                                 dataList = data.quotesList.toMutableList(),
-                                qot = data.quotesOfTheDay.firstOrNull(), isLoading = false, error = ""
+                                qot = data.quotesOfTheDay[0], isLoading = false, error = ""
                             )
 
+                          val firstQuote = data.quotesList.firstOrNull()
                           firstQuote?.let { quote ->
                               updateWidgetIfSameOrEmptyUseCase(quote)
                                   .onFailure { Log.w(TAG, "Widget update failed: ${it.message}") }

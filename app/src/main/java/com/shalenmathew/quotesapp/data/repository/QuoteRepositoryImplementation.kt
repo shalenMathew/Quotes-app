@@ -1,6 +1,5 @@
 package com.shalenmathew.quotesapp.data.repository
 
-import android.content.Context
 import android.util.Log
 import com.shalenmathew.quotesapp.data.local.QuoteDatabase
 import com.shalenmathew.quotesapp.data.mappers.toQuote
@@ -9,9 +8,8 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.model.QuoteHome
 import com.shalenmathew.quotesapp.domain.repository.QuoteRepository
 import com.shalenmathew.quotesapp.util.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+    import kotlinx.coroutines.Dispatchers
+    import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -19,7 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import java.io.IOException
 
-class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: QuoteDatabase, private val context: Context) :
+class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: QuoteDatabase) :
     QuoteRepository {
 
 
@@ -35,38 +33,9 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
 
             coroutineScope {
 
-                var quotesList: List<Quote> = emptyList()
-                var qot: List<Quote> = emptyList()
-                var retryCount = 0
-                val maxRetries = 2
-
-                while (retryCount <= maxRetries) {
-                    try {
-                        Log.d("QuoteRepository", "Fetching from ZenQuotes API (Attempt ${retryCount + 1})")
-                        
-                        // Fetch sequentially to avoid rate limiting (429 Too Many Requests or REFUSED_STREAM)
-                        quotesList = api.getQuotesList(System.currentTimeMillis()).map { it.toQuote() }
-                        
-                        // ZenQuotes strictly limits to 1 request per second. We MUST delay here.
-                        delay(1500) 
-                        
-                        qot = api.getQuoteOfTheDay(System.currentTimeMillis()).map { it.toQuote() }
-                        
-                        if (quotesList.isEmpty() || qot.isEmpty()) {
-                            throw Exception("ZenQuotes returned empty list")
-                        }
-                        
-                        // If we reach here, both requests succeeded
-                        break
-                    } catch (e: Exception) {
-                        retryCount++
-                        if (retryCount > maxRetries) {
-                            throw e // Re-throw if we've exhausted retries
-                        }
-                        Log.w("QuoteRepository", "ZenQuotes request failed, retrying in 3 seconds...", e)
-                        delay(3000) // Wait 3 seconds before retrying to let rate limits reset
-                    }
-                }
+                // Fetch sequentially to avoid rate limiting (429 Too Many Requests or REFUSED_STREAM)
+                val quotesList = api.getQuotesList().map { it.toQuote() }
+                val qot = api.getQuoteOfTheDay().map { it.toQuote() }
 
                 val currList = db.getQuoteDao().getAllQuotes()
 
@@ -97,7 +66,7 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
             }
 
         }.catch { e ->
-            Log.e("QuoteRepository", "API Call Failed with exception: ${e.message}", e)
+
             val errorMessage = throwExceptionMessage(e)
 
 
@@ -161,20 +130,5 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
             Resource.Success(emptyList())
         }
 
-    }
-
-    override suspend fun getRandomQuoteFromNetwork(): Resource<Quote> {
-        return try {
-            val response = api.getRandomQuote(System.currentTimeMillis())
-            val quote = response.firstOrNull()?.toQuote()
-            if (quote != null) {
-                Resource.Success(quote)
-            } else {
-                Resource.Error("Empty response from ZenQuotes")
-            }
-        } catch (e: Exception) {
-            Log.e("QuoteRepository", "Failed to fetch random quote", e)
-            Resource.Error(throwExceptionMessage(e))
-        }
     }
 }

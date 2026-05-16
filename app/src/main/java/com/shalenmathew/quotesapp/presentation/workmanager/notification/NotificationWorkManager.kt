@@ -85,7 +85,7 @@ class NotificationWorkManager @AssistedInject constructor(
                 )
             }
             val response =
-                withTimeoutOrNull(15000) {
+                withTimeoutOrNull(5000) {
                     quoteUseCase.getQuote()
                         .filter { it is Resource.Success || it is Resource.Error }
                         .first()

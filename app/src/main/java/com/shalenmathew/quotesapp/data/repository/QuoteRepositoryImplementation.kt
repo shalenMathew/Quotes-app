@@ -8,8 +8,9 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.model.QuoteHome
 import com.shalenmathew.quotesapp.domain.repository.QuoteRepository
 import com.shalenmathew.quotesapp.util.Resource
-    import kotlinx.coroutines.Dispatchers
-    import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -33,9 +34,14 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
 
             coroutineScope {
 
-                // Fetch sequentially to avoid rate limiting (429 Too Many Requests or REFUSED_STREAM)
-                val quotesList = api.getQuotesList().map { it.toQuote() }
-                val qot = api.getQuoteOfTheDay().map { it.toQuote() }
+                /// coroutine scope is a type of scope that allows you to launch multiple coroutines and await for their results
+                // before moving forward
+
+                val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
+                val qotDef = async { api.getQuoteOfTheDay().map { it.toQuote() } }
+
+                val quotesList = quotesListDef.await()
+                val qot = qotDef.await()
 
                 val currList = db.getQuoteDao().getAllQuotes()
 
@@ -79,9 +85,7 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
     fun throwExceptionMessage(e: Throwable): String{
 
         return when (e) {
-            is java.net.SocketTimeoutException -> "Connection timed out. Please try again."
-            is java.net.UnknownHostException -> "No internet connection. Please check your network."
-            is IOException -> "Network error. Please try again."
+            is IOException -> "No internet connection. Please try again."
             is HttpException -> {
                 when (e.code()) {
                     400 -> "Bad Request"

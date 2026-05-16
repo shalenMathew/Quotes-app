@@ -146,6 +146,7 @@ object AppModule {
         return OkHttpClient
             .Builder()
             .cache(Cache(context.cacheDir, (5 * 1024 * 1024).toLong()))
+            .protocols(listOf(okhttp3.Protocol.HTTP_1_1))
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = if (BuildConfig.DEBUG) Level.BODY else Level.NONE

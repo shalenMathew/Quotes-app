@@ -83,16 +83,19 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
     fun throwExceptionMessage(e: Throwable): String{
 
         return when (e) {
-            is IOException -> "No internet connection. Please try again."
+            is java.net.UnknownHostException -> "No internet connection. Please check your network."
+            is java.net.SocketTimeoutException -> "Connection timed out. Please try again."
+            is java.net.ConnectException -> "Failed to connect to the server. Please try again."
+            is IOException -> "Network error. Please check your connection."
             is HttpException -> {
                 when (e.code()) {
                     400 -> "Bad Request"
                     401 -> "Unauthorized Request"
                     403 -> "Forbidden Request"
-                    429 -> "To many request to the server please check back in some time"
+                    429 -> "Too many requests to the server, please check back in some time"
                     500 -> "Server is down...Please try again later"
                     else -> {
-                        "Unknown error,Please try again."
+                        "Unknown error, please try again."
                     }
                 }
             }

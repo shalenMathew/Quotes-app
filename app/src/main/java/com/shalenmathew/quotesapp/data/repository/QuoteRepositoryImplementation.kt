@@ -37,11 +37,9 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
                 /// coroutine scope is a type of scope that allows you to launch multiple coroutines and await for their results
                 // before moving forward
 
-                val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
-                val qotDef = async { api.getQuoteOfTheDay().map { it.toQuote() } }
-
-                val quotesList = quotesListDef.await()
-                val qot = qotDef.await()
+                // Removed the async blocks and just make the calls sequentially - Mitchi (github/mitchib1440)
+                val quotesList = api.getQuotesList().map { it.toQuote() }
+                val qot = api.getQuoteOfTheDay().map { it.toQuote() }
 
                 val currList = db.getQuoteDao().getAllQuotes()
 

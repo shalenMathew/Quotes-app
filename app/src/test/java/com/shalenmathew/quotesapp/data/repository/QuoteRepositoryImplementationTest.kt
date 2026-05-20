@@ -90,11 +90,11 @@ class QuoteRepositoryImplementationTest {
         }
 
         val testScenarios = mapOf(
-            IOException() to "No internet connection. Please try again.",
+            IOException() to "Network error. Please check your connection.",
             mockHttpException(401) to "Unauthorized Request",
-            mockHttpException(429) to "To many request to the server please check back in some time",
+            mockHttpException(429) to "Too many requests to the server, please check back in some time",
             mockHttpException(500) to "Server is down...Please try again later",
-            mockHttpException(404) to "Unknown error,Please try again.",
+            mockHttpException(404) to "Unknown error, please try again.",
             IllegalArgumentException() to "Something went wrong. Please try again."
         )
 

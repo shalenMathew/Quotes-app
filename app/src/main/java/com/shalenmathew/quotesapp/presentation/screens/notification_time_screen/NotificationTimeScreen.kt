@@ -17,6 +17,13 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.foundation.layout.Spacer
+import com.shalenmathew.quotesapp.util.getNotificationSources
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,6 +63,7 @@ import com.shalenmathew.quotesapp.util.getNotificationDailyTime
 import com.shalenmathew.quotesapp.util.getNotificationMode
 import kotlinx.coroutines.flow.first
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationTimeScreen(
     paddingValues: PaddingValues,
@@ -68,6 +76,8 @@ fun NotificationTimeScreen(
     var dailyHour by rememberSaveable { mutableIntStateOf(DEFAULT_DAILY_NOTIFICATION_HOUR) }
     var dailyMinute by rememberSaveable { mutableIntStateOf(DEFAULT_DAILY_NOTIFICATION_MINUTE) }
     var hasDailyTime by rememberSaveable { mutableStateOf(false) }
+    var selectedSources by rememberSaveable { mutableStateOf(setOf("network")) }
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         mode = context.getNotificationMode().first()
@@ -76,6 +86,7 @@ fun NotificationTimeScreen(
             dailyMinute = m
             hasDailyTime = true
         }
+        selectedSources = context.getNotificationSources().first()
     }
 
     val frequencyActive = mode == NotificationMode.FREQUENCY
@@ -215,6 +226,105 @@ fun NotificationTimeScreen(
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp
             )
+        }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(78.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(customGrey2)
+                .clickable {
+                    showBottomSheet = true
+                }
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_notifications),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(30.dp)
+            )
+            Text(
+                modifier = Modifier.weight(1f),
+                text = "Quote Sources",
+                color = Color.White,
+                fontFamily = GIFont,
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp
+            )
+            Text(
+                text = selectedSources.joinToString(", ") { it.replaceFirstChar { char -> char.uppercase() } },
+                color = bratGreen,
+                fontFamily = GIFont,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp
+            )
+        }
+    }
+
+    if (showBottomSheet) {
+        val sheetState = rememberModalBottomSheetState()
+        ModalBottomSheet(
+            onDismissRequest = {
+                showBottomSheet = false
+                settingsViewModel.saveNotificationSources(selectedSources)
+            },
+            sheetState = sheetState,
+            containerColor = customGrey2
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Select Quote Sources",
+                    fontFamily = GIFont,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                val sourceOptions = listOf("network", "favourite", "custom")
+                sourceOptions.forEach { source ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                val newSources = selectedSources.toMutableSet()
+                                if (newSources.contains(source)) {
+                                    if (newSources.size > 1) { // ensure at least one is selected
+                                        newSources.remove(source)
+                                    }
+                                } else {
+                                    newSources.add(source)
+                                }
+                                selectedSources = newSources
+                            }
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Checkbox(
+                            checked = selectedSources.contains(source),
+                            onCheckedChange = null,
+                            colors = CheckboxDefaults.colors(checkedColor = bratGreen, checkmarkColor = Color.Black)
+                        )
+                        Text(
+                            text = source.replaceFirstChar { it.uppercase() },
+                            color = Color.White,
+                            fontFamily = GIFont,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(30.dp))
+            }
         }
     }
 }

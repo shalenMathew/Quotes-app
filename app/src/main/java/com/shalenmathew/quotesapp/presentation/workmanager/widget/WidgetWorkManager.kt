@@ -103,17 +103,17 @@ class WidgetWorkManager @AssistedInject constructor(
         return pushQuoteToWidget(quote)
     }
 
-    private suspend fun updateWidgetFromCache(): Boolean {
-        Log.d(TAG, "Cache is fresh, reading from local DB")
-        val widgetSource = context.getWidgetSource().first()
-        val quote = when (widgetSource) {
-            "favorites" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-            "custom" -> getRandomCustomQuote() ?: getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-            "network" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-            else -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-        }
-        return pushQuoteToWidget(quote)
-    }
+//    private suspend fun updateWidgetFromCache(): Boolean {
+//        Log.d(TAG, "Cache is fresh, reading from local DB")
+//        val widgetSource = context.getWidgetSource().first()
+//        val quote = when (widgetSource) {
+//            "favorites" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+//            "custom" -> getRandomCustomQuote() ?: getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+//            "network" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+//            else -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+//        }
+//        return pushQuoteToWidget(quote)
+//    }
 
     internal suspend fun getRandomLikedQuote(): Quote? {
         return try {

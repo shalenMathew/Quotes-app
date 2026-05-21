@@ -1,11 +1,29 @@
 # Quotes.app 💭
 
+> [!CAUTION]
+> ## [Keep Android Open](https://keepandroidopen.org/)
+> ###  Your phone is about to stop being yours.
+> Starting September 2026, a silent update, nonconsensually pushed by Google, will block every 
+> Android app whose developer hasn't registered with Google, signed their contract, paid up, and 
+> handed over government ID.
+> **Every app and every device, worldwide, with no opt-out.**
+>
+> **This mean you can no longer download your favourite apps from outside playstore**
+>
+> **Your favourite app including this app are in critical situation as their are no plans to launch in playstore soon...**
+
 <img width="1024" height="500" alt="Quotes" src="https://github.com/user-attachments/assets/4e01e512-295f-4ea5-8a65-4a76961a7235" />
 
 
 ### Quotes App is a minimalistic quotes app to fill your day with positivity and gratitude.
 ### The app follows latest android principles and components
 
+
+<p align="left">
+  <a href="https://forg.to/products/quotes-app" target="_blank" rel="noopener">
+    <img src="https://forg.to/api/badges/launch-winner/quotes-app?theme=dark&shape=rounded&rank=1" alt="Quotes app - #1 on forg." height="54" />
+  </a>
+</p>
 
 
 

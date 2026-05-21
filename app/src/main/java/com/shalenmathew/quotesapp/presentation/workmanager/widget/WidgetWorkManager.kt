@@ -13,7 +13,7 @@ import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
-import com.shalenmathew.quotesapp.util.getWidgetSource
+import com.shalenmathew.quotesapp.util.getWidgetSources
 import com.shalenmathew.quotesapp.util.isWidgetCacheStale
 import com.shalenmathew.quotesapp.util.setLastAlarmTriggerMillis
 import dagger.assisted.Assisted
@@ -90,29 +90,35 @@ class WidgetWorkManager @AssistedInject constructor(
 
     private suspend fun refreshAndUpdateWidget(refreshInterval: Int): Boolean {
         scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(getMillisFromNow(refreshInterval))
-        val widgetSource = context.getWidgetSource().first()
-        Log.d(TAG, "refreshAndUpdateWidget: Current source is $widgetSource")
-
-        val quote = when (widgetSource) {
-            "favorites" -> getRandomLikedQuote() ?: fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
-            "custom" -> getRandomCustomQuote() ?: getRandomLikedQuote() ?: fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
-            "network" -> fetchQuoteFromNetwork() ?: getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-            else -> getRandomLikedQuote() ?: fetchQuoteFromNetwork() ?: quoteUseCase.getLatestQuote()
-        }
-
+        val sources = context.getWidgetSources().first()
+        Log.d(TAG, "refreshAndUpdateWidget: Current sources are $sources")
+        val quote = fetchQuoteFromSources(allowNetwork = true)
         return pushQuoteToWidget(quote)
     }
 
     private suspend fun updateWidgetFromCache(): Boolean {
         Log.d(TAG, "Cache is fresh, reading from local DB")
-        val widgetSource = context.getWidgetSource().first()
-        val quote = when (widgetSource) {
-            "favorites" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-            "custom" -> getRandomCustomQuote() ?: getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-            "network" -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-            else -> getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
-        }
+        val sources = context.getWidgetSources().first()
+        Log.d(TAG, "updateWidgetFromCache: Current sources are $sources")
+        val quote = fetchQuoteFromSources(allowNetwork = false)
         return pushQuoteToWidget(quote)
+    }
+
+    private suspend fun fetchQuoteFromSources(allowNetwork: Boolean): Quote? {
+        val sources = context.getWidgetSources().first().toList().shuffled()
+        val fallbackSources = listOf("favorites", "custom", "network").shuffled()
+        val sourcesToTry = (sources + fallbackSources).distinct()
+
+        for (source in sourcesToTry) {
+            val quote = when (source) {
+                "favorites" -> getRandomLikedQuote()
+                "custom" -> getRandomCustomQuote()
+                "network" -> if (allowNetwork) fetchQuoteFromNetwork() else null
+                else -> null
+            }
+            if (quote != null) return quote
+        }
+        return getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
     }
 
     internal suspend fun getRandomLikedQuote(): Quote? {

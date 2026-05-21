@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.setNotificationSources
+import com.shalenmathew.quotesapp.util.setWidgetSources
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -39,6 +40,13 @@ class SettingsViewModel @Inject constructor(
     fun saveNotificationSources(sources: Set<String>) {
         viewModelScope.launch {
             context.setNotificationSources(sources)
+        }
+    }
+
+    fun saveWidgetSources(sources: Set<String>) {
+        viewModelScope.launch {
+            context.setWidgetSources(sources)
+            scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
         }
     }
 }

@@ -8,9 +8,9 @@
 > handed over government ID.
 > **Every app and every device, worldwide, with no opt-out.**
 >
-> **This mean you can no longer download your fav apps from outside playstore**
+> **This mean you can no longer download your favourite apps from outside playstore**
 >
-> **Your fav app including this app are in critical situation as their are no plans to launch in playstore soon...**
+> **Your favourite app including this app are in critical situation as their are no plans to launch in playstore soon...**
 
 <img width="1024" height="500" alt="Quotes" src="https://github.com/user-attachments/assets/4e01e512-295f-4ea5-8a65-4a76961a7235" />
 

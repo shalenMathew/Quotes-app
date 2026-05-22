@@ -153,6 +153,11 @@ val aboutMeCardsRow = listOf<CardRow>(
         name = "Portfolio",
         url = "https://shalenmathew.github.io/portfolio-website/"
     ),
+    CardRow(
+        icon = R.drawable.ic_github,
+        name = "Github",
+        url = "https://github.com/shalenMathew"
+    ),
     CardRow(icon = R.drawable.ic_twitter, name = "Twitter", url = "https://x.com/shalenmathew"),
     CardRow(icon = R.drawable.ic_discord, name = "Discord", url = "https://discord.gg/QpDJh3rT4q"),
     CardRow(

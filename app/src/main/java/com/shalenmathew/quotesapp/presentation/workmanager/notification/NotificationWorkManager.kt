@@ -90,19 +90,20 @@ class NotificationWorkManager @AssistedInject constructor(
                 )
             }
             
-            val sources = context.getNotificationSources().first().toList().shuffled()
-            val fallbackSources = listOf("network", "favourite", "custom").shuffled()
-            val sourcesToTry = (sources + fallbackSources).distinct()
+            val enabledSources = context.getNotificationSources().first().toList()
+            if (enabledSources.isEmpty()) {
+                Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "No notification sources configured")
+                return false
+            }
+
+            val primarySource = enabledSources.random()
+            val sourcesToTry = listOf(primarySource) +
+                enabledSources.filter { it != primarySource }.shuffled()
 
             var finalQuote: Quote? = null
 
             for (source in sourcesToTry) {
-                val quote = when (source) {
-                    "network" -> fetchQuoteFromNetwork()
-                    "favourite" -> getRandomLikedQuote()
-                    "custom" -> getRandomCustomQuote()
-                    else -> null
-                }
+                val quote = quoteFromNotificationSource(source)
                 if (quote != null) {
                     finalQuote = quote
                     break
@@ -123,6 +124,15 @@ class NotificationWorkManager @AssistedInject constructor(
             false
         }
 
+    }
+
+    private suspend fun quoteFromNotificationSource(source: String): Quote? {
+        return when (source) {
+            "network" -> fetchQuoteFromNetwork()
+            "favourite" -> getRandomLikedQuote()
+            "custom" -> getRandomCustomQuote()
+            else -> null
+        }
     }
 
     private suspend fun fetchQuoteFromNetwork(): Quote? {

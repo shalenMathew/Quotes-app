@@ -109,20 +109,31 @@ class WidgetWorkManager @AssistedInject constructor(
 //    }
 
     private suspend fun fetchQuoteFromSources(allowNetwork: Boolean): Quote? {
-        val sources = context.getWidgetSources().first().toList().shuffled()
-        val fallbackSources = listOf("favorites", "custom", "network").shuffled()
-        val sourcesToTry = (sources + fallbackSources).distinct()
+        val enabledSources = context.getWidgetSources().first()
+            .filter { source -> source != "network" || allowNetwork }
+            .toList()
+        if (enabledSources.isEmpty()) {
+            return getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+        }
+
+        val primarySource = enabledSources.random()
+        val sourcesToTry = listOf(primarySource) +
+            enabledSources.filter { it != primarySource }.shuffled()
 
         for (source in sourcesToTry) {
-            val quote = when (source) {
-                "favorites" -> getRandomLikedQuote()
-                "custom" -> getRandomCustomQuote()
-                "network" -> if (allowNetwork) fetchQuoteFromNetwork() else null
-                else -> null
-            }
+            val quote = quoteFromWidgetSource(source, allowNetwork)
             if (quote != null) return quote
         }
         return getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+    }
+
+    private suspend fun quoteFromWidgetSource(source: String, allowNetwork: Boolean): Quote? {
+        return when (source) {
+            "favorites" -> getRandomLikedQuote()
+            "custom" -> getRandomCustomQuote()
+            "network" -> if (allowNetwork) fetchQuoteFromNetwork() else null
+            else -> null
+        }
     }
 
     internal suspend fun getRandomLikedQuote(): Quote? {

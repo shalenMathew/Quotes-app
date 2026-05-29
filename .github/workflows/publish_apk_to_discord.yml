@@ -45,6 +45,8 @@ jobs:
           embed-title: "✅ New release : A new version of Quotes App is live!"
           embed-description: |
               [CLICK TO DOWNLOAD THE APK](${{ env.DOWNLOAD_LINK }})
+            
+             [VIEW ALL VERSION IN GITHUB](https://github.com/shalenMathew/Quotes-app/releases)
           embed-image-url: "https://github.com/shalenMathew/Quotes-app/blob/master/images/quotes_logo.png?raw=true"
           wait: true
 

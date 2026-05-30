@@ -63,7 +63,8 @@ class WidgetWorkManagerTest {
             getLikedQuotes = getLikedQuotes,
             getLatestQuote = mock(),
             markAsDisplayed = mock(),
-            getUndisplayedQuotes = mock()
+            getUndisplayedQuotes = mock(),
+            getRandomRemoteQuote = mock()
         )
 
         customQuoteUseCases = CustomQuoteUseCases(

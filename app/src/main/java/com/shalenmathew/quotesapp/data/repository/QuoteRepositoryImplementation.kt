@@ -136,4 +136,16 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
         }
 
     }
+
+    override suspend fun fetchRandomRemoteQuote(): Resource<Quote> {
+        return try {
+            val quotesList = api.getQuotesList().map { it.toQuote() }
+            val quote = quotesList.randomOrNull()
+                ?: return Resource.Error("No quotes received from the server")
+            db.getQuoteDao().insertQuoteList(quotesList)
+            Resource.Success(quote)
+        } catch (e: Throwable) {
+            Resource.Error(throwExceptionMessage(e))
+        }
+    }
 }

@@ -14,12 +14,10 @@ import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
 import com.shalenmathew.quotesapp.util.getWidgetSources
-import com.shalenmathew.quotesapp.util.isWidgetCacheStale
 import com.shalenmathew.quotesapp.util.setLastAlarmTriggerMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -113,18 +111,20 @@ class WidgetWorkManager @AssistedInject constructor(
             .filter { source -> source != "network" || allowNetwork }
             .toList()
         if (enabledSources.isEmpty()) {
-            return getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+            Log.w(TAG, "No widget sources enabled")
+            return null
         }
 
-        val primarySource = enabledSources.random()
-        val sourcesToTry = listOf(primarySource) +
-            enabledSources.filter { it != primarySource }.shuffled()
+        val selectedSource = enabledSources.random()
+        Log.d(TAG, "Selected widget source for this refresh: $selectedSource (enabled: $enabledSources)")
 
-        for (source in sourcesToTry) {
-            val quote = quoteFromWidgetSource(source, allowNetwork)
-            if (quote != null) return quote
+        val quote = quoteFromWidgetSource(selectedSource, allowNetwork)
+        if (quote != null) {
+            Log.d(TAG, "Quote loaded from widget source: $selectedSource")
+        } else {
+            Log.d(TAG, "Widget source $selectedSource returned no quote; will retry")
         }
-        return getRandomLikedQuote() ?: quoteUseCase.getLatestQuote()
+        return quote
     }
 
     private suspend fun quoteFromWidgetSource(source: String, allowNetwork: Boolean): Quote? {
@@ -167,16 +167,12 @@ class WidgetWorkManager @AssistedInject constructor(
     }
     private suspend fun fetchQuoteFromNetwork(): Quote? {
         return try {
-            val response = withTimeoutOrNull(NETWORK_TIMEOUT_MILLIS) {
-                quoteUseCase.getQuote()
-                    .filter { it is Resource.Success || it is Resource.Error }
-                    .first()
-            }
-
-            when (response) {
+            when (val response = withTimeoutOrNull(NETWORK_TIMEOUT_MILLIS) {
+                quoteUseCase.getRandomRemoteQuote()
+            }) {
                 is Resource.Success -> {
-                    Log.d(TAG, "Fetched quote from network")
-                    response.data?.quotesList?.getOrNull(0)
+                    Log.d(TAG, "Fetched random quote from network")
+                    response.data
                 }
 
                 is Resource.Error -> {
@@ -184,10 +180,12 @@ class WidgetWorkManager @AssistedInject constructor(
                     null
                 }
 
-                else -> {
-                    Log.d(TAG, "Network timeout")
+                null -> {
+                    Log.d(TAG, "Network fetch timed out after ${NETWORK_TIMEOUT_MILLIS}ms")
                     null
                 }
+
+                else -> null
             }
         } catch (e: Exception) {
             Log.d(TAG, "Exception in fetchQuoteFromNetwork", e)
@@ -207,7 +205,7 @@ class WidgetWorkManager @AssistedInject constructor(
 
     companion object {
         private const val TAG = "WidgetWorkManager"
-        private const val NETWORK_TIMEOUT_MILLIS = 5000L
+        private const val NETWORK_TIMEOUT_MILLIS = 10_000L
     }
 
     @AssistedFactory

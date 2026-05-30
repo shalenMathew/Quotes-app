@@ -22,7 +22,6 @@ import com.shalenmathew.quotesapp.util.setLastNotificationAlarmTriggerMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -96,26 +95,26 @@ class NotificationWorkManager @AssistedInject constructor(
                 return false
             }
 
-            val primarySource = enabledSources.random()
-            val sourcesToTry = listOf(primarySource) +
-                enabledSources.filter { it != primarySource }.shuffled()
+            val selectedSource = enabledSources.random()
+            Log.d(
+                Constants.WORK_MANAGER_STATUS_NOTIFY,
+                "Selected notification source for this refresh: $selectedSource (enabled: $enabledSources)"
+            )
 
-            var finalQuote: Quote? = null
-
-            for (source in sourcesToTry) {
-                val quote = quoteFromNotificationSource(source)
-                if (quote != null) {
-                    finalQuote = quote
-                    break
-                }
-            }
+            val finalQuote = quoteFromNotificationSource(selectedSource)
 
             if (finalQuote != null) {
-                Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Fetched Quote: $finalQuote")
+                Log.d(
+                    Constants.WORK_MANAGER_STATUS_NOTIFY,
+                    "Fetched quote from notification source $selectedSource: $finalQuote"
+                )
                 context.saveNotificationQuote(finalQuote)
                 true
             } else {
-                Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Quote is null from all sources")
+                Log.d(
+                    Constants.WORK_MANAGER_STATUS_NOTIFY,
+                    "Notification source $selectedSource returned no quote; will retry"
+                )
                 false
             }
 
@@ -137,17 +136,25 @@ class NotificationWorkManager @AssistedInject constructor(
 
     private suspend fun fetchQuoteFromNetwork(): Quote? {
         return try {
-            val response = withTimeoutOrNull(5000) {
-                quoteUseCase.getQuote()
-                    .filter { it is Resource.Success || it is Resource.Error }
-                    .first()
-            }
-            if (response is Resource.Success) {
-                response.data?.quotesList?.shuffled()?.firstOrNull()
-            } else {
-                null
+            when (val response = withTimeoutOrNull(NETWORK_TIMEOUT_MILLIS) {
+                quoteUseCase.getRandomRemoteQuote()
+            }) {
+                is Resource.Success -> response.data
+                is Resource.Error -> {
+                    Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Network error: ${response.message}")
+                    null
+                }
+                null -> {
+                    Log.d(
+                        Constants.WORK_MANAGER_STATUS_NOTIFY,
+                        "Network fetch timed out after ${NETWORK_TIMEOUT_MILLIS}ms"
+                    )
+                    null
+                }
+                else -> null
             }
         } catch (e: Exception) {
+            Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Exception in fetchQuoteFromNetwork", e)
             null
         }
     }
@@ -168,6 +175,10 @@ class NotificationWorkManager @AssistedInject constructor(
         } catch (e: Exception) {
             null
         }
+    }
+
+    companion object {
+        private const val NETWORK_TIMEOUT_MILLIS = 10_000L
     }
 
     @AssistedFactory

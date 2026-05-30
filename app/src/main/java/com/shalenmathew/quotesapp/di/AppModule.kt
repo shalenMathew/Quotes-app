@@ -38,6 +38,7 @@ import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.LikedQuot
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.SaveLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.MarkAsDisplayed
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
+import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetRandomRemoteQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetUndisplayedQuotes
 import com.shalenmathew.quotesapp.util.Constants
 import dagger.Module
@@ -68,7 +69,8 @@ object AppModule {
             getLikedQuotes: GetLikedQuotes,
             getLatestQuote: GetLatestQuote,
             markAsDisplayed: MarkAsDisplayed,
-            getUndisplayedQuotes: GetUndisplayedQuotes
+            getUndisplayedQuotes: GetUndisplayedQuotes,
+            getRandomRemoteQuote: GetRandomRemoteQuote
     ): QuoteUseCase {
         return QuoteUseCase(
             getQuote = getQuote,
@@ -77,7 +79,8 @@ object AppModule {
             getLikedQuotes = getLikedQuotes,
             getLatestQuote = getLatestQuote,
             markAsDisplayed = markAsDisplayed,
-            getUndisplayedQuotes = getUndisplayedQuotes
+            getUndisplayedQuotes = getUndisplayedQuotes,
+            getRandomRemoteQuote = getRandomRemoteQuote
         )
     }
 

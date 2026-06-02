@@ -1,4 +1,4 @@
-package com.shalenmathew.quotesapp.presentation.screens.settings_screen.widget_source
+package com.shalenmathew.quotesapp.presentation.screens.settings_screen.notification_source
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,25 +28,25 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.SettingsViewModel
-import com.shalenmathew.quotesapp.util.getWidgetSources
+import com.shalenmathew.quotesapp.util.getNotificationSources
 import kotlinx.coroutines.flow.first
 
 @Composable
-fun WidgetSourceScreen(
+fun NotificationSourceScreen(
     paddingValues: PaddingValues,
     settingsViewModel: SettingsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    var selectedSources by remember { mutableStateOf(setOf("favorites")) }
+    var selectedSources by remember { mutableStateOf(setOf("network")) }
 
     LaunchedEffect(Unit) {
-        selectedSources = context.getWidgetSources().first()
+        selectedSources = context.getNotificationSources().first()
     }
 
     val options = listOf(
-        WidgetSourceOption("Fav Quotes", "favorites", "Fetched from your favorites"),
-        WidgetSourceOption("Custom Quotes", "custom", "Fetched from your own creations"),
-        WidgetSourceOption("Network", "network", "Fetched fresh from the internet")
+        NotificationSourceOption("Fav Quotes", "favourite", "Fetched from your favorites"),
+        NotificationSourceOption("Custom Quotes", "custom", "Fetched from your own creations"),
+        NotificationSourceOption("Network", "network", "Fetched fresh from the internet")
     )
 
     Column(
@@ -57,7 +57,7 @@ fun WidgetSourceScreen(
             .padding(16.dp)
     ) {
         Text(
-            text = "Widget Content Source",
+            text = "Notification Content Source",
             fontFamily = GIFont,
             fontWeight = FontWeight.Medium,
             color = Color.White,
@@ -65,7 +65,7 @@ fun WidgetSourceScreen(
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
-            text = "Choose which quotes to be displayed on widget. Select one or more.",
+            text = "Choose which quotes to be shown in notifications. Select one or more.",
             color = Color.Gray,
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 24.dp)
@@ -86,7 +86,7 @@ fun WidgetSourceScreen(
                                 newSources.add(option.value)
                             }
                             selectedSources = newSources
-                            settingsViewModel.saveWidgetSources(newSources)
+                            settingsViewModel.saveNotificationSources(newSources)
                         }
                         .padding(vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -118,7 +118,7 @@ fun WidgetSourceScreen(
         }
 
         Text(
-            text = "(The widget might not refresh if this app is battery optimized. Please make sure you're not keeping the app in battery saver mode for all features to work properly.)",
+            text = "(Notifications might not appear if this app is battery optimized. Please make sure you're not keeping the app in battery saver mode for all features to work properly.)",
             color = Color.Gray,
             fontSize = 14.sp,
             fontStyle = FontStyle.Italic,
@@ -127,7 +127,7 @@ fun WidgetSourceScreen(
     }
 }
 
-data class WidgetSourceOption(
+data class NotificationSourceOption(
     val label: String,
     val value: String,
     val description: String

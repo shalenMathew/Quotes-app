@@ -301,6 +301,45 @@ fun SettingsScreen(
                                 color = Color.Black,
                                 shape = RectangleShape
                             )
+                            .background(customGrey2)
+                            .clickable {
+                                navHost.navigate(Screen.NotificationSource.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_notifications),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .size(30.dp)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            text = "Fetch quotes for notifications from",
+                            color = Color.White,
+                            fontFamily = GIFont,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        androidx.compose.material3.Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 0.6.dp,
+                                color = Color.Black,
+                                shape = RectangleShape
+                            )
                             .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
                             .background(customGrey2)
                             .clickable {

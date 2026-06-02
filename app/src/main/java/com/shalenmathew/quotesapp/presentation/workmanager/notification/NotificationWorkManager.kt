@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
 import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
@@ -13,12 +14,14 @@ import com.shalenmathew.quotesapp.util.createOrUpdateNotification
 import com.shalenmathew.quotesapp.util.createNotificationChannel
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getSavedNotificationQuote
+import com.shalenmathew.quotesapp.util.getNotificationSources
+import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.domain.model.toQuote
 import com.shalenmathew.quotesapp.util.saveNotificationQuote
 import com.shalenmathew.quotesapp.util.setLastNotificationAlarmTriggerMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -27,6 +30,7 @@ class NotificationWorkManager @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val params: WorkerParameters,
     private val quoteUseCase: QuoteUseCase,
+    private val customQuoteUseCases: CustomQuoteUseCases,
     private val scheduleNotification: ScheduleNotification
 ) : CoroutineWorker(context, params) {
 
@@ -84,40 +88,34 @@ class NotificationWorkManager @AssistedInject constructor(
                     getMillisFromNow(DEFAULT_REFRESH_INTERVAL)
                 )
             }
-            val response =
-                withTimeoutOrNull(5000) {
-                    quoteUseCase.getQuote()
-                        .filter { it is Resource.Success || it is Resource.Error }
-                        .first()
-                }
-            when (response) {
+            
+            val enabledSources = context.getNotificationSources().first().toList()
+            if (enabledSources.isEmpty()) {
+                Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "No notification sources configured")
+                return false
+            }
 
-                is Resource.Success -> {
-                    val quote = response.data?.quotesList?.getOrNull(1)
+            val selectedSource = enabledSources.random()
+            Log.d(
+                Constants.WORK_MANAGER_STATUS_NOTIFY,
+                "Selected notification source for this refresh: $selectedSource (enabled: $enabledSources)"
+            )
 
-                    if (quote != null) {
-                        Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Fetched Quote: $quote")
-                        context.saveNotificationQuote(quote)
-                        true
-                    } else {
-                        Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Quote is null")
-                        false
-                    }
+            val finalQuote = quoteFromNotificationSource(selectedSource)
 
-                }
-
-                is Resource.Error -> {
-                    Log.d(
-                        Constants.WORK_MANAGER_STATUS_NOTIFY,
-                        "Error from fetchQuotes: ${response.message}"
-                    )
-                    false
-                }
-
-                else -> {
-                    Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "No response from fetchQuotes")
-                    false
-                }
+            if (finalQuote != null) {
+                Log.d(
+                    Constants.WORK_MANAGER_STATUS_NOTIFY,
+                    "Fetched quote from notification source $selectedSource: $finalQuote"
+                )
+                context.saveNotificationQuote(finalQuote)
+                true
+            } else {
+                Log.d(
+                    Constants.WORK_MANAGER_STATUS_NOTIFY,
+                    "Notification source $selectedSource returned no quote; will retry"
+                )
+                false
             }
 
         } catch (e: Exception) {
@@ -125,6 +123,62 @@ class NotificationWorkManager @AssistedInject constructor(
             false
         }
 
+    }
+
+    private suspend fun quoteFromNotificationSource(source: String): Quote? {
+        return when (source) {
+            "network" -> fetchQuoteFromNetwork()
+            "favourite" -> getRandomLikedQuote()
+            "custom" -> getRandomCustomQuote()
+            else -> null
+        }
+    }
+
+    private suspend fun fetchQuoteFromNetwork(): Quote? {
+        return try {
+            when (val response = withTimeoutOrNull(NETWORK_TIMEOUT_MILLIS) {
+                quoteUseCase.getRandomRemoteQuote()
+            }) {
+                is Resource.Success -> response.data
+                is Resource.Error -> {
+                    Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Network error: ${response.message}")
+                    null
+                }
+                null -> {
+                    Log.d(
+                        Constants.WORK_MANAGER_STATUS_NOTIFY,
+                        "Network fetch timed out after ${NETWORK_TIMEOUT_MILLIS}ms"
+                    )
+                    null
+                }
+                else -> null
+            }
+        } catch (e: Exception) {
+            Log.d(Constants.WORK_MANAGER_STATUS_NOTIFY, "Exception in fetchQuoteFromNetwork", e)
+            null
+        }
+    }
+
+    private suspend fun getRandomLikedQuote(): Quote? {
+        return try {
+            val quotes = quoteUseCase.getLikedQuotes().first()
+            quotes.shuffled().firstOrNull()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private suspend fun getRandomCustomQuote(): Quote? {
+        return try {
+            val quotes = customQuoteUseCases.getCustomQuotes("").first()
+            quotes.shuffled().firstOrNull()?.toQuote()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    companion object {
+        private const val NETWORK_TIMEOUT_MILLIS = 10_000L
     }
 
     @AssistedFactory

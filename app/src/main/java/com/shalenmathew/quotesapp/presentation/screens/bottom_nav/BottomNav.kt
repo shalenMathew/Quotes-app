@@ -206,6 +206,7 @@ sealed class Screen(
     object Troubleshoot : Screen("Troubleshoot", false)
     object AddCustomQuote : Screen("AddCustomQuote", false)
     object WidgetSource : Screen("WidgetSource", false)
+    object NotificationSource : Screen("NotificationSource", false)
     object Backup : Screen("Backup", false)
     object NotificationTime : Screen("NotificationTime", false)
     object AboutMe : Screen("AboutMe", false)

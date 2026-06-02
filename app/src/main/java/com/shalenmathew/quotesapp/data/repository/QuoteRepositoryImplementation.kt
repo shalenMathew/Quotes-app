@@ -37,11 +37,9 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
                 /// coroutine scope is a type of scope that allows you to launch multiple coroutines and await for their results
                 // before moving forward
 
-                val quotesListDef = async { api.getQuotesList().map { it.toQuote() } }
-                val qotDef = async { api.getQuoteOfTheDay().map { it.toQuote() } }
-
-                val quotesList = quotesListDef.await()
-                val qot = qotDef.await()
+                // Removed the async blocks and just make the calls sequentially - Mitchi (github/mitchib1440)
+                val quotesList = api.getQuotesList().map { it.toQuote() }
+                val qot = api.getQuoteOfTheDay().map { it.toQuote() }
 
                 val currList = db.getQuoteDao().getAllQuotes()
 
@@ -85,16 +83,19 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
     fun throwExceptionMessage(e: Throwable): String{
 
         return when (e) {
-            is IOException -> "No internet connection. Please try again."
+            is java.net.UnknownHostException -> "No internet connection. Please check your network."
+            is java.net.SocketTimeoutException -> "Connection timed out. Please try again."
+            is java.net.ConnectException -> "Failed to connect to the server. Please try again."
+            is IOException -> "Network error. Please check your connection."
             is HttpException -> {
                 when (e.code()) {
                     400 -> "Bad Request"
                     401 -> "Unauthorized Request"
                     403 -> "Forbidden Request"
-                    429 -> "To many request to the server please check back in some time"
+                    429 -> "Too many requests to the server, please check back in some time"
                     500 -> "Server is down...Please try again later"
                     else -> {
-                        "Unknown error,Please try again."
+                        "Unknown error, please try again."
                     }
                 }
             }
@@ -134,5 +135,17 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
             Resource.Success(emptyList())
         }
 
+    }
+
+    override suspend fun fetchRandomRemoteQuote(): Resource<Quote> {
+        return try {
+            val quotesList = api.getQuotesList().map { it.toQuote() }
+            val quote = quotesList.randomOrNull()
+                ?: return Resource.Error("No quotes received from the server")
+            db.getQuoteDao().insertQuoteList(quotesList)
+            Resource.Success(quote)
+        } catch (e: Throwable) {
+            Resource.Error(throwExceptionMessage(e))
+        }
     }
 }

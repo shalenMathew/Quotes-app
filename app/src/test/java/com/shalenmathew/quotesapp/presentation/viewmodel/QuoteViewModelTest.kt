@@ -57,7 +57,14 @@ class QuoteViewModelTest {
     fun setUp() {
 
         quoteUseCase = QuoteUseCase(
-            getQuote, likedQuote, saveLikedQuote, getLikedQuotes, getLatestQuote, markAsDisplayed, getUndisplayedQuotes
+            getQuote,
+            likedQuote,
+            saveLikedQuote,
+            getLikedQuotes,
+            getLatestQuote,
+            markAsDisplayed,
+            getUndisplayedQuotes,
+            getRandomRemoteQuote = org.mockito.kotlin.mock()
         )
 
 

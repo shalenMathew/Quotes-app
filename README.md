@@ -21,7 +21,7 @@
 
 <p align="left">
   <a href="https://forg.to/products/quotes-app" target="_blank" rel="noopener">
-    <img src="https://forg.to/api/badges/launch-winner/quotes-app?theme=dark&shape=rounded&rank=1" alt="Quotes app - #1 on forg." height="54" />
+    <img src="https://forg.to/api/badges/launch-winner/quotes-app?theme=dark&shape=rounded&rank=1" alt="Quotes app - #1 on forg." height="80" />
   </a>
 </p>
 

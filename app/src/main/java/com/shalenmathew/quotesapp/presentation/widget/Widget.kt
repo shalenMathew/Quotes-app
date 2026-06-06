@@ -1,8 +1,11 @@
 package com.shalenmathew.quotesapp.presentation.widget
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
@@ -15,12 +18,16 @@ import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.appWidgetBackground
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
+import androidx.glance.color.ColorProvider
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
@@ -38,6 +45,7 @@ import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_LIKED_KEY
 import com.shalenmathew.quotesapp.util.dataStore
 import kotlinx.coroutines.flow.first
+
 
 object QuotesWidgetObj : GlanceAppWidget() {
 
@@ -71,10 +79,22 @@ object QuotesWidgetObj : GlanceAppWidget() {
 
 @Composable
 fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
+
+    val radius = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        android.R.dimen.system_app_widget_background_radius
+    } else {
+        // Fallback for older versions (e.g., 16dp)
+        null
+    }
+
     Column(
         modifier = GlanceModifier
-            .fillMaxWidth()
-            .wrapContentHeight()
+            .fillMaxSize()
+            .appWidgetBackground()
+            .then(
+                if (radius != null) GlanceModifier.cornerRadius(radius)
+                else GlanceModifier.cornerRadius(16.dp)
+            )
             .background(Color.Black)
             .padding(horizontal = 12.dp, vertical = 5.dp)
             .clickable(actionStartActivity<MainActivity>()),
@@ -93,7 +113,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
             text = savedQuote,
             style = TextStyle(
                 fontSize = 18.sp,
-                color = ColorProvider(Color.White),
+                color = ColorProvider(day = Color.White, night = Color.White),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize()

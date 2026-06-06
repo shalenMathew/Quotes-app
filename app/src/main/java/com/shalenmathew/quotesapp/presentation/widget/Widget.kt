@@ -38,6 +38,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.glance.ColorFilter
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
@@ -95,7 +96,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                 if (radius != null) GlanceModifier.cornerRadius(radius)
                 else GlanceModifier.cornerRadius(16.dp)
             )
-            .background(Color.Black)
+            .background(ImageProvider(R.drawable.widget_prism_bg))
             .padding(horizontal = 12.dp, vertical = 5.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
@@ -104,6 +105,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
         Image(
             provider = ImageProvider(R.drawable.quotation),
             contentDescription = null,
+            colorFilter = ColorFilter.tint(ColorProvider(Color.White, Color.White)),
             modifier = GlanceModifier
                 .padding(start = 12.dp, top = 10.dp)
                 .size(30.dp)
@@ -113,7 +115,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
             text = savedQuote,
             style = TextStyle(
                 fontSize = 18.sp,
-                color = ColorProvider(day = Color.White, night = Color.White),
+                color = ColorProvider(Color.White, Color.White),
                 fontWeight = FontWeight.Normal,
             ),
             modifier = GlanceModifier.wrapContentSize()
@@ -131,6 +133,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                         else R.drawable.heart_unfilled
                     ),
                     contentDescription = "Like",
+                    colorFilter = ColorFilter.tint(ColorProvider(Color.White, Color.White)),
                     modifier = GlanceModifier
                         .size(28.dp)
                         .padding(end = 8.dp, bottom = 8.dp)

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base Black -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#000000" />
+        </shape>
+    </item>
+
+    <!-- Super Soft Vibrant Rainbow Prism in Top-Left -->
+    <!-- Increased size and offset to hide edges -->
+    <item
+        android:width="250dp"
+        android:height="250dp"
+        android:left="-90dp"
+        android:top="-90dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="235dp"
+                android:centerX="0.2"
+                android:centerY="0.2"
+                android:startColor="#89FF1313"
+                android:centerColor="#525666FC"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Super Soft Secondary Accent Glow in Bottom-Right -->
+    <item
+        android:width="250dp"
+        android:height="250dp"
+        android:gravity="bottom|right"
+        android:bottom="-80dp"
+        android:right="-80dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="230dp"
+                android:centerX="0.8"
+                android:centerY="0.8"
+                android:startColor="#76DD52F5"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+</layer-list>

@@ -2,13 +2,12 @@ package com.shalenmathew.quotesapp.presentation.widget
 
 import android.content.Context
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
@@ -25,7 +24,6 @@ import androidx.glance.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
@@ -34,14 +32,10 @@ import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
-import androidx.glance.layout.wrapContentHeight
-import androidx.glance.layout.wrapContentSize
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import androidx.glance.unit.ColorProvider
-import androidx.glance.ColorFilter
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
@@ -114,7 +108,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                 modifier = GlanceModifier.defaultWeight()
             ) {
                 Text(
-                    text = "Your day at a glance",
+                    text = "A gentle reminder for today",
                     style = TextStyle(
                         fontSize = 13.sp,
                         color = ColorProvider(Color.White.copy(alpha = 0.6f), Color.White.copy(alpha = 0.6f)),
@@ -126,25 +120,38 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                 Text(
                     text = savedQuote,
                     style = TextStyle(
-                        fontSize = 19.sp,
+                        fontSize = 15.sp,
                         color = ColorProvider(Color.White, Color.White),
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                     )
                 )
             }
 
-            Spacer(modifier = GlanceModifier.width(12.dp))
+            Spacer(modifier = GlanceModifier.width(15.dp))
+
+            val prismImages = listOf(R.drawable.prism,
+                R.drawable.prism2,
+                R.drawable.prism3,
+                R.drawable.prsim4,
+                R.drawable.prism5,
+                R.drawable.prism6,
+                R.drawable.prism7,
+                R.drawable.prism8,
+                )
+            val selectedPrism = if (quoteId != -1) prismImages[Math.abs(quoteId) % prismImages.size] else R.drawable.prism3
 
             Image(
-                provider = ImageProvider(R.drawable.prism),
+                provider = ImageProvider(selectedPrism),
                 contentDescription = null,
-                modifier = GlanceModifier.size(90.dp)
+                contentScale = androidx.glance.layout.ContentScale.Crop,
+                modifier = GlanceModifier.size(60.dp)
             )
         }
 
         if (quoteId != -1) {
             Row(
-                modifier = GlanceModifier.fillMaxWidth(),
+                modifier = GlanceModifier.fillMaxWidth()
+                    .padding(top = 20.dp),
                 horizontalAlignment = Alignment.End
             ) {
                 Image(

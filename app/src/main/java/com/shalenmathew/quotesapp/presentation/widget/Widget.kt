@@ -132,7 +132,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
             val prismImages = listOf(R.drawable.prism,
                 R.drawable.prism2,
                 R.drawable.prism3,
-                R.drawable.prsim4,
+                R.drawable.prism4,
                 R.drawable.prism5,
                 R.drawable.prism6,
                 R.drawable.prism7,

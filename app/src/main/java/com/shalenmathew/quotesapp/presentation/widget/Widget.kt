@@ -25,12 +25,15 @@ import androidx.glance.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
+import androidx.glance.layout.width
 import androidx.glance.layout.wrapContentHeight
 import androidx.glance.layout.wrapContentSize
 import androidx.glance.state.PreferencesGlanceStateDefinition
@@ -84,7 +87,6 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
     val radius = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         android.R.dimen.system_app_widget_background_radius
     } else {
-        // Fallback for older versions (e.g., 16dp)
         null
     }
 
@@ -97,30 +99,48 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                 else GlanceModifier.cornerRadius(16.dp)
             )
             .background(ImageProvider(R.drawable.widget_prism_bg))
-            .padding(horizontal = 12.dp, vertical = 5.dp)
+//            .background(Color.Black)
+            .padding(20.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
-        Image(
-            provider = ImageProvider(R.drawable.quotation),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(ColorProvider(Color.White, Color.White)),
-            modifier = GlanceModifier
-                .padding(start = 12.dp, top = 10.dp)
-                .size(30.dp)
-        )
+        Row(
+            modifier = GlanceModifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Column(
+                modifier = GlanceModifier.defaultWeight()
+            ) {
+                Text(
+                    text = "Your day at a glance",
+                    style = TextStyle(
+                        fontSize = 13.sp,
+                        color = ColorProvider(Color.White.copy(alpha = 0.6f), Color.White.copy(alpha = 0.6f)),
+                        fontWeight = FontWeight.Normal,
+                    ),
+                    modifier = GlanceModifier.padding(bottom = 8.dp)
+                )
 
-        Text(
-            text = savedQuote,
-            style = TextStyle(
-                fontSize = 18.sp,
-                color = ColorProvider(Color.White, Color.White),
-                fontWeight = FontWeight.Normal,
-            ),
-            modifier = GlanceModifier.wrapContentSize()
-                .padding(horizontal = 15.dp, vertical = 15.dp)
-        )
+                Text(
+                    text = savedQuote,
+                    style = TextStyle(
+                        fontSize = 19.sp,
+                        color = ColorProvider(Color.White, Color.White),
+                        fontWeight = FontWeight.Bold,
+                    )
+                )
+            }
+
+            Spacer(modifier = GlanceModifier.width(12.dp))
+
+            Image(
+                provider = ImageProvider(R.drawable.prism),
+                contentDescription = null,
+                modifier = GlanceModifier.size(90.dp)
+            )
+        }
 
         if (quoteId != -1) {
             Row(
@@ -135,8 +155,8 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                     contentDescription = "Like",
                     colorFilter = ColorFilter.tint(ColorProvider(Color.White, Color.White)),
                     modifier = GlanceModifier
-                        .size(28.dp)
-                        .padding(end = 8.dp, bottom = 8.dp)
+                        .size(24.dp)
+                        .padding(top = 8.dp)
                         .clickable(
                             actionRunCallback<ToggleLikeActionCallback>(
                                 actionParametersOf(

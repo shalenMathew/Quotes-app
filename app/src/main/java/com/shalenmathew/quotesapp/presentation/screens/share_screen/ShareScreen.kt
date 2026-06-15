@@ -59,6 +59,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.CodeSnippetStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DragAndDropTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
@@ -124,6 +125,12 @@ fun ShareScreen(
     val pickTwitterProfileImage =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             twitterProfileUri = uri
+        }
+
+    var dragAndDropImageUri by remember { mutableStateOf<Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    val pickDragAndDropImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            dragAndDropImageUri = uri
         }
 
 
@@ -217,6 +224,13 @@ fun ShareScreen(
                         QuoteStyle.TwitterTheme -> {
                             TwitterStyleTheme(Modifier, quote, twitterProfileUri)
 
+                        }
+
+                        QuoteStyle.DragAndDropTheme -> {
+                            DragAndDropTheme(
+                                quote = quote,
+                                imageUri = dragAndDropImageUri
+                            )
                         }
                     }
                 }
@@ -359,6 +373,21 @@ fun ShareScreen(
                             .clickable {
                                 // Launch image picker
                                 pickTwitterProfileImage.launch("image/*")
+                            }
+                    )
+                }
+
+                // icons visible on Drag and Drop theme
+                AnimatedVisibility(quoteStyleState == QuoteStyle.DragAndDropTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Pick background image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                pickDragAndDropImage.launch("image/*")
                             }
                     )
                 }
@@ -685,6 +714,22 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.TwitterTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Drag And Drop Theme",
+                    drawableRes = R.drawable.ic_launcher_background, // Placeholder image
+                    quoteStyle = QuoteStyle.DragAndDropTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.DragAndDropTheme,
+                    contentScale = ContentScale.Crop,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.DragAndDropTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.DragAndDropTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

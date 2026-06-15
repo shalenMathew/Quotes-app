@@ -28,6 +28,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.ArtisanCardTheme -> Constants.ARTISAN_CARD_THEME
             is QuoteStyle.BookLookTheme -> Constants.BOOK_LOOK_THEME
             is QuoteStyle.TwitterTheme -> Constants.TWITTER_CARD_THEME
+            is QuoteStyle.DragAndDropTheme -> Constants.DRAG_AND_DROP_THEME
         }
         sharedPreferences.edit {
             putString(QUOTE_STYLE_KEY, quoteStyleString)
@@ -50,6 +51,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             Constants.ARTISAN_CARD_THEME -> QuoteStyle.ArtisanCardTheme
             Constants.BOOK_LOOK_THEME -> QuoteStyle.BookLookTheme
             Constants.TWITTER_CARD_THEME -> QuoteStyle.TwitterTheme
+            Constants.DRAG_AND_DROP_THEME -> QuoteStyle.DragAndDropTheme
             else -> QuoteStyle.DefaultTheme
         }
     }

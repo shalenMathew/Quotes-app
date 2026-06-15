@@ -35,4 +35,5 @@ object Constants {
     const val BOOK_LOOK_THEME = "BookLookTheme"
 
     const val TWITTER_CARD_THEME = "TwitterTheme"
+    const val DRAG_AND_DROP_THEME = "DragAndDropTheme"
 }

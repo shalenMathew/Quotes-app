@@ -127,7 +127,7 @@ fun ShareScreen(
             twitterProfileUri = uri
         }
 
-    var dragAndDropImageUri by remember { mutableStateOf<Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
+    var dragAndDropImageUri by remember { mutableStateOf<Uri?>(null) }
     val pickDragAndDropImage =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             dragAndDropImageUri = uri
@@ -719,8 +719,8 @@ fun ShareScreen(
                 )
 
                 ThemeItem(
-                    title = "Drag And Drop Theme",
-                    drawableRes = R.drawable.ic_launcher_background, // Placeholder image
+                    title = "Drag And Drop Text",
+                    drawableRes = R.drawable.sample_drag_n_drop,
                     quoteStyle = QuoteStyle.DragAndDropTheme,
                     isSelected = defaultQuoteStyle == QuoteStyle.DragAndDropTheme,
                     contentScale = ContentScale.Crop,

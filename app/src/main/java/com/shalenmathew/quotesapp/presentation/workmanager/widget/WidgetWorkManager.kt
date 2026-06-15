@@ -75,7 +75,11 @@ class WidgetWorkManager @AssistedInject constructor(
                 context.setLastAlarmTriggerMillis(System.currentTimeMillis())
                 Result.success()
             } else {
-                Result.retry()
+
+//                Result.retry()
+
+                Log.d(TAG, "Update failed, skipping this interval to save battery.")
+                Result.success()
             }
 
 

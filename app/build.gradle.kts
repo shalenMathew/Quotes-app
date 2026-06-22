@@ -41,8 +41,10 @@ android {
         buildTypes {
             release {
                 buildConfigField("Boolean", "ENABLE_ANALYTICS", "true")
-                isMinifyEnabled = false
+                isMinifyEnabled = true
+                isShrinkResources = true
                 proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
             }
 
             debug {

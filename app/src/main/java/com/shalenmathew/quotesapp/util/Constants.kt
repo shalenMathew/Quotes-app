@@ -1,8 +1,8 @@
 package com.shalenmathew.quotesapp.util
 
 object Constants {
-//    const val BASE_URL = "https://quotes-app-backend-au3c.onrender.com/api/"
-    const val BASE_URL = "https://zenquotes.io/api/"
+    const val BASE_URL = "https://quotes-app-backend-au3c.onrender.com/api/"
+//    const val BASE_URL = "https://zenquotes.io/api/"
     const val NOTIFICATION_ID = 100
     const val NOTIFICATION_CHANNEL_ID = "quote_channel"
     const val NOTIFICATION_CHANNEL_ID_NEW = "quote_channel_new"

@@ -90,6 +90,14 @@ or
 - ✍️ create your own custom quotes
 - 🔔 daily inspiration via notifications
 
+ ## 🤖 Backend
+
+ - The app uses my own home grown backend created from scratch powered by AI
+ - 👉 [Quotes app backend](https://github.com/shalenMathew/Quotes-app-backend).
+ 
+   <img width="250" alt="b14d7457428c06f625ac675d324190c8" src="https://github.com/user-attachments/assets/3eccaea5-f95a-483a-ba2d-ece197f969c5" />
+
+
 
 ## Contribution/Issues 🤝
 - If your new to open source and want to play around with contribution you can do it here or u can raise issue if you want to make any improvements or fix any bugs

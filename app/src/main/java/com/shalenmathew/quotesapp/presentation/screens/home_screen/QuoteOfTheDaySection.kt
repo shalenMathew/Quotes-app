@@ -30,9 +30,11 @@ fun QuoteOfTheDaySection(
             .background(Color.Transparent)
     ) {
 
-        Column(modifier = Modifier
-            .wrapContentHeight()
-            .fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+        ) {
             Text(
                 text = "Quote of the day",
                 fontFamily = GIFont,

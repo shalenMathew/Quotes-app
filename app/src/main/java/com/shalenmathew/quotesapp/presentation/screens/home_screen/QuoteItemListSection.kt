@@ -214,6 +214,3 @@ fun QuoteItemListSection(
         }
     }
 }
-
-
-

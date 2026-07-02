@@ -3,6 +3,7 @@ package com.shalenmathew.quotesapp.presentation.screens.home_screen
 import android.content.Intent
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
@@ -62,15 +63,31 @@ fun HomeScreen(
         ).animationPreferences()
     }
 
+    val state = quoteViewModel.quoteState.value
+
     var isVisible by remember {
         mutableStateOf(animationPreferences.hasRainbowAnimationBeenShown())
     }
 
-    LaunchedEffect(Unit) {
-        if (!animationPreferences.hasRainbowAnimationBeenShown()) {
-            delay(1000)
-            isVisible = true
-            animationPreferences.setRainbowAnimationShown()
+    // Trigger rainbow animation logic
+    LaunchedEffect(state.isLoading) {
+        if (state.isLoading) {
+            // Only fade out if it's currently visible AND it's not the initial startup load
+            // (Initial load is when hasRainbowAnimationBeenShown is still false)
+            if (isVisible && animationPreferences.hasRainbowAnimationBeenShown()) {
+                isVisible = false
+            }
+        } else {
+            // Data has arrived (or we are in idle state)
+            // Show (fade in) if it's currently hidden and we have data to display
+            if (!isVisible && state.dataList.isNotEmpty()) {
+                delay(500)
+                isVisible = true
+                // Mark as shown for the current session
+                if (!animationPreferences.hasRainbowAnimationBeenShown()) {
+                    animationPreferences.setRainbowAnimationShown()
+                }
+            }
         }
     }
 
@@ -103,6 +120,7 @@ fun HomeScreen(
         AnimatedVisibility(
             visible = isVisible,
             enter = fadeIn(animationSpec = tween(durationMillis = 3000)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 1500)),
             modifier = Modifier
                 .size(200.dp)
                 .align(Alignment.TopEnd),

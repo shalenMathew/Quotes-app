@@ -15,8 +15,16 @@
 <img width="1024" height="500" alt="Quotes img" src="https://github.com/user-attachments/assets/18d2a81d-4846-4854-8d5e-d3750d294854" />
 
 
-### Quotes App is a minimalistic quotes app to fill your day with positivity and gratitude.
-### The app follows latest android principles and components
+### A minimalistic quotes app with Tinder-like swipeable cards to fill your day with positivity and gratitude.
+
+## Project Overview
+
+`A free and open-source quotes app with no-ads , no - subscriptions and intended to be free forever. Because staying positive should be free ✌️`
+
+The app follows latest android principles and components. 
+
+<b> This project will be best for you if ur someone who are looking to learn more about android development
+or Who are trying to find simpler projects to begin their contribution journey. </b>
 
 
 <p align="left">
@@ -39,10 +47,6 @@
 ## Socials
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">](https://discord.gg/QpDJh3rT4q)
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Twitter/twitter1.svg">](https://x.com/shalenmathew)
-
-### This project will be best for you if ur someone who are looking to learn more about android development
-or
-### Who are trying to find simpler projects to begin their contribution journey
 
 # Users Review 💖
 

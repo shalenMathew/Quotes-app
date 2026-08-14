@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
+import com.shalenmathew.quotesapp.util.isZenAudioEnabled
 import com.shalenmathew.quotesapp.util.setNotificationSources
 import com.shalenmathew.quotesapp.util.setWidgetSources
+import com.shalenmathew.quotesapp.util.setZenAudioEnabled
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,6 +21,14 @@ class SettingsViewModel @Inject constructor(
     private val scheduleWidgetRefresh: ScheduleWidgetRefresh,
     private val scheduleNotificationRefresh: ScheduleNotification,
 ) : ViewModel() {
+
+    val isZenAudioEnabled: Flow<Boolean> = context.isZenAudioEnabled()
+
+    fun toggleZenAudio(enabled: Boolean) {
+        viewModelScope.launch {
+            context.setZenAudioEnabled(enabled)
+        }
+    }
 
     fun scheduleWidgetRefreshWorkManager() {
         viewModelScope.launch {

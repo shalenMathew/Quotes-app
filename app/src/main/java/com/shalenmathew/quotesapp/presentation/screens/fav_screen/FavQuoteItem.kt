@@ -23,6 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,6 +48,8 @@ fun FavQuoteItem(
     navHost: NavHostController,
     modifier: Modifier
 ) {
+
+    val haptic = LocalHapticFeedback.current
 
     val gradient = Brush.radialGradient(
         0.0f to customBlack,
@@ -122,6 +126,7 @@ fun FavQuoteItem(
                             .padding(end = 12.dp, bottom = 10.dp)
                             .size(35.dp)
                             .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 quoteViewModel.onEvent(FavQuoteEvent.Like(quote))
                             }
                     )

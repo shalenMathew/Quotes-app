@@ -34,6 +34,7 @@ val USER_PREF_NOTIFICATION_MODE_KEY = stringPreferencesKey("user_pref_notificati
 val USER_PREF_NOTIFICATION_DAILY_HOUR_KEY = intPreferencesKey("user_pref_notification_daily_hour")
 val USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY =
     intPreferencesKey("user_pref_notification_daily_minute")
+val ZEN_AUDIO_ENABLED_KEY = booleanPreferencesKey("zen_audio_enabled")
 val NOTIFICATION_SOURCES_KEY = stringSetPreferencesKey("notification_sources")
 
 suspend fun Context.setFirstLaunchDone() {
@@ -169,5 +170,17 @@ fun Context.getNotificationSources(): Flow<Set<String>> {
 suspend fun Context.setNotificationSources(sources: Set<String>) {
     dataStore.edit { preferences ->
         preferences[NOTIFICATION_SOURCES_KEY] = sources
+    }
+}
+
+fun Context.isZenAudioEnabled(): Flow<Boolean> {
+    return dataStore.data.map { preferences ->
+        preferences[ZEN_AUDIO_ENABLED_KEY] ?: false
+    }
+}
+
+suspend fun Context.setZenAudioEnabled(enabled: Boolean) {
+    dataStore.edit { preferences ->
+        preferences[ZEN_AUDIO_ENABLED_KEY] = enabled
     }
 }

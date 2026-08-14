@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -48,6 +50,8 @@ import com.shalenmathew.quotesapp.presentation.widget.AnimatedHeartButton
 
 @Composable
 fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostController) {
+
+    val haptic = LocalHapticFeedback.current
 
     // Observe the current state to get the updated quote with correct liked status
     val currentState = quoteViewModel.quoteState.value
@@ -118,6 +122,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
             AnimatedHeartButton(
                 isLiked = currentQuote.liked,
                 onLikeClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
                 }
             )

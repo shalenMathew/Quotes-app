@@ -1,7 +1,10 @@
 package com.shalenmathew.quotesapp.presentation
 
 import android.Manifest
+import android.animation.ValueAnimator
+import android.content.Context
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -19,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.navigation.AppNavigation
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.BottomNavAnimation
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
@@ -32,11 +36,13 @@ import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getNotificationInterval
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.isZenAudioEnabled
 import com.shalenmathew.quotesapp.util.setNotificationInterval
 import com.shalenmathew.quotesapp.util.setNotificationMode
 import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -52,6 +58,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var scheduleWidget: ScheduleWidgetRefresh
 
+    private var mediaPlayer: MediaPlayer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,6 +72,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuotesAppTheme {
                 val context = LocalContext.current
+                val navHost = rememberNavController()
+                val currentBackStackEntry by navHost.currentBackStackEntryAsState()
+                val currentDestination = currentBackStackEntry?.destination?.route
 
                 LaunchedEffect(Unit) {
                     val widgetRefreshInterval = context.getWidgetRefreshInterval().first()
@@ -92,11 +103,20 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                // Observe Zen Audio setting AND Navigation
+                LaunchedEffect(currentDestination) {
+                    context.isZenAudioEnabled().collect { enabled ->
+                        if (enabled && currentDestination != Screen.Splash.route && currentDestination != null) {
+                            startZenAudio(context, fadeIn = true)
+                        } else if (!enabled || currentDestination == Screen.Splash.route) {
+                            stopZenAudio()
+                        }
+                    }
+                }
+
                 /* REQUESTING NECESSARY PERMISSIONS  */
                 requestNecessaryPermissions()
                 checkWorkManagerStatus(this, this)
-
-                val navHost = rememberNavController()
 
                 Scaffold(
                     containerColor = androidx.compose.ui.graphics.Color.Black,
@@ -169,6 +189,52 @@ class MainActivity : ComponentActivity() {
                 Constants.REQUEST_CODE_NOTIFICATION
             )
         }
+    }
+
+    private fun startZenAudio(context: Context, fadeIn: Boolean = false) {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(context, R.raw.water_flow).apply {
+                isLooping = true
+            }
+        }
+        if (mediaPlayer?.isPlaying == false) {
+            if (fadeIn) {
+                mediaPlayer?.setVolume(0f, 0f)
+                mediaPlayer?.start()
+                ValueAnimator.ofFloat(0f, 0.3f).apply {
+                    duration = 2000 // 2 seconds fade in
+                    addUpdateListener {
+                        val volume = it.animatedValue as Float
+                        mediaPlayer?.setVolume(volume, volume)
+                    }
+                    start()
+                }
+            } else {
+                mediaPlayer?.setVolume(0.3f, 0.3f)
+                mediaPlayer?.start()
+            }
+        }
+    }
+
+    private fun stopZenAudio() {
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mediaPlayer?.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer?.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopZenAudio()
     }
 
 }

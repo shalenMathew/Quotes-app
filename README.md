@@ -12,7 +12,8 @@
 >
 > **Your favourite app including this app are in critical situation as their are no plans to launch in playstore soon...**
 
-<img width="1024" height="500" alt="Quotes img" src="https://github.com/user-attachments/assets/18d2a81d-4846-4854-8d5e-d3750d294854" />
+<img width="1024" height="500" alt="Quotes img" src="https://github.com/user-attachments/assets/5a9c476a-c651-4c57-8503-4dc01193e15a" />
+
 
 
 ### A minimalistic quotes app with Tinder-like swipeable cards to fill your day with positivity and gratitude.

@@ -16,16 +16,11 @@
 
 
 
-### A minimalistic quotes app with Tinder-like swipeable cards to fill your day with positivity and gratitude.
+## An quotes app with Tinder-like swiping, made for positivity and gratitude.
 
 ## Project Overview
 
 `A free and open-source quotes app with no-ads , no - subscriptions and intended to be free forever. Because staying positive should be free ✌️`
-
-The app follows latest android principles and components. 
-
-<b> This project will be best for you if ur someone who are looking to learn more about android development
-or Who are trying to find simpler projects to begin their contribution journey. </b>
 
 
 <p align="left">

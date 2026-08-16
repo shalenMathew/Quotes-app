@@ -20,7 +20,8 @@
 
 ## Project Overview
 
-`A free and open-source quotes app with no-ads , no - subscriptions and intended to be free forever. Because staying positive should be free ✌️`
+### `An quotes app with Tinder-like swiping, made for positivity and gratitude. `
+### `No-ads , No - Subscriptions and intended to be free forever. Because staying positive should be free ✌️`
 
 
 <p align="left">

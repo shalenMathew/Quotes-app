@@ -15,8 +15,6 @@
 <img width="1024" height="500" alt="Quotes img" src="https://github.com/user-attachments/assets/ea488190-a20d-46eb-916f-d6b6769414df" />
 
 
-## An quotes app with Tinder-like swiping, made for positivity and gratitude.
-
 ## Project Overview
 
 #### `An quotes app with Tinder-like swiping, made for positivity and gratitude. `

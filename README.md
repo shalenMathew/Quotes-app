@@ -12,7 +12,9 @@
 >
 > **Your favourite app including this app are in critical situation as their are no plans to launch in playstore soon...**
 
-<img width="1024" height="500" alt="Quotes img" src="https://github.com/user-attachments/assets/ea488190-a20d-46eb-916f-d6b6769414df" />
+
+<img width="1024" height="500" alt="Quotes (1)" src="https://github.com/user-attachments/assets/9159cb37-23c4-442f-bb05-81c42d3d09eb" />
+
 
 
 ## Project Overview

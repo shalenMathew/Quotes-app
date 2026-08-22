@@ -61,9 +61,21 @@
 
 ## See It In Action ✨
 
-|  |  |
-|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/d566613b-4bb8-43be-a4e6-f21ce8487b57" width="360"> | <img src="https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534" width="360"> |
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/d566613b-4bb8-43be-a4e6-f21ce8487b57"
+    alt="Quotes app demonstration"
+    width="650"
+  />
+</p>
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534"
+    alt="Quotes app preview"
+    width="650"
+  />
+</p>
 
 ## Trailer 🎬
 

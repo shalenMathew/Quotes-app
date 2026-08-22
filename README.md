@@ -44,18 +44,52 @@
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Discord/discord2.svg">](https://discord.gg/QpDJh3rT4q)
 > [<img src="https://ziadoua.github.io/m3-Markdown-Badges/badges/Twitter/twitter1.svg">](https://x.com/shalenmathew)
 
-# Users Review 💖
+## Users Review 💖
 
-[Users just love the app](https://www.reddit.com/r/fossdroid/comments/1szrsdt/quotes_app_a_open_source_tinder_for_positive/)
+> **“Quotes is like Tinder, but for positivity.”**  
+> See what the community thinks on [Reddit](https://www.reddit.com/r/fossdroid/comments/1szrsdt/quotes_app_a_open_source_tinder_for_positive/).
 
-<img width="1004" height="714" alt="Screenshot 2026-05-04 154650" src="https://github.com/user-attachments/assets/c56fac83-812d-4ca0-ad34-5266f28caec3" />
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/c56fac83-812d-4ca0-ad34-5266f28caec3"
+    alt="Users reviewing Quotes"
+    width="800"
+  />
+</p>
 
+---
 
-## Trailer 📽️
+## See It In Action ✨
 
-<img src="https://github.com/user-attachments/assets/d566613b-4bb8-43be-a4e6-f21ce8487b57" alt="Trailer GIF" width="700" >
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/d566613b-4bb8-43be-a4e6-f21ce8487b57"
+    alt="Quotes app demonstration"
+    width="420"
+  />
+  &nbsp;&nbsp;
+  <img
+    src="https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534"
+    alt="Quotes app preview"
+    width="420"
+  />
+</p>
 
-![Adobe Express - 416798702-38a15a1e-b324-4355-8574-49e83cf044cd](https://github.com/user-attachments/assets/bbeb71e4-5d6c-424e-916c-3cb157b6c534)
+## Trailer 🎬
+
+<p align="center">
+  <a href="https://youtu.be/zoDPjzray1w">
+    <img
+      src="https://img.youtube.com/vi/zoDPjzray1w/maxresdefault.jpg"
+      alt="Watch the Quotes app trailer"
+      width="700"
+    />
+  </a>
+</p>
+
+<p align="center">
+  <sub>▶ Click to watch the full trailer</sub>
+</p>
 
 ## Screenshots 📱
 

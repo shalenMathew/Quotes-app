@@ -33,7 +33,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -101,7 +100,6 @@ fun SettingsScreen(
     val context = LocalContext.current
     val coroutineScope = CoroutineScope(Dispatchers.IO)
     var isQuotesWidgetEnabled by remember { mutableStateOf(false) }
-    val isZenAudioEnabled by settingsViewModel.isZenAudioEnabled.collectAsState(initial = false)
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -267,7 +265,10 @@ fun SettingsScreen(
                             )
                             .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                             .background(customGrey2)
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                            .clickable {
+                                navHost.navigate(Screen.ZenAudioSettings.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 18.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -281,22 +282,17 @@ fun SettingsScreen(
                                     .size(30.dp)
                             )
                             Text(
-                                text = "Zen Audio (Flowing Water)",
+                                text = "Zen Audio",
                                 color = Color.White,
                                 fontFamily = GIFont,
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 16.sp
                             )
                         }
-                        Switch(
-                            checked = isZenAudioEnabled,
-                            onCheckedChange = { settingsViewModel.toggleZenAudio(it) },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
-                                checkedTrackColor = Color.Gray,
-                                uncheckedThumbColor = Color.DarkGray,
-                                uncheckedTrackColor = Color.Black
-                            )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
 

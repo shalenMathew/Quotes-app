@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
+import com.shalenmathew.quotesapp.util.getZenAudioCustomPath
 import com.shalenmathew.quotesapp.util.isZenAudioEnabled
 import com.shalenmathew.quotesapp.util.setNotificationSources
 import com.shalenmathew.quotesapp.util.setWidgetSources
+import com.shalenmathew.quotesapp.util.setZenAudioCustomPath
 import com.shalenmathew.quotesapp.util.setZenAudioEnabled
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,10 +25,17 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isZenAudioEnabled: Flow<Boolean> = context.isZenAudioEnabled()
+    val zenAudioCustomPath: Flow<String?> = context.getZenAudioCustomPath()
 
     fun toggleZenAudio(enabled: Boolean) {
         viewModelScope.launch {
             context.setZenAudioEnabled(enabled)
+        }
+    }
+
+    fun setZenAudioCustomPath(path: String?) {
+        viewModelScope.launch {
+            context.setZenAudioCustomPath(path)
         }
     }
 

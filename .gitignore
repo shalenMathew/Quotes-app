@@ -46,3 +46,4 @@ gradle.lockfile
 # Other IDE junk
 *.ctxt
 .mtj.tmp/
+.artifacts/

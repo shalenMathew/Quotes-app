@@ -211,8 +211,9 @@ sealed class Screen(
     object NotificationTime : Screen("NotificationTime", false)
     object AboutMe : Screen("AboutMe", false)
     object Donation : Screen("Donation", false)
+    object ZenAudioSettings : Screen("ZenAudioSettings", false)
     companion object {
-        val values: List<Screen> = listOf(Home, Fav, Splash, Share, Settings, AboutLibraries, AboutMe, Donation)
+        val values: List<Screen> = listOf(Home, Fav, Splash, Share, Settings, AboutLibraries, AboutMe, Donation, ZenAudioSettings)
     }
 }
 

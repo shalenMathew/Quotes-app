@@ -21,6 +21,7 @@ import com.shalenmathew.quotesapp.presentation.screens.settings_screen.widget_so
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.about_me.AboutMeScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.donation.DonationScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.backup.BackupScreen
+import com.shalenmathew.quotesapp.presentation.screens.settings_screen.zen_audio.ZenAudioSettingsScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.ShareScreen
 
 @Composable
@@ -105,6 +106,13 @@ fun AppNavigation(
 
         composable(Screen.Donation.route) {
             DonationScreen(
+                paddingValues = paddingValues,
+                navHost = navHost
+            )
+        }
+
+        composable(Screen.ZenAudioSettings.route) {
+            ZenAudioSettingsScreen(
                 paddingValues = paddingValues,
                 navHost = navHost
             )

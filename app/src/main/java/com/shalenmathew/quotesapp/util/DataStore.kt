@@ -35,6 +35,7 @@ val USER_PREF_NOTIFICATION_DAILY_HOUR_KEY = intPreferencesKey("user_pref_notific
 val USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY =
     intPreferencesKey("user_pref_notification_daily_minute")
 val ZEN_AUDIO_ENABLED_KEY = booleanPreferencesKey("zen_audio_enabled")
+val ZEN_AUDIO_CUSTOM_PATH_KEY = stringPreferencesKey("zen_audio_custom_path")
 val NOTIFICATION_SOURCES_KEY = stringSetPreferencesKey("notification_sources")
 
 suspend fun Context.setFirstLaunchDone() {
@@ -175,12 +176,28 @@ suspend fun Context.setNotificationSources(sources: Set<String>) {
 
 fun Context.isZenAudioEnabled(): Flow<Boolean> {
     return dataStore.data.map { preferences ->
-        preferences[ZEN_AUDIO_ENABLED_KEY] ?: false
+        preferences[ZEN_AUDIO_ENABLED_KEY] ?: true
     }
 }
 
 suspend fun Context.setZenAudioEnabled(enabled: Boolean) {
     dataStore.edit { preferences ->
         preferences[ZEN_AUDIO_ENABLED_KEY] = enabled
+    }
+}
+
+fun Context.getZenAudioCustomPath(): Flow<String?> {
+    return dataStore.data.map { preferences ->
+        preferences[ZEN_AUDIO_CUSTOM_PATH_KEY]
+    }
+}
+
+suspend fun Context.setZenAudioCustomPath(path: String?) {
+    dataStore.edit { preferences ->
+        if (path == null) {
+            preferences.remove(ZEN_AUDIO_CUSTOM_PATH_KEY)
+        } else {
+            preferences[ZEN_AUDIO_CUSTOM_PATH_KEY] = path
+        }
     }
 }

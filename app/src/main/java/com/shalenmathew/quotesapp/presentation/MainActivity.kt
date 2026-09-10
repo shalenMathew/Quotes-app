@@ -36,11 +36,13 @@ import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
 import com.shalenmathew.quotesapp.util.getMillisFromNow
 import com.shalenmathew.quotesapp.util.getNotificationInterval
 import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.getZenAudioCustomPath
 import com.shalenmathew.quotesapp.util.isZenAudioEnabled
 import com.shalenmathew.quotesapp.util.setNotificationInterval
 import com.shalenmathew.quotesapp.util.setNotificationMode
 import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,6 +61,7 @@ class MainActivity : ComponentActivity() {
     lateinit var scheduleWidget: ScheduleWidgetRefresh
 
     private var mediaPlayer: MediaPlayer? = null
+    private var currentAudioPath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,9 +108,14 @@ class MainActivity : ComponentActivity() {
 
                 // Observe Zen Audio setting AND Navigation
                 LaunchedEffect(currentDestination) {
-                    context.isZenAudioEnabled().collect { enabled ->
+                    combine(
+                        context.isZenAudioEnabled(),
+                        context.getZenAudioCustomPath()
+                    ) { enabled, customPath ->
+                        enabled to customPath
+                    }.collect { (enabled, customPath) ->
                         if (enabled && currentDestination != Screen.Splash.route && currentDestination != null) {
-                            startZenAudio(context, fadeIn = true)
+                            startZenAudio(context, fadeIn = true, customPath = customPath)
                         } else if (!enabled || currentDestination == Screen.Splash.route) {
                             stopZenAudio()
                         }
@@ -191,11 +199,31 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun startZenAudio(context: Context, fadeIn: Boolean = false) {
+    private fun startZenAudio(context: Context, fadeIn: Boolean = false, customPath: String? = null) {
+        if (mediaPlayer != null && currentAudioPath != customPath) {
+            stopZenAudio()
+        }
+
         if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.water_flow).apply {
-                isLooping = true
+            mediaPlayer = if (customPath != null) {
+                try {
+                    MediaPlayer().apply {
+                        setDataSource(customPath)
+                        prepare()
+                        isLooping = true
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    MediaPlayer.create(context, R.raw.water_flow).apply {
+                        isLooping = true
+                    }
+                }
+            } else {
+                MediaPlayer.create(context, R.raw.water_flow).apply {
+                    isLooping = true
+                }
             }
+            currentAudioPath = customPath
         }
         if (mediaPlayer?.isPlaying == false) {
             if (fadeIn) {
@@ -220,6 +248,7 @@ class MainActivity : ComponentActivity() {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
+        currentAudioPath = null
     }
 
     override fun onResume() {

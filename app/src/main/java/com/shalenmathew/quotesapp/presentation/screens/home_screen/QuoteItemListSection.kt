@@ -49,7 +49,12 @@ import com.shalenmathew.quotesapp.presentation.widget.AnimatedHeartButton
 
 
 @Composable
-fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostController) {
+fun QuoteItem(
+    data: Quote,
+    quoteViewModel: QuoteViewModel,
+    navHost: NavHostController,
+    onLongClickHeart: (Quote) -> Unit
+) {
 
     val haptic = LocalHapticFeedback.current
 
@@ -124,6 +129,9 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
                 onLikeClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
+                },
+                onLongClick = {
+                    onLongClickHeart(currentQuote)
                 }
             )
 
@@ -149,6 +157,7 @@ fun QuoteItem(data: Quote, quoteViewModel: QuoteViewModel, navHost: NavHostContr
 fun QuoteItemListSection(
     quoteViewModel: QuoteViewModel,
     navHost: NavHostController,
+    onLongClickHeart: (Quote) -> Unit
 ) {
 
     val state = quoteViewModel.quoteState.value
@@ -207,7 +216,7 @@ fun QuoteItemListSection(
         ) {
 
             items(state.dataList) {
-                QuoteItem(it, quoteViewModel, navHost)
+                QuoteItem(it, quoteViewModel, navHost, onLongClickHeart)
             }
             onSwiped { item, _ ->
                 val quote = item as Quote

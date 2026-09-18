@@ -37,4 +37,7 @@ object Constants {
 
     const val TWITTER_CARD_THEME = "TwitterTheme"
     const val DRAG_AND_DROP_THEME = "DragAndDropTheme"
+
+    const val COLLECTION_ID_FAV = -1
+    const val COLLECTION_ID_CUSTOM = -2
 }

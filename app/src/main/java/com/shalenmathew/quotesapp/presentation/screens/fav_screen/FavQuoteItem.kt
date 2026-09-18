@@ -33,20 +33,17 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
-import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
-import com.shalenmathew.quotesapp.presentation.screens.fav_screen.util.FavQuoteEvent
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.customBlack
 import com.shalenmathew.quotesapp.presentation.theme.customGrey
-import com.shalenmathew.quotesapp.presentation.viewmodel.FavQuoteViewModel
 
 
 @Composable
 fun FavQuoteItem(
     quote: Quote,
-    quoteViewModel: FavQuoteViewModel,
-    navHost: NavHostController,
-    modifier: Modifier
+    onLikeClick: () -> Unit,
+    onShareClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     val haptic = LocalHapticFeedback.current
@@ -63,7 +60,7 @@ fun FavQuoteItem(
             .padding(horizontal = 12.dp, vertical = 5.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(gradient)
-            .fillMaxSize()
+            .fillMaxWidth()
     ) {
 
         Column(modifier = Modifier.wrapContentSize()) {
@@ -112,8 +109,7 @@ fun FavQuoteItem(
                             .padding(end = 12.dp, bottom = 10.dp)
                             .size(35.dp)
                             .clickable {
-                                navHost.currentBackStackEntry?.savedStateHandle?.set("quote", quote)
-                                navHost.navigate(Screen.Share.route)
+                                onShareClick()
                             }
                     )
 
@@ -127,7 +123,7 @@ fun FavQuoteItem(
                             .size(35.dp)
                             .clickable {
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                quoteViewModel.onEvent(FavQuoteEvent.Like(quote))
+                                onLikeClick()
                             }
                     )
                 }

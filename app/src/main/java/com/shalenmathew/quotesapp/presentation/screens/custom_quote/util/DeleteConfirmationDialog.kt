@@ -30,6 +30,7 @@ import com.shalenmathew.quotesapp.presentation.theme.customGrey
 @Composable
 fun DeleteConfirmationDialog(
     modifier: Modifier = Modifier,
+    title: String = "Delete Quote?",
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -54,7 +55,7 @@ fun DeleteConfirmationDialog(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Delete Quote?",
+                text = title,
                 fontFamily = GIFont,
                 fontSize = 22.sp,
                 color = Color.White

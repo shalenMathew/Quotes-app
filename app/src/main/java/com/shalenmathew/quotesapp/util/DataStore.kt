@@ -37,11 +37,20 @@ val USER_PREF_NOTIFICATION_DAILY_MINUTE_KEY =
 val ZEN_AUDIO_ENABLED_KEY = booleanPreferencesKey("zen_audio_enabled")
 val ZEN_AUDIO_CUSTOM_PATH_KEY = stringPreferencesKey("zen_audio_custom_path")
 val NOTIFICATION_SOURCES_KEY = stringSetPreferencesKey("notification_sources")
+val HAS_SHOWN_COLLECTION_TIP_KEY = booleanPreferencesKey("has_shown_collection_tip")
 
 suspend fun Context.setFirstLaunchDone() {
     dataStore.edit { prefs ->
         prefs[IS_FIRST_LAUNCH_KEY] = false
     }
+}
+
+fun Context.hasShownCollectionTip(): Flow<Boolean> {
+    return dataStore.data.map { it[HAS_SHOWN_COLLECTION_TIP_KEY] ?: false }
+}
+
+suspend fun Context.setCollectionTipShown() {
+    dataStore.edit { it[HAS_SHOWN_COLLECTION_TIP_KEY] = true }
 }
 
 fun Context.isFirstLaunch(): Flow<Boolean> {

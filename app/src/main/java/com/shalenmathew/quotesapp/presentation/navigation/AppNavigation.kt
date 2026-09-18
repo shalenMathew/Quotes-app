@@ -9,7 +9,8 @@ import androidx.navigation.compose.composable
 import com.shalenmathew.quotesapp.presentation.screens.about_libraries_screen.AboutLibrariesScreen
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.screens.custom_quote.AddCustomQuoteScreen
-import com.shalenmathew.quotesapp.presentation.screens.fav_screen.FavScreen
+import com.shalenmathew.quotesapp.presentation.screens.library.CollectionDetailScreen
+import com.shalenmathew.quotesapp.presentation.screens.library.LibraryScreen
 import com.shalenmathew.quotesapp.presentation.screens.home_screen.HomeScreen
 import com.shalenmathew.quotesapp.presentation.screens.intro_screen.SplashScreen
 import com.shalenmathew.quotesapp.presentation.screens.notification_time_screen.NotificationTimeScreen
@@ -41,7 +42,11 @@ fun AppNavigation(
                 intent = intent
             )
         }
-        composable(Screen.Fav.route) { FavScreen(paddingValues = paddingValues, navHost = navHost) }
+        composable(Screen.Library.route) { LibraryScreen(paddingValues = paddingValues, navHost = navHost) }
+        composable(Screen.CollectionDetail.route + "/{collectionId}") { backStackEntry ->
+            val collectionId = backStackEntry.arguments?.getString("collectionId")?.toInt() ?: -1
+            CollectionDetailScreen(collectionId = collectionId, paddingValues = paddingValues, navHost = navHost)
+        }
         composable(Screen.Share.route) { ShareScreen(paddingValues, navHost) }
         composable(Screen.Settings.route) {
             SettingsScreen(

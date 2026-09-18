@@ -57,7 +57,7 @@ fun BottomNavAnimation(
     // Only show bottom nav if current screen needs it
     if (currentScreen?.needBottomNav == true) {
         val haptic = LocalHapticFeedback.current
-        val tabItem = listOf(BottomNav.Home, BottomNav.Fav, BottomNav.Settings)
+        val tabItem = listOf(BottomNav.Home, BottomNav.Library, BottomNav.Settings)
         Box(
             modifier = Modifier
                 .navigationBarsPadding()
@@ -197,7 +197,7 @@ sealed class Screen(
     val needBottomNav: Boolean
 ) {
     object Home : Screen("Home", true)
-    object Fav : Screen("Favourites", true)
+    object Library : Screen("Library", true)
     object Splash : Screen("Splash", false)
     object Share : Screen("Share", false)
     object Settings : Screen("Settings", true)
@@ -212,8 +212,9 @@ sealed class Screen(
     object AboutMe : Screen("AboutMe", false)
     object Donation : Screen("Donation", false)
     object ZenAudioSettings : Screen("ZenAudioSettings", false)
+    object CollectionDetail : Screen("CollectionDetail", false)
     companion object {
-        val values: List<Screen> = listOf(Home, Fav, Splash, Share, Settings, AboutLibraries, AboutMe, Donation, ZenAudioSettings)
+        val values: List<Screen> = listOf(Home, Library, Splash, Share, Settings, AboutLibraries, AboutMe, Donation, ZenAudioSettings, CollectionDetail)
     }
 }
 
@@ -223,6 +224,6 @@ sealed class BottomNav(
     val inactiveIcon: ImageVector
 ) {
     object Home : BottomNav(Screen.Home.route, Icons.Filled.Home, Icons.Outlined.Home)
-    object Fav : BottomNav(Screen.Fav.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
+    object Library : BottomNav(Screen.Library.route, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
     object Settings : BottomNav(Screen.Settings.route, Icons.Filled.Person, Icons.Outlined.Person)
 }

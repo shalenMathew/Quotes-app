@@ -2,7 +2,8 @@ package com.shalenmathew.quotesapp.presentation.widget
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -17,10 +18,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.shalenmathew.quotesapp.R
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AnimatedHeartButton(
     isLiked: Boolean,
     onLikeClick: () -> Unit,
+    onLongClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var isAnimating by remember { mutableStateOf(false) }
@@ -54,10 +57,15 @@ fun AnimatedHeartButton(
     Box(
         modifier = modifier
             .scale(scale)
-            .clickable {
-                isAnimating = true
-                onLikeClick()
-            }
+            .combinedClickable(
+                onClick = {
+                    isAnimating = true
+                    onLikeClick()
+                },
+                onLongClick = {
+                    onLongClick()
+                }
+            )
     ) {
         if (isLiked) {
             AsyncImage(

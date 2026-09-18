@@ -150,7 +150,7 @@ class MainActivity : ComponentActivity() {
                         if (intent.getStringExtra("shortcut_nav") == "settings") {
                             Screen.Settings.route
                         } else if (intent.getStringExtra("shortcut_nav") == "favourite") {
-                            Screen.Fav.route
+                            Screen.Library.route
                         } else Screen.Splash.route
                     AppNavigation(
                         navHost = navHost,

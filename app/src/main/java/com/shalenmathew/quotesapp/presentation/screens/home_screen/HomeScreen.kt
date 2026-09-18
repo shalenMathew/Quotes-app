@@ -2,6 +2,7 @@ package com.shalenmathew.quotesapp.presentation.screens.home_screen
 
 import android.content.Intent
 import android.os.Build
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.core.tween
@@ -19,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,12 +38,17 @@ import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.repository.AnimationPreferences
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
+import com.shalenmathew.quotesapp.presentation.screens.library.AddToCollectionBottomSheet
 import com.shalenmathew.quotesapp.presentation.viewmodel.QuoteViewModel
+import com.shalenmathew.quotesapp.util.hasShownCollectionTip
+import com.shalenmathew.quotesapp.util.setCollectionTipShown
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
@@ -67,6 +74,8 @@ fun HomeScreen(
     }
 
     val state = quoteViewModel.quoteState.value
+    val scope = rememberCoroutineScope()
+    var selectedQuoteForCollection by remember { mutableStateOf<Quote?>(null) }
 
     var isVisible by remember {
         mutableStateOf(animationPreferences.hasRainbowAnimationBeenShown())
@@ -145,7 +154,22 @@ fun HomeScreen(
         ) {
 
             QuoteOfTheDaySection(quoteViewModel)
-            QuoteItemListSection(quoteViewModel, navHost)
+            QuoteItemListSection(quoteViewModel, navHost) { quote ->
+                scope.launch {
+                    if (!context.hasShownCollectionTip().first()) {
+                        Toast.makeText(context, "Long press heart to add to collections!", Toast.LENGTH_SHORT).show()
+                        context.setCollectionTipShown()
+                    }
+                }
+                selectedQuoteForCollection = quote
+            }
+        }
+
+        selectedQuoteForCollection?.let { quote ->
+            AddToCollectionBottomSheet(
+                quote = quote,
+                onDismiss = { selectedQuoteForCollection = null }
+            )
         }
     }
 

@@ -14,12 +14,20 @@ class ToggleLikeActionCallback : ActionCallback {
         parameters: ActionParameters
     ) {
         val quoteId = parameters[WidgetKeys.quoteIdKey] ?: return
+        val isCustom = parameters[WidgetKeys.isCustomKey] ?: false
 
         runCatching {
             val entryPoint = EntryPointAccessors.fromApplication(
                 context,
                 WidgetEntryPoint::class.java
             )
+
+            // Since custom quotes hide the heart button, this will typically be false.
+            // But we check it here for completeness.
+            if (isCustom) {
+                Log.d(TAG, "Like action triggered for custom quote (ID: $quoteId). Ignoring as per app logic.")
+                return
+            }
 
             val likedQuote = entryPoint.likedQuote()(quoteId) ?: run {
                 Log.w(TAG, "Unable to like the quote with id: $quoteId")

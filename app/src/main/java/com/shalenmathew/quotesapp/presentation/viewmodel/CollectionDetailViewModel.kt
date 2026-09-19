@@ -65,7 +65,7 @@ class CollectionDetailViewModel @Inject constructor(
                         collectionUseCases.removeQuoteFromCollection(
                             _state.value.collectionId,
                             event.quote.id ?: return@launch,
-                            false
+                            event.quote.isCustom
                         )
                     }
                     getQuotes()

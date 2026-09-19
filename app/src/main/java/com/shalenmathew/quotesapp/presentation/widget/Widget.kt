@@ -39,6 +39,7 @@ import androidx.glance.text.TextStyle
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
+import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_IS_CUSTOM_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_LIKED_KEY
 import com.shalenmathew.quotesapp.util.dataStore
@@ -65,18 +66,20 @@ object QuotesWidgetObj : GlanceAppWidget() {
             val savedQuote = prefs[WIDGET_QUOTE_KEY] ?: deprecatedQuote ?: defaultMessage
             val quoteId = prefs[WIDGET_QUOTE_ID_KEY] ?: -1
             val isLiked = prefs[WIDGET_QUOTE_LIKED_KEY] ?: false
+            val isCustom = prefs[WIDGET_QUOTE_IS_CUSTOM_KEY] ?: false
 
             QuoteWidget(
                 savedQuote = savedQuote,
                 isLiked = isLiked,
                 quoteId = quoteId,
+                isCustom = isCustom
             )
         }
     }
 }
 
 @Composable
-fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
+fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int, isCustom: Boolean) {
 
     val radius = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         android.R.dimen.system_app_widget_background_radius
@@ -148,7 +151,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
             )
         }
 
-        if (quoteId != -1) {
+        if (quoteId != -1 && !isCustom) {
             Row(
                 modifier = GlanceModifier.fillMaxWidth()
                     .padding(top = 20.dp),
@@ -168,6 +171,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int) {
                             actionRunCallback<ToggleLikeActionCallback>(
                                 actionParametersOf(
                                     WidgetKeys.quoteIdKey to quoteId,
+                                    WidgetKeys.isCustomKey to isCustom
                                 )
                             )
                         )

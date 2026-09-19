@@ -51,7 +51,7 @@ fun AddToCollectionBottomSheet(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(quote.id) {
-        viewModel.onEvent(LibraryEvent.SetSelectedQuote(quote.id, false))
+        viewModel.onEvent(LibraryEvent.SetSelectedQuote(quote.id, quote.isCustom))
     }
 
     ModalBottomSheet(
@@ -97,9 +97,9 @@ fun AddToCollectionBottomSheet(
                             isSelected = isSelected,
                             onSelect = {
                                 if (isSelected) {
-                                    viewModel.onEvent(LibraryEvent.RemoveQuoteFromCollection(collection.id, quote.id ?: return@CollectionSelectItem, false))
+                                    viewModel.onEvent(LibraryEvent.RemoveQuoteFromCollection(collection.id, quote.id ?: return@CollectionSelectItem, quote.isCustom))
                                 } else {
-                                    viewModel.onEvent(LibraryEvent.AddQuoteToCollection(collection.id, quote.id ?: return@CollectionSelectItem, false))
+                                    viewModel.onEvent(LibraryEvent.AddQuoteToCollection(collection.id, quote.id ?: return@CollectionSelectItem, quote.isCustom))
                                 }
                             }
                         )

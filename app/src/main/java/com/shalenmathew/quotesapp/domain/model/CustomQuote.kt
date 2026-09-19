@@ -20,5 +20,6 @@ fun CustomQuote.toQuote(): Quote = Quote(
     quote = quote,
     author = author,
     liked = false,
-    updatedAt = createdAt
+    updatedAt = createdAt,
+    isCustom = true
 )

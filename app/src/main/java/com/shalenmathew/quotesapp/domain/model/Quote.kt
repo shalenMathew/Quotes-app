@@ -15,4 +15,5 @@ data class Quote(
     var liked: Boolean,
     var displayed: Boolean = false,
     var updatedAt: Long = System.currentTimeMillis(),
+    val isCustom: Boolean = false,
 ) : Parcelable

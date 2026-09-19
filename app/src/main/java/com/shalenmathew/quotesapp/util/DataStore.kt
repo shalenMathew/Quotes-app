@@ -20,6 +20,7 @@ val Context.dataStore by preferencesDataStore("quote_prefs")
 val WIDGET_QUOTE_KEY = stringPreferencesKey("widgetQuote")
 val WIDGET_QUOTE_ID_KEY = intPreferencesKey("widgetQuoteId")
 val WIDGET_QUOTE_LIKED_KEY = booleanPreferencesKey("widgetQuoteLiked")
+val WIDGET_QUOTE_IS_CUSTOM_KEY = booleanPreferencesKey("widgetQuoteIsCustom")
 val NOTIFICATION_QUOTE_MODEL = stringPreferencesKey("notificationQuoteModel")
 
 val IS_FIRST_LAUNCH_KEY = booleanPreferencesKey("is_first_launch")

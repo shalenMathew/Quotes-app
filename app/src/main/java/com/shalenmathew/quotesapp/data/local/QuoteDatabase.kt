@@ -8,7 +8,7 @@ import com.shalenmathew.quotesapp.domain.model.CustomQuote
 import com.shalenmathew.quotesapp.domain.model.Quote
 
 
-@Database(entities = [Quote::class, CustomQuote::class, Collection::class, CollectionQuoteCrossRef::class], version = 7)
+@Database(entities = [Quote::class, CustomQuote::class, Collection::class, CollectionQuoteCrossRef::class], version = 8)
 abstract class QuoteDatabase : RoomDatabase() {
 
     abstract fun getQuoteDao(): QuoteDao

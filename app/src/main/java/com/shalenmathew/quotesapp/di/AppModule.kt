@@ -101,7 +101,7 @@ object AppModule {
     @Provides
     fun providesQuoteDatabase(application: Application): QuoteDatabase {
         return Room.databaseBuilder(application, QuoteDatabase::class.java, "quote_db")
-            .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5, MIGRATION_ADD_DISPLAYED, MIGRATION_6_7)
+            .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5, MIGRATION_ADD_DISPLAYED, MIGRATION_6_7, MIGRATION_7_8)
 //            .fallbackToDestructiveMigration(true)
             .build()
     }
@@ -154,6 +154,12 @@ object AppModule {
             )
         """
             )
+        }
+    }
+
+    val MIGRATION_7_8 = object : Migration(7, 8) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE Quote ADD COLUMN isCustom INTEGER NOT NULL DEFAULT 0")
         }
     }
 

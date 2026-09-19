@@ -71,7 +71,7 @@ fun QuoteItem(
 
     Box(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 10.dp, vertical = 10.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(gradient)
             .fillMaxSize()

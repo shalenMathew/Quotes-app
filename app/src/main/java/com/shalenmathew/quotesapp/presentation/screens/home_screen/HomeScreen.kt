@@ -125,9 +125,9 @@ fun HomeScreen(
     {
 
         val painter = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            rememberAsyncImagePainter(R.drawable.bg)
+            rememberAsyncImagePainter(R.drawable.rainbow_2)
         } else {
-            painterResource(R.drawable.bg)
+            painterResource(R.drawable.rainbow_2)
         }
 
         AnimatedVisibility(

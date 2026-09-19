@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,9 +39,12 @@ fun QuoteOfTheDaySection(
             Text(
                 text = "Quote of the day",
                 fontFamily = GIFont,
-                fontSize = 35.sp,
-                modifier = Modifier.padding(start = 15.dp),
-                color = Color.White
+                fontSize = 30.sp,
+                modifier = Modifier.padding(start = 15.dp,top =15.dp),
+                color = Color.White ,
+                style = TextStyle(
+                        lineHeight = 40.sp
+                        )
             )
 
             Text(
@@ -48,7 +52,7 @@ fun QuoteOfTheDaySection(
                 fontFamily = GIFont,
                 fontWeight = FontWeight.Thin,
                 fontSize = 16.sp,
-                modifier = Modifier.padding(start = 15.dp, top = 5.dp, end = 15.dp),
+                modifier = Modifier.padding(start = 15.dp, top = 15.dp, end = 15.dp),
                 color = Color.White
             )
         }

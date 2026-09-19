@@ -7,16 +7,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
-import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
-import androidx.glance.action.actionParametersOf
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
@@ -39,9 +36,7 @@ import androidx.glance.text.TextStyle
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
-import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_IS_CUSTOM_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
-import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_LIKED_KEY
 import com.shalenmathew.quotesapp.util.dataStore
 import kotlinx.coroutines.flow.first
 
@@ -65,21 +60,17 @@ object QuotesWidgetObj : GlanceAppWidget() {
             val prefs = currentState<Preferences>()
             val savedQuote = prefs[WIDGET_QUOTE_KEY] ?: deprecatedQuote ?: defaultMessage
             val quoteId = prefs[WIDGET_QUOTE_ID_KEY] ?: -1
-            val isLiked = prefs[WIDGET_QUOTE_LIKED_KEY] ?: false
-            val isCustom = prefs[WIDGET_QUOTE_IS_CUSTOM_KEY] ?: false
 
             QuoteWidget(
                 savedQuote = savedQuote,
-                isLiked = isLiked,
-                quoteId = quoteId,
-                isCustom = isCustom
+                quoteId = quoteId
             )
         }
     }
 }
 
 @Composable
-fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int, isCustom: Boolean) {
+fun QuoteWidget(savedQuote: String, quoteId: Int) {
 
     val radius = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         android.R.dimen.system_app_widget_background_radius
@@ -123,7 +114,7 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int, isCustom: Bo
                 Text(
                     text = savedQuote,
                     style = TextStyle(
-                        fontSize = 15.sp,
+                        fontSize = 14.sp,
                         color = ColorProvider(Color.White, Color.White),
                         fontWeight = FontWeight.Medium,
                     )
@@ -149,34 +140,6 @@ fun QuoteWidget(savedQuote: String, isLiked: Boolean, quoteId: Int, isCustom: Bo
                 contentScale = androidx.glance.layout.ContentScale.Crop,
                 modifier = GlanceModifier.size(60.dp)
             )
-        }
-
-        if (quoteId != -1 && !isCustom) {
-            Row(
-                modifier = GlanceModifier.fillMaxWidth()
-                    .padding(top = 20.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-                Image(
-                    provider = ImageProvider(
-                        if (isLiked) R.drawable.heart_filled
-                        else R.drawable.heart_unfilled
-                    ),
-                    contentDescription = "Like",
-                    colorFilter = ColorFilter.tint(ColorProvider(Color.White, Color.White)),
-                    modifier = GlanceModifier
-                        .size(24.dp)
-                        .padding(top = 8.dp)
-                        .clickable(
-                            actionRunCallback<ToggleLikeActionCallback>(
-                                actionParametersOf(
-                                    WidgetKeys.quoteIdKey to quoteId,
-                                    WidgetKeys.isCustomKey to isCustom
-                                )
-                            )
-                        )
-                )
-            }
         }
     }
 }

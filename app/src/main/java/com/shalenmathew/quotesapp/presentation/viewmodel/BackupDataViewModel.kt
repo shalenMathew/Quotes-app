@@ -10,8 +10,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.shalenmathew.quotesapp.BuildConfig
 import com.shalenmathew.quotesapp.domain.model.BackupData
+import com.shalenmathew.quotesapp.domain.model.Collection
+import com.shalenmathew.quotesapp.domain.model.CollectionQuoteCrossRef
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
+import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -25,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BackupDataViewModel @Inject constructor(
     private val quoteUseCase: QuoteUseCase,
-    private val customQuoteUseCases: CustomQuoteUseCases
+    private val customQuoteUseCases: CustomQuoteUseCases,
+    private val collectionUseCases: CollectionUseCases
 ): ViewModel() {
 
     var isLoading by mutableStateOf(false)
@@ -41,10 +45,14 @@ class BackupDataViewModel @Inject constructor(
 
                 val likedQuotes = quoteUseCase.getLikedQuotes().first()
                 val customQuotes = customQuoteUseCases.getCustomQuotes("").first()
+                val collections = collectionUseCases.getAllCollections().first()
+                val crossRefs = collectionUseCases.getAllCrossRefs()
 
                 val backupData = BackupData(
                     likedQuotes = likedQuotes,
                     customQuotes = customQuotes,
+                    collections = collections,
+                    crossRefs = crossRefs,
                     appVersionName = BuildConfig.VERSION_NAME
                 )
 
@@ -98,6 +106,38 @@ class BackupDataViewModel @Inject constructor(
                 backupData.customQuotes.forEach { customQuote ->
                     customQuoteUseCases.saveCustomQuote(customQuote)
                 }
+
+                // Map old collection IDs to new ones
+                val oldToNewIdMap = mutableMapOf<Int, Int>()
+
+                backupData.collections.forEach { collection ->
+                    val existing = collectionUseCases.getCollectionByName(collection.name)
+                    if (existing != null) {
+                        oldToNewIdMap[collection.id] = existing.id
+                    } else {
+                        val newId = collectionUseCases.addCollection(collection.name).fold(
+                            onSuccess = {
+                                collectionUseCases.getCollectionByName(collection.name)?.id
+                            },
+                            onFailure = { null }
+                        )
+                        if (newId != null) {
+                            oldToNewIdMap[collection.id] = newId
+                        }
+                    }
+                }
+
+                backupData.crossRefs.forEach { crossRef ->
+                    val newCollectionId = oldToNewIdMap[crossRef.collectionId]
+                    if (newCollectionId != null) {
+                        collectionUseCases.addQuoteToCollection(
+                            newCollectionId,
+                            crossRef.quoteId,
+                            crossRef.isCustom
+                        )
+                    }
+                }
+
                 isLoading = false
                 onComplete(true)
 

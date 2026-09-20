@@ -47,7 +47,9 @@ import com.shalenmathew.quotesapp.domain.usecases.library.AddQuoteToCollection
 import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import com.shalenmathew.quotesapp.domain.usecases.library.DeleteCollection
 import com.shalenmathew.quotesapp.domain.usecases.library.GetAllCollections
+import com.shalenmathew.quotesapp.domain.usecases.library.GetAllCrossRefs
 import com.shalenmathew.quotesapp.domain.usecases.library.GetCollectionById
+import com.shalenmathew.quotesapp.domain.usecases.library.GetCollectionByName
 import com.shalenmathew.quotesapp.domain.usecases.library.GetCollectionIdsForQuote
 import com.shalenmathew.quotesapp.domain.usecases.library.IsQuoteInCollection
 import com.shalenmathew.quotesapp.domain.usecases.library.RemoveQuoteFromCollection
@@ -101,8 +103,15 @@ object AppModule {
     @Provides
     fun providesQuoteDatabase(application: Application): QuoteDatabase {
         return Room.databaseBuilder(application, QuoteDatabase::class.java, "quote_db")
-            .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5, MIGRATION_ADD_DISPLAYED, MIGRATION_6_7, MIGRATION_7_8)
-            .fallbackToDestructiveMigration(true)
+            .addMigrations(
+                DB_MIGRATION,
+                DB_MIGRATION_4_5,
+                MIGRATION_ADD_DISPLAYED,
+                MIGRATION_6_7,
+                MIGRATION_7_8,
+                MIGRATION_8_9,
+                MIGRATION_9_10
+            )
             .build()
     }
 
@@ -160,6 +169,18 @@ object AppModule {
     val MIGRATION_7_8 = object : Migration(7, 8) {
         override fun migrate(db: SupportSQLiteDatabase) {
             db.execSQL("ALTER TABLE Quote ADD COLUMN isCustom INTEGER NOT NULL DEFAULT 0")
+        }
+    }
+
+    val MIGRATION_8_9 = object : Migration(8, 9) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            // Empty migration to handle version bump
+        }
+    }
+
+    val MIGRATION_9_10 = object : Migration(9, 10) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_collections_name` ON `collections` (`name`)")
         }
     }
 
@@ -300,11 +321,13 @@ object AppModule {
             updateCollection = UpdateCollection(repository),
             deleteCollection = DeleteCollection(repository),
             getCollectionById = GetCollectionById(repository),
+            getCollectionByName = GetCollectionByName(repository),
             addQuoteToCollection = AddQuoteToCollection(repository),
             removeQuoteFromCollection = RemoveQuoteFromCollection(repository),
             isQuoteInCollection = IsQuoteInCollection(repository),
             getCollectionIdsForQuote = GetCollectionIdsForQuote(repository),
-            searchQuotesInCollection = SearchQuotesInCollection(repository, favRepository, customQuoteRepository)
+            searchQuotesInCollection = SearchQuotesInCollection(repository, favRepository, customQuoteRepository),
+            getAllCrossRefs = GetAllCrossRefs(repository)
         )
     }
 

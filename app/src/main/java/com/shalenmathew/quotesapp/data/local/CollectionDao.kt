@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 interface CollectionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCollection(collection: Collection)
+    suspend fun insertCollection(collection: Collection): Long
 
     @Update
     suspend fun updateCollection(collection: Collection)
@@ -71,4 +71,7 @@ interface CollectionDao {
 
     @Query("DELETE FROM collection_quote_cross_ref WHERE isCustom = 0")
     suspend fun deleteAllSystemQuoteCrossRefs()
+
+    @Query("SELECT * FROM collection_quote_cross_ref")
+    suspend fun getAllCrossRefs(): List<CollectionQuoteCrossRef>
 }

@@ -6,9 +6,11 @@ data class CollectionUseCases(
     val updateCollection: UpdateCollection,
     val deleteCollection: DeleteCollection,
     val getCollectionById: GetCollectionById,
+    val getCollectionByName: GetCollectionByName,
     val addQuoteToCollection: AddQuoteToCollection,
     val removeQuoteFromCollection: RemoveQuoteFromCollection,
     val isQuoteInCollection: IsQuoteInCollection,
     val getCollectionIdsForQuote: GetCollectionIdsForQuote,
-    val searchQuotesInCollection: SearchQuotesInCollection
+    val searchQuotesInCollection: SearchQuotesInCollection,
+    val getAllCrossRefs: GetAllCrossRefs
 )

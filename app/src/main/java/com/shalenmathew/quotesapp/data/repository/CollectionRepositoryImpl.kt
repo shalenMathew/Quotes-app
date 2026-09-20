@@ -17,7 +17,7 @@ class CollectionRepositoryImpl @Inject constructor(
 
     override fun getAllCollections(): Flow<List<Collection>> = dao.getAllCollections()
 
-    override suspend fun insertCollection(collection: Collection) = dao.insertCollection(collection)
+    override suspend fun insertCollection(collection: Collection): Long = dao.insertCollection(collection)
 
     override suspend fun updateCollection(collection: Collection) = dao.updateCollection(collection)
 
@@ -49,5 +49,9 @@ class CollectionRepositoryImpl @Inject constructor(
 
     override fun searchCustomQuotesInCollection(collectionId: Int, query: String): Flow<List<CustomQuote>> {
         return dao.searchCustomQuotesInCollection(collectionId, query)
+    }
+
+    override suspend fun getAllCrossRefs(): List<CollectionQuoteCrossRef> {
+        return dao.getAllCrossRefs()
     }
 }

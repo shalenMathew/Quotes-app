@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CollectionRepository {
     fun getAllCollections(): Flow<List<Collection>>
-    suspend fun insertCollection(collection: Collection)
+    suspend fun insertCollection(collection: Collection): Long
     suspend fun updateCollection(collection: Collection)
     suspend fun deleteCollection(collection: Collection)
     suspend fun getCollectionById(id: Int): Collection?
@@ -21,4 +21,5 @@ interface CollectionRepository {
     
     fun searchQuotesInCollection(collectionId: Int, query: String): Flow<List<Quote>>
     fun searchCustomQuotesInCollection(collectionId: Int, query: String): Flow<List<CustomQuote>>
+    suspend fun getAllCrossRefs(): List<CollectionQuoteCrossRef>
 }

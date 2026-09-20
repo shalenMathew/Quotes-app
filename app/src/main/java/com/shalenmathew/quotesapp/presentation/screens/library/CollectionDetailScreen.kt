@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.shalenmathew.quotesapp.domain.model.CollectionType
 import com.shalenmathew.quotesapp.domain.model.CustomQuote
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.model.toQuote
@@ -72,7 +73,6 @@ import com.shalenmathew.quotesapp.presentation.screens.library.util.animatedBord
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.Grey
 import com.shalenmathew.quotesapp.presentation.viewmodel.CollectionDetailViewModel
-import com.shalenmathew.quotesapp.util.Constants
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -166,10 +166,10 @@ fun CollectionDetailScreen(
                 shape = MaterialTheme.shapes.extraLarge,
                 placeholder = {
                     Text(
-                        text = when (collectionId) {
-                            Constants.COLLECTION_ID_FAV -> "Search your favorite quotes..."
-                            Constants.COLLECTION_ID_CUSTOM -> "Search your custom quotes..."
-                            else -> "Search in ${state.collectionName}..."
+                        text = when (state.collectionType) {
+                            CollectionType.Favorites -> "Search your favorite quotes..."
+                            CollectionType.Custom -> "Search your custom quotes..."
+                            is CollectionType.UserDefined -> "Search in ${state.collectionName}..."
                         },
                         color = Color.Gray
                     )
@@ -203,9 +203,9 @@ fun CollectionDetailScreen(
                         .padding(top = 12.dp)
                 ) {
                     itemsIndexed(state.quotes) { index, quote ->
-                        val showHeart = collectionId == Constants.COLLECTION_ID_FAV
-                        val showEdit = collectionId == Constants.COLLECTION_ID_CUSTOM
-                        val showDelete = collectionId != Constants.COLLECTION_ID_FAV 
+                        val showHeart = state.collectionType is CollectionType.Favorites
+                        val showEdit = state.collectionType is CollectionType.Custom
+                        val showDelete = state.collectionType !is CollectionType.Favorites 
 
                         LibraryQuoteItem(
                             quote = quote,
@@ -221,7 +221,7 @@ fun CollectionDetailScreen(
                                 quoteToDelete = quote
                             },
                             onEditClick = {
-                                if (collectionId == Constants.COLLECTION_ID_CUSTOM) {
+                                if (state.collectionType is CollectionType.Custom) {
                                     val customQuote = CustomQuote(
                                         id = quote.id ?: 0,
                                         quote = quote.quote,
@@ -248,10 +248,10 @@ fun CollectionDetailScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    val emptyMessage = when (collectionId) {
-                        Constants.COLLECTION_ID_FAV -> "Looks empty... \n\nImport data if you have one from settings!"
-                        Constants.COLLECTION_ID_CUSTOM -> "No custom quotes yet.\nTap + to create one!\n\n Import data if you have one from settings!"
-                        else -> "No quotes found in this collection."
+                    val emptyMessage = when (state.collectionType) {
+                        CollectionType.Favorites -> "Looks empty... \n\nImport data if you have one from settings!"
+                        CollectionType.Custom -> "No custom quotes yet.\nTap + to create one!\n\n Import data if you have one from settings!"
+                        is CollectionType.UserDefined -> "No quotes found in this collection."
                     }
                     Text(
                         text = emptyMessage,
@@ -265,7 +265,7 @@ fun CollectionDetailScreen(
 
         if (quoteToDelete != null) {
             DeleteConfirmationDialog(
-                title = if (collectionId == Constants.COLLECTION_ID_CUSTOM) "Delete Quote?" else "Remove Quote?",
+                title = if (state.collectionType is CollectionType.Custom) "Delete Quote?" else "Remove Quote?",
                 onConfirm = {
                     viewModel.onEvent(CollectionDetailEvent.Delete(quoteToDelete!!))
                     quoteToDelete = null
@@ -276,7 +276,7 @@ fun CollectionDetailScreen(
             )
         }
 
-        if (collectionId == Constants.COLLECTION_ID_CUSTOM) {
+        if (state.collectionType is CollectionType.Custom) {
             FloatingActionButton(
                 onClick = {
                     hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)

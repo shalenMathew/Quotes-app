@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.domain.model.Collection
+import com.shalenmathew.quotesapp.domain.model.CollectionType
 import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.screens.custom_quote.util.DeleteConfirmationDialog
 import com.shalenmathew.quotesapp.presentation.screens.library.util.LibraryEvent
@@ -62,7 +63,6 @@ import com.shalenmathew.quotesapp.presentation.theme.customBlack
 import com.shalenmathew.quotesapp.presentation.theme.customGrey
 import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 import com.shalenmathew.quotesapp.presentation.viewmodel.LibraryViewModel
-import com.shalenmathew.quotesapp.util.Constants
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,8 +83,8 @@ fun LibraryScreen(
     val scope = rememberCoroutineScope()
 
     val systemCollections = listOf(
-        Collection(id = Constants.COLLECTION_ID_FAV, name = "Favorites"),
-        Collection(id = Constants.COLLECTION_ID_CUSTOM, name = "Custom")
+        Collection(id = CollectionType.ID_FAV, name = "Favorites"),
+        Collection(id = CollectionType.ID_CUSTOM, name = "Custom")
     )
 
     Box(

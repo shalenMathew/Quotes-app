@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shalenmathew.quotesapp.domain.model.CollectionType
 import com.shalenmathew.quotesapp.domain.model.CustomQuote
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.fav_screen_usecases.FavQuoteUseCase
@@ -11,7 +12,6 @@ import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetIfSameOrEmptyUseCase
 import com.shalenmathew.quotesapp.presentation.screens.library.util.CollectionDetailEvent
 import com.shalenmathew.quotesapp.presentation.screens.library.util.CollectionDetailState
-import com.shalenmathew.quotesapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -35,7 +35,10 @@ class CollectionDetailViewModel @Inject constructor(
     fun onEvent(event: CollectionDetailEvent) {
         when (event) {
             is CollectionDetailEvent.LoadCollection -> {
-                _state.value = _state.value.copy(collectionId = event.id)
+                _state.value = _state.value.copy(
+                    collectionId = event.id,
+                    collectionType = CollectionType.fromId(event.id)
+                )
                 getQuotes()
                 loadCollectionName(event.id)
             }
@@ -53,7 +56,7 @@ class CollectionDetailViewModel @Inject constructor(
             }
             is CollectionDetailEvent.Delete -> {
                 viewModelScope.launch {
-                    if (_state.value.collectionId == Constants.COLLECTION_ID_CUSTOM) {
+                    if (_state.value.collectionType is CollectionType.Custom) {
                         val customQuote = CustomQuote(
                             id = event.quote.id ?: return@launch,
                             quote = event.quote.quote,
@@ -85,10 +88,10 @@ class CollectionDetailViewModel @Inject constructor(
 
     private fun loadCollectionName(id: Int) {
         viewModelScope.launch {
-            val name = when (id) {
-                Constants.COLLECTION_ID_FAV -> "Favorites"
-                Constants.COLLECTION_ID_CUSTOM -> "Custom"
-                else -> collectionUseCases.getCollectionById(id)?.name ?: "Collection"
+            val name = when (val type = CollectionType.fromId(id)) {
+                CollectionType.Favorites -> "Favorites"
+                CollectionType.Custom -> "Custom"
+                is CollectionType.UserDefined -> collectionUseCases.getCollectionById(type.id)?.name ?: "Collection"
             }
             _state.value = _state.value.copy(collectionName = name)
         }

@@ -51,7 +51,6 @@ class CollectionDetailViewModel @Inject constructor(
                     val updatedQuote = favQuoteUseCase.favLikedQuote.saveLikedQuote(event.quote)
                     updateWidgetIfSameOrEmptyUseCase(updatedQuote)
                         .onFailure { Log.w("CollectionDetailVM", "Widget update failed: ${it.message}") }
-                    getQuotes()
                 }
             }
             is CollectionDetailEvent.Delete -> {
@@ -71,7 +70,6 @@ class CollectionDetailViewModel @Inject constructor(
                             event.quote.isCustom
                         )
                     }
-                    getQuotes()
                 }
             }
         }

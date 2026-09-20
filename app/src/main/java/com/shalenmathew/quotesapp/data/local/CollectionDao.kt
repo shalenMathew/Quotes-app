@@ -24,7 +24,7 @@ interface CollectionDao {
     @Delete
     suspend fun deleteCollection(collection: Collection)
 
-    @Query("SELECT * FROM collections ORDER BY createdAt DESC")
+    @Query("SELECT * FROM collections ORDER BY createdAt DESC, id DESC")
     fun getAllCollections(): Flow<List<Collection>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -41,6 +41,7 @@ interface CollectionDao {
         INNER JOIN collection_quote_cross_ref ref ON q.id = ref.quoteId
         WHERE ref.collectionId = :collectionId AND ref.isCustom = 0
         AND (LOWER(q.quote) LIKE '%' || LOWER(:query) || '%' OR LOWER(q.author) LIKE '%' || LOWER(:query) || '%')
+        ORDER BY q.updatedAt DESC, q.id DESC
     """)
     fun searchQuotesInCollection(collectionId: Int, query: String): Flow<List<Quote>>
 
@@ -49,6 +50,7 @@ interface CollectionDao {
         INNER JOIN collection_quote_cross_ref ref ON cq.id = ref.quoteId
         WHERE ref.collectionId = :collectionId AND ref.isCustom = 1
         AND (LOWER(cq.quote) LIKE '%' || LOWER(:query) || '%' OR LOWER(cq.author) LIKE '%' || LOWER(:query) || '%')
+        ORDER BY cq.createdAt DESC, cq.id DESC
     """)
     fun searchCustomQuotesInCollection(collectionId: Int, query: String): Flow<List<CustomQuote>>
 

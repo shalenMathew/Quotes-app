@@ -25,7 +25,9 @@ class SearchQuotesInCollection(
                 repository.searchQuotesInCollection(collectionId, query),
                 repository.searchCustomQuotesInCollection(collectionId, query)
             ) { standard, custom ->
-                standard + custom.map { it.toQuote() }
+                (standard + custom.map { it.toQuote() }).sortedWith(
+                    compareByDescending<Quote> { it.updatedAt }.thenByDescending { it.id }
+                )
             }
         }
     }

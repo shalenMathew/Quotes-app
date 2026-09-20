@@ -102,7 +102,7 @@ object AppModule {
     fun providesQuoteDatabase(application: Application): QuoteDatabase {
         return Room.databaseBuilder(application, QuoteDatabase::class.java, "quote_db")
             .addMigrations(DB_MIGRATION, DB_MIGRATION_4_5, MIGRATION_ADD_DISPLAYED, MIGRATION_6_7, MIGRATION_7_8)
-//            .fallbackToDestructiveMigration(true)
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 

@@ -12,7 +12,8 @@ interface CollectionRepository {
     suspend fun updateCollection(collection: Collection)
     suspend fun deleteCollection(collection: Collection)
     suspend fun getCollectionById(id: Int): Collection?
-    
+    suspend fun getCollectionByName(name: String): Collection?
+
     suspend fun addQuoteToCollection(collectionId: Int, quoteId: Int, isCustom: Boolean)
     suspend fun removeQuoteFromCollection(collectionId: Int, quoteId: Int, isCustom: Boolean)
     suspend fun isQuoteInCollection(collectionId: Int, quoteId: Int, isCustom: Boolean): Boolean

@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -175,15 +176,18 @@ fun LibraryScreen(
             CollectionNameDialog(
                 title = "New Collection",
                 value = newCollectionName,
-                onValueChange = { newCollectionName = it },
+                errorMessage = state.error,
+                onValueChange = { 
+                    newCollectionName = it 
+                    if (state.error.isNotEmpty()) viewModel.onEvent(LibraryEvent.ClearError)
+                },
                 onConfirm = {
                     viewModel.onEvent(LibraryEvent.AddCollection(newCollectionName))
-                    newCollectionName = ""
-                    showAddDialog = false
                 },
                 onDismiss = {
                     newCollectionName = ""
                     showAddDialog = false
+                    viewModel.onEvent(LibraryEvent.ClearError)
                 }
             )
         }
@@ -192,19 +196,37 @@ fun LibraryScreen(
             CollectionNameDialog(
                 title = "Edit Collection",
                 value = newCollectionName,
-                onValueChange = { newCollectionName = it },
+                errorMessage = state.error,
+                onValueChange = { 
+                    newCollectionName = it 
+                    if (state.error.isNotEmpty()) viewModel.onEvent(LibraryEvent.ClearError)
+                },
                 onConfirm = {
                     viewModel.onEvent(LibraryEvent.UpdateCollection(editingCollection!!.copy(name = newCollectionName)))
-                    newCollectionName = ""
-                    showEditDialog = false
-                    editingCollection = null
                 },
                 onDismiss = {
                     newCollectionName = ""
                     showEditDialog = false
                     editingCollection = null
+                    viewModel.onEvent(LibraryEvent.ClearError)
                 }
             )
+        }
+    }
+
+    // Auto-close dialogs on success
+    LaunchedEffect(state.collections.size) {
+        if (showAddDialog && state.error.isEmpty()) {
+            showAddDialog = false
+            newCollectionName = ""
+        }
+    }
+
+    LaunchedEffect(state.collections) {
+        if (showEditDialog && state.error.isEmpty()) {
+            showEditDialog = false
+            editingCollection = null
+            newCollectionName = ""
         }
     }
 }
@@ -213,6 +235,7 @@ fun LibraryScreen(
 fun CollectionNameDialog(
     title: String,
     value: String,
+    errorMessage: String = "",
     onValueChange: (String) -> Unit,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
@@ -228,19 +251,31 @@ fun CollectionNameDialog(
             ) 
         },
         text = {
-            OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                placeholder = { Text("Enter collection name...", color = Color.Gray) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.Gray
+            Column {
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    placeholder = { Text("Enter collection name...", color = Color.Gray) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = errorMessage.isNotEmpty(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.Gray,
+                        errorBorderColor = Color.Red
+                    )
                 )
-            )
+                if (errorMessage.isNotEmpty()) {
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+                    )
+                }
+            }
         },
         confirmButton = {
             Button(

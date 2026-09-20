@@ -42,11 +42,23 @@ class LibraryViewModel @Inject constructor(
             is LibraryEvent.AddCollection -> {
                 viewModelScope.launch {
                     collectionUseCases.addCollection(event.name)
+                        .onFailure { error ->
+                            _state.value = _state.value.copy(error = error.message ?: "Failed to add collection")
+                        }
+                        .onSuccess {
+                            _state.value = _state.value.copy(error = "")
+                        }
                 }
             }
             is LibraryEvent.UpdateCollection -> {
                 viewModelScope.launch {
                     collectionUseCases.updateCollection(event.collection)
+                        .onFailure { error ->
+                            _state.value = _state.value.copy(error = error.message ?: "Failed to update collection")
+                        }
+                        .onSuccess {
+                            _state.value = _state.value.copy(error = "")
+                        }
                 }
             }
             is LibraryEvent.DeleteCollection -> {
@@ -74,6 +86,9 @@ class LibraryViewModel @Inject constructor(
                 } else {
                     _state.value = _state.value.copy(selectedQuoteCollectionIds = emptyList())
                 }
+            }
+            is LibraryEvent.ClearError -> {
+                _state.value = _state.value.copy(error = "")
             }
         }
     }

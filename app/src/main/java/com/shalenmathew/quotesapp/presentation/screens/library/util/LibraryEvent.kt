@@ -9,4 +9,5 @@ sealed class LibraryEvent {
     data class AddQuoteToCollection(val collectionId: Int, val quoteId: Int, val isCustom: Boolean) : LibraryEvent()
     data class RemoveQuoteFromCollection(val collectionId: Int, val quoteId: Int, val isCustom: Boolean) : LibraryEvent()
     data class SetSelectedQuote(val quoteId: Int?, val isCustom: Boolean) : LibraryEvent()
+    object ClearError : LibraryEvent()
 }

@@ -5,7 +5,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "collections")
+import androidx.room.Index
+
+@Entity(
+    tableName = "collections",
+    indices = [Index(value = ["name"], unique = true)]
+)
 @Parcelize
 data class Collection(
     @PrimaryKey(autoGenerate = true)

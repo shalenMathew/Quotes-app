@@ -57,6 +57,9 @@ interface CollectionDao {
     @Query("SELECT * FROM collections WHERE id = :id")
     suspend fun getCollectionById(id: Int): Collection?
 
+    @Query("SELECT * FROM collections WHERE LOWER(name) = LOWER(:name) LIMIT 1")
+    suspend fun getCollectionByName(name: String): Collection?
+
     @Query("SELECT EXISTS(SELECT 1 FROM collection_quote_cross_ref WHERE collectionId = :collectionId AND quoteId = :quoteId AND isCustom = :isCustom)")
     suspend fun isQuoteInCollection(collectionId: Int, quoteId: Int, isCustom: Boolean): Boolean
 

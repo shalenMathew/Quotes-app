@@ -25,6 +25,8 @@ class CollectionRepositoryImpl @Inject constructor(
 
     override suspend fun getCollectionById(id: Int): Collection? = dao.getCollectionById(id)
 
+    override suspend fun getCollectionByName(name: String): Collection? = dao.getCollectionByName(name)
+
     override suspend fun addQuoteToCollection(collectionId: Int, quoteId: Int, isCustom: Boolean) {
         dao.insertQuoteToCollection(CollectionQuoteCrossRef(collectionId, quoteId, isCustom))
     }

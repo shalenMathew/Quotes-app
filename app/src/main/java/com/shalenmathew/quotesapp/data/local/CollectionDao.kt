@@ -60,4 +60,10 @@ interface CollectionDao {
 
     @Query("SELECT collectionId FROM collection_quote_cross_ref WHERE quoteId = :quoteId AND isCustom = :isCustom")
     fun getCollectionIdsForQuote(quoteId: Int, isCustom: Boolean): Flow<List<Int>>
+
+    @Query("DELETE FROM collection_quote_cross_ref WHERE quoteId = :quoteId AND isCustom = :isCustom")
+    suspend fun deleteCrossRefsForQuote(quoteId: Int, isCustom: Boolean)
+
+    @Query("DELETE FROM collection_quote_cross_ref WHERE isCustom = 0")
+    suspend fun deleteAllSystemQuoteCrossRefs()
 }

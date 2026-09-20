@@ -1,6 +1,7 @@
 package com.shalenmathew.quotesapp.data.repository
 
 import android.util.Log
+import androidx.room.withTransaction
 import com.shalenmathew.quotesapp.data.local.QuoteDatabase
 import com.shalenmathew.quotesapp.data.mappers.toQuote
 import com.shalenmathew.quotesapp.data.remote.QuoteApi
@@ -43,12 +44,14 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
 
                 val currList = db.getQuoteDao().getAllQuotes()
 
-                currList.onEach {
-                    if (!it.liked) {
-                        db.getQuoteDao()
-                            .deleteQuote(it)  // here u dont need to launch a coroutine as ...
-                        // launch keyword is used to launch a coroutine and flow already have a running coroutine under its hood ...
-                        // so u don't need to launch another coroutine
+                currList.onEach { quote ->
+                    if (!quote.liked) {
+                        quote.id?.let { id ->
+                            db.withTransaction {
+                                db.getQuoteDao().deleteQuote(quote)
+                                db.getCollectionDao().deleteCrossRefsForQuote(id, false)
+                            }
+                        }
                     }
                 }
 

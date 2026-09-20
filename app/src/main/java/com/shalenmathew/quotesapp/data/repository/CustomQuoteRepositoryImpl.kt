@@ -1,5 +1,6 @@
 package com.shalenmathew.quotesapp.data.repository
 
+import androidx.room.withTransaction
 import com.shalenmathew.quotesapp.data.local.QuoteDatabase
 import com.shalenmathew.quotesapp.domain.model.CustomQuote
 import com.shalenmathew.quotesapp.domain.repository.CustomQuoteRepository
@@ -20,7 +21,10 @@ class CustomQuoteRepositoryImpl(private val db: QuoteDatabase) : CustomQuoteRepo
     }
 
     override suspend fun deleteCustomQuote(quote: CustomQuote) {
-        db.getCustomQuoteDao().deleteCustomQuote(quote)
+        db.withTransaction {
+            db.getCustomQuoteDao().deleteCustomQuote(quote)
+            db.getCollectionDao().deleteCrossRefsForQuote(quote.id, true)
+        }
     }
 
     override suspend fun updateCustomQuote(quote: CustomQuote) {

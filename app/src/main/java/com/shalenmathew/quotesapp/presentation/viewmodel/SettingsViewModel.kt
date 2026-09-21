@@ -6,11 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.shalenmathew.quotesapp.presentation.workmanager.notification.ScheduleNotification
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.getZenAudioCustomPath
+import com.shalenmathew.quotesapp.util.getWidgetThemeId
 import com.shalenmathew.quotesapp.util.isZenAudioEnabled
 import com.shalenmathew.quotesapp.util.setNotificationSources
 import com.shalenmathew.quotesapp.util.setWidgetSources
+import com.shalenmathew.quotesapp.util.setWidgetThemeId
 import com.shalenmathew.quotesapp.util.setZenAudioCustomPath
 import com.shalenmathew.quotesapp.util.setZenAudioEnabled
+import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetThemeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -22,10 +25,12 @@ class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val scheduleWidgetRefresh: ScheduleWidgetRefresh,
     private val scheduleNotificationRefresh: ScheduleNotification,
+    private val updateWidgetThemeUseCase: UpdateWidgetThemeUseCase,
 ) : ViewModel() {
 
     val isZenAudioEnabled: Flow<Boolean> = context.isZenAudioEnabled()
     val zenAudioCustomPath: Flow<String?> = context.getZenAudioCustomPath()
+    val widgetThemeId: Flow<String> = context.getWidgetThemeId()
 
     fun toggleZenAudio(enabled: Boolean) {
         viewModelScope.launch {
@@ -67,6 +72,13 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             context.setWidgetSources(sources)
             scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+        }
+    }
+
+    fun saveWidgetThemeId(themeId: String) {
+        viewModelScope.launch {
+            context.setWidgetThemeId(themeId)
+            updateWidgetThemeUseCase(themeId)
         }
     }
 }

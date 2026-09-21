@@ -39,6 +39,7 @@ val ZEN_AUDIO_ENABLED_KEY = booleanPreferencesKey("zen_audio_enabled")
 val ZEN_AUDIO_CUSTOM_PATH_KEY = stringPreferencesKey("zen_audio_custom_path")
 val NOTIFICATION_SOURCES_KEY = stringSetPreferencesKey("notification_sources")
 val HAS_SHOWN_COLLECTION_TIP_KEY = booleanPreferencesKey("has_shown_collection_tip")
+val WIDGET_THEME_ID_KEY = stringPreferencesKey("widget_theme_id")
 
 suspend fun Context.setFirstLaunchDone() {
     dataStore.edit { prefs ->
@@ -209,5 +210,17 @@ suspend fun Context.setZenAudioCustomPath(path: String?) {
         } else {
             preferences[ZEN_AUDIO_CUSTOM_PATH_KEY] = path
         }
+    }
+}
+
+fun Context.getWidgetThemeId(): Flow<String> {
+    return dataStore.data.map { preferences ->
+        preferences[WIDGET_THEME_ID_KEY] ?: "default"
+    }
+}
+
+suspend fun Context.setWidgetThemeId(themeId: String) {
+    dataStore.edit { preferences ->
+        preferences[WIDGET_THEME_ID_KEY] = themeId
     }
 }

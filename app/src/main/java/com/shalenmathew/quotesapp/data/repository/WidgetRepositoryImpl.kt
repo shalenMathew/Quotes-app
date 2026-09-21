@@ -10,11 +10,19 @@ import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_IS_CUSTOM_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_LIKED_KEY
+import com.shalenmathew.quotesapp.util.WIDGET_THEME_ID_KEY
 import javax.inject.Inject
 
 class WidgetRepositoryImpl @Inject constructor(
     private val glanceWidgetManager: GlanceWidgetManager
 ) : WidgetRepository {
+
+    override suspend fun updateWidgetTheme(themeId: String): Result<Unit> =
+        updateWidgets { prefs ->
+            prefs.toMutablePreferences().apply {
+                this[WIDGET_THEME_ID_KEY] = themeId
+            }
+        }
 
     override suspend fun updateWidget(quote: Quote): Result<Unit> =
         withValidQuoteId(quote) { quoteId ->

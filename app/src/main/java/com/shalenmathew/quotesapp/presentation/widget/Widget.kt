@@ -22,6 +22,7 @@ import androidx.glance.color.ColorProvider
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
+import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
@@ -37,9 +38,12 @@ import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.MainActivity
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
+import com.shalenmathew.quotesapp.util.WIDGET_THEME_ID_KEY
 import com.shalenmathew.quotesapp.util.dataStore
 import kotlinx.coroutines.flow.first
 
+
+import androidx.glance.text.TextAlign
 
 object QuotesWidgetObj : GlanceAppWidget() {
 
@@ -60,23 +64,36 @@ object QuotesWidgetObj : GlanceAppWidget() {
             val prefs = currentState<Preferences>()
             val savedQuote = prefs[WIDGET_QUOTE_KEY] ?: deprecatedQuote ?: defaultMessage
             val quoteId = prefs[WIDGET_QUOTE_ID_KEY] ?: -1
+            val themeId = prefs[WIDGET_THEME_ID_KEY] ?: "default"
 
             QuoteWidget(
                 savedQuote = savedQuote,
-                quoteId = quoteId
+                quoteId = quoteId,
+                themeId = themeId
             )
         }
     }
 }
 
 @Composable
-fun QuoteWidget(savedQuote: String, quoteId: Int) {
+fun QuoteWidget(savedQuote: String, quoteId: Int, themeId: String) {
 
+    val theme = WidgetThemeRegistry.getTheme(themeId)
     val radius = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         android.R.dimen.system_app_widget_background_radius
     } else {
         null
     }
+
+    val backgroundModifier = if (theme.backgroundResource != null) {
+        GlanceModifier.background(ImageProvider(theme.backgroundResource))
+    } else if (theme.backgroundColor != null) {
+        GlanceModifier.background(theme.backgroundColor)
+    } else {
+        GlanceModifier.background(Color.Black)
+    }
+
+    val isMinimalTheme = themeId == "all_black" || themeId == "all_white"
 
     Column(
         modifier = GlanceModifier
@@ -86,60 +103,58 @@ fun QuoteWidget(savedQuote: String, quoteId: Int) {
                 if (radius != null) GlanceModifier.cornerRadius(radius)
                 else GlanceModifier.cornerRadius(16.dp)
             )
-            .background(ImageProvider(R.drawable.widget_prism_bg))
-//            .background(Color.Black)
+            .then(backgroundModifier)
             .padding(20.dp)
             .clickable(actionStartActivity<MainActivity>()),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = if (isMinimalTheme) Alignment.CenterHorizontally else Alignment.Start
     ) {
         Row(
             modifier = GlanceModifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = if (isMinimalTheme) Alignment.CenterHorizontally else Alignment.Start
         ) {
             Column(
-                modifier = GlanceModifier.defaultWeight()
+                modifier = GlanceModifier.defaultWeight(),
+                horizontalAlignment = if (isMinimalTheme) Alignment.CenterHorizontally else Alignment.Start
             ) {
-                Text(
-                    text = "A gentle reminder for today",
-                    style = TextStyle(
-                        fontSize = 13.sp,
-                        color = ColorProvider(Color.White.copy(alpha = 0.6f), Color.White.copy(alpha = 0.6f)),
-                        fontWeight = FontWeight.Normal,
-                    ),
-                    modifier = GlanceModifier.padding(bottom = 8.dp)
-                )
+                if (!isMinimalTheme) {
+                    Text(
+                        text = "A gentle reminder for today",
+                        style = TextStyle(
+                            fontSize = 13.sp,
+                            color = ColorProvider(theme.labelTextColor, theme.labelTextColor),
+                            fontWeight = FontWeight.Normal,
+                        ),
+                        modifier = GlanceModifier.padding(bottom = 8.dp)
+                    )
+                }
 
                 Text(
                     text = savedQuote,
                     style = TextStyle(
-                        fontSize = 14.sp,
-                        color = ColorProvider(Color.White, Color.White),
+                        fontSize = if (isMinimalTheme) 16.sp else 14.sp,
+                        color = ColorProvider(theme.quoteTextColor, theme.quoteTextColor),
                         fontWeight = FontWeight.Medium,
+                        textAlign = if (isMinimalTheme) TextAlign.Center else TextAlign.Start
                     )
                 )
             }
 
-            Spacer(modifier = GlanceModifier.width(15.dp))
+            if (!isMinimalTheme) {
+                Spacer(modifier = GlanceModifier.width(15.dp))
 
-            val prismImages = listOf(R.drawable.prism,
-                R.drawable.prism2,
-                R.drawable.prism3,
-                R.drawable.prism4,
-                R.drawable.prism5,
-                R.drawable.prism6,
-                R.drawable.prism7,
-                R.drawable.prism8,
+                val prismImages = theme.prismImages
+                val selectedPrism = if (quoteId != -1) prismImages[Math.abs(quoteId) % prismImages.size] else R.drawable.prism3
+
+                Image(
+                    provider = ImageProvider(selectedPrism),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = GlanceModifier.size(60.dp)
                 )
-            val selectedPrism = if (quoteId != -1) prismImages[Math.abs(quoteId) % prismImages.size] else R.drawable.prism3
-
-            Image(
-                provider = ImageProvider(selectedPrism),
-                contentDescription = null,
-                contentScale = androidx.glance.layout.ContentScale.Crop,
-                modifier = GlanceModifier.size(60.dp)
-            )
+            }
         }
     }
 }
+

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -165,17 +164,7 @@ fun QuoteItemListSection(
 
     val state = quoteViewModel.quoteState.value
 
-    if (state.isLoading) {
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.Transparent), contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = White)
-        }
-    } else if (state.error.isNotEmpty()) {
+    if (state.error.isNotEmpty()) {
         Box(
             modifier = Modifier
                 .padding(5.dp)

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -82,22 +83,21 @@ fun HomeScreen(
     }
 
     // Trigger rainbow animation logic
-    LaunchedEffect(state.isLoading) {
+    LaunchedEffect(state.isLoading, state.error) {
         if (state.isLoading) {
             // Only fade out if it's currently visible AND it's not the initial startup load
-            // (Initial load is when hasRainbowAnimationBeenShown is still false)
             if (isVisible && animationPreferences.hasRainbowAnimationBeenShown()) {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 isVisible = false
             }
         } else {
-            // Data has arrived (or we are in idle state)
-            // Show (fade in) if it's currently hidden and we have data to display
-            if (!isVisible && state.dataList.isNotEmpty()) {
+            // Data has arrived OR error occurred
+            // Show (fade in) if it's currently hidden
+            if (!isVisible && (state.dataList.isNotEmpty() || state.error.isNotEmpty())) {
                 delay(500)
                 isVisible = true
-                // Mark as shown for the current session
-                if (!animationPreferences.hasRainbowAnimationBeenShown()) {
+                // Mark as shown for the current session if data was fetched
+                if (state.dataList.isNotEmpty() && !animationPreferences.hasRainbowAnimationBeenShown()) {
                     animationPreferences.setRainbowAnimationShown()
                 }
             }
@@ -132,7 +132,7 @@ fun HomeScreen(
 
         AnimatedVisibility(
             visible = isVisible,
-            enter = fadeIn(animationSpec = tween(durationMillis = 3000)),
+            enter = fadeIn(animationSpec = tween(durationMillis = 2000)),
             exit = fadeOut(animationSpec = tween(durationMillis = 1500)),
             modifier = Modifier
                 .size(200.dp)
@@ -146,33 +146,48 @@ fun HomeScreen(
         }
 
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Transparent)
                 .padding(paddingValues)
         ) {
-
-            QuoteOfTheDaySection(quoteViewModel)
-            QuoteItemListSection(
-                quoteViewModel = quoteViewModel,
-                navHost = navHost,
-                onLikeClick = {
-                    scope.launch {
-                        if (!context.hasShownCollectionTip().first()) {
-                            Toast.makeText(
-                                context,
-                                "Hold heart to add in collection",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            context.setCollectionTipShown()
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = fadeIn(animationSpec = tween(durationMillis = 2000)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 1500)),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    QuoteOfTheDaySection(quoteViewModel)
+                    QuoteItemListSection(
+                        quoteViewModel = quoteViewModel,
+                        navHost = navHost,
+                        onLikeClick = {
+                            scope.launch {
+                                if (!context.hasShownCollectionTip().first()) {
+                                    Toast.makeText(
+                                        context,
+                                        "Hold heart to add in collection",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    context.setCollectionTipShown()
+                                }
+                            }
+                        },
+                        onLongClickHeart = { quote ->
+                            selectedQuoteForCollection = quote
                         }
-                    }
-                },
-                onLongClickHeart = { quote ->
-                    selectedQuoteForCollection = quote
+                    )
                 }
-            )
+            }
+
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
 
         selectedQuoteForCollection?.let { quote ->

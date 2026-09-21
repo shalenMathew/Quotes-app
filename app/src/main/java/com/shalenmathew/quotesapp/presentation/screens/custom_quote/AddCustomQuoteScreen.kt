@@ -106,7 +106,7 @@ fun AddCustomQuoteScreen(
                                 CustomQuoteEvent.UpdateQuote(
                                     quote = quoteToEdit.copy(
                                         quote = quoteText.trim(),
-                                        author = if (authorText.isNotBlank()) authorText.trim() else "Anonymous"
+                                        author = if (authorText.isNotBlank()) authorText.trim() else "Unknown"
                                     )
                                 )
                             )
@@ -181,7 +181,7 @@ fun AddCustomQuoteScreen(
                     unfocusedTextColor = Color.White,
                     cursorColor = Color.White
                 ),
-                placeholder = { Text("Anonymous", color = Color.Gray) },
+                placeholder = { Text("Unknown", color = Color.Gray) },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done
                 ),

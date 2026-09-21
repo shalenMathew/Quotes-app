@@ -44,7 +44,7 @@ class CustomQuoteViewModel @Inject constructor(
                 viewModelScope.launch {
                     val customQuote = CustomQuote(
                         quote = event.quote,
-                        author = event.author.ifBlank { "Anonymous" }
+                        author = event.author.ifBlank { "Unknown" }
                     )
                     customQuoteUseCases.saveCustomQuote(customQuote)
                     scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()

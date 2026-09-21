@@ -49,5 +49,14 @@ fun MinimalBrownTheme(
                 textAlign = TextAlign.Start
             )
         }
+
+        Text(
+            text = "Quotes app",
+            color = Color(0xFFEDE1D6).copy(alpha = 0.6f),
+            fontSize = 12.sp,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp)
+        )
     }
 }

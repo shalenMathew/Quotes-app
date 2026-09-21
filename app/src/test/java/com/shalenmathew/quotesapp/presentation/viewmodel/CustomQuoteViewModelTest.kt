@@ -53,7 +53,7 @@ class CustomQuoteViewModelTest {
 
 
     @Test
-    fun onEvent_SaveQuote_With_Blank_Author_Should_Save_As_Anonymous() = runTest {
+    fun onEvent_SaveQuote_With_Blank_Author_Should_Save_As_Unknown() = runTest {
         whenever(getCustomQuotes.invoke(any())).thenReturn(flowOf(emptyList()))
         viewModel = CustomQuoteViewModel(useCases, scheduleWidgetRefresh)
         advanceUntilIdle()
@@ -65,7 +65,7 @@ class CustomQuoteViewModelTest {
         // Assert: Use check {} to verify the PROPERTIES of the object saved
         verify(saveCustomQuote).invoke(org.mockito.kotlin.check { savedQuote ->
             assertEquals("Hello", savedQuote.quote)
-            assertEquals("Anonymous", savedQuote.author)
+            assertEquals("Unknown", savedQuote.author)
         })
     }
 

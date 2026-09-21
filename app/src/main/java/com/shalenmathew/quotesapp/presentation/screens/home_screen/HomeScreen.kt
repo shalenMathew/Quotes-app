@@ -154,15 +154,25 @@ fun HomeScreen(
         ) {
 
             QuoteOfTheDaySection(quoteViewModel)
-            QuoteItemListSection(quoteViewModel, navHost) { quote ->
-                scope.launch {
-                    if (!context.hasShownCollectionTip().first()) {
-                        Toast.makeText(context, "Long press heart to add to collections!", Toast.LENGTH_SHORT).show()
-                        context.setCollectionTipShown()
+            QuoteItemListSection(
+                quoteViewModel = quoteViewModel,
+                navHost = navHost,
+                onLikeClick = {
+                    scope.launch {
+                        if (!context.hasShownCollectionTip().first()) {
+                            Toast.makeText(
+                                context,
+                                "Hold heart to add in collection",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            context.setCollectionTipShown()
+                        }
                     }
+                },
+                onLongClickHeart = { quote ->
+                    selectedQuoteForCollection = quote
                 }
-                selectedQuoteForCollection = quote
-            }
+            )
         }
 
         selectedQuoteForCollection?.let { quote ->

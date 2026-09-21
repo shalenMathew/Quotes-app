@@ -91,7 +91,7 @@ fun ShareScreen(
     var captureRequest by remember { mutableStateOf<String?>(null) }
     var liquidStartColor by remember { mutableStateOf(Color(0xFFf093fb)) }
     var liquidEndColor by remember { mutableStateOf(Color(0xFF0022BB)) }
-    var diceDreamColor by remember { mutableStateOf(Color(0xFF0022BB)) }
+    var diceDreamColor by remember { mutableStateOf(Color(0xFF1800AD)) }
     var showColorPicker by remember { mutableStateOf(false) }
     var editTarget by remember { mutableStateOf("start") }
 

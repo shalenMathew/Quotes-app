@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -251,14 +252,29 @@ fun CollectionDetailScreen(
                     val emptyMessage = when (state.collectionType) {
                         CollectionType.Favorites -> "Looks empty... \n\nImport data if you have one from settings!"
                         CollectionType.Custom -> "No custom quotes yet.\nTap + to create one!\n\n Import data if you have one from settings!"
-                        is CollectionType.UserDefined -> "No quotes found in this collection."
+                        is CollectionType.UserDefined -> "No quote in this collection"
                     }
-                    Text(
-                        text = emptyMessage,
-                        color = White,
-                        fontFamily = GIFont,
-                        textAlign = TextAlign.Center
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    ) {
+                        Text(
+                            text = emptyMessage,
+                            color = White,
+                            fontFamily = GIFont,
+                            textAlign = TextAlign.Center
+                        )
+                        if (state.collectionType is CollectionType.UserDefined) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = "Hold heart to add quote in collection",
+                                color = Color.Gray,
+                                fontFamily = GIFont,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
         }

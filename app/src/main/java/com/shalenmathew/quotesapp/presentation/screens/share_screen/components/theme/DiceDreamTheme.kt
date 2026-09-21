@@ -45,7 +45,7 @@ fun DiceDreamsStyleQuoteCard(
         author = "Unknown",
         liked = true
     ),
-    color: Color = Grey,
+    color: Color = Color(0xFF1800AD),
     imageUri: Uri? = null,
     onPickImage: () -> Unit = {}
 ) {

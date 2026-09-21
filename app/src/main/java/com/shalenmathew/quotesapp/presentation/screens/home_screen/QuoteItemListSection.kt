@@ -53,6 +53,7 @@ fun QuoteItem(
     data: Quote,
     quoteViewModel: QuoteViewModel,
     navHost: NavHostController,
+    onLikeClick: (Quote) -> Unit,
     onLongClickHeart: (Quote) -> Unit
 ) {
 
@@ -127,6 +128,7 @@ fun QuoteItem(
             AnimatedHeartButton(
                 isLiked = currentQuote.liked,
                 onLikeClick = {
+                    onLikeClick(currentQuote)
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     quoteViewModel.onEvent(QuoteEvent.Like(currentQuote))
                 },
@@ -157,6 +159,7 @@ fun QuoteItem(
 fun QuoteItemListSection(
     quoteViewModel: QuoteViewModel,
     navHost: NavHostController,
+    onLikeClick: (Quote) -> Unit,
     onLongClickHeart: (Quote) -> Unit
 ) {
 
@@ -216,7 +219,7 @@ fun QuoteItemListSection(
         ) {
 
             items(state.dataList) {
-                QuoteItem(it, quoteViewModel, navHost, onLongClickHeart)
+                QuoteItem(it, quoteViewModel, navHost, onLikeClick, onLongClickHeart)
             }
             onSwiped { item, _ ->
                 val quote = item as Quote

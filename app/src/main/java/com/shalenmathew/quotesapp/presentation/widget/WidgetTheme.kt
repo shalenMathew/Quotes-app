@@ -1,7 +1,10 @@
 package com.shalenmathew.quotesapp.presentation.widget
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.shalenmathew.quotesapp.R
+import com.shalenmathew.quotesapp.presentation.widget.layouts.ClassicPrismWidgetLayout
+import com.shalenmathew.quotesapp.presentation.widget.layouts.MinimalWidgetLayout
 
 data class WidgetTheme(
     val id: String,
@@ -14,7 +17,8 @@ data class WidgetTheme(
         R.drawable.prism, R.drawable.prism2, R.drawable.prism3,
         R.drawable.prism4, R.drawable.prism5, R.drawable.prism6,
         R.drawable.prism7, R.drawable.prism8
-    )
+    ),
+    val contentLayout: @Composable (savedQuote: String, quoteId: Int, theme: WidgetTheme) -> Unit
 )
 
 object WidgetThemeRegistry {
@@ -23,7 +27,10 @@ object WidgetThemeRegistry {
         name = "Classic Prism",
         backgroundResource = R.drawable.widget_prism_bg,
         quoteTextColor = Color.White,
-        labelTextColor = Color.White.copy(alpha = 0.6f)
+        labelTextColor = Color.White.copy(alpha = 0.6f),
+        contentLayout = { savedQuote, quoteId, theme ->
+            ClassicPrismWidgetLayout(savedQuote, quoteId, theme)
+        }
     )
 
     val AllBlack = WidgetTheme(
@@ -31,7 +38,10 @@ object WidgetThemeRegistry {
         name = "Midnight Black",
         backgroundColor = Color.Black,
         quoteTextColor = Color.White,
-        labelTextColor = Color.Gray
+        labelTextColor = Color.Gray,
+        contentLayout = { savedQuote, _, theme ->
+            MinimalWidgetLayout(savedQuote, theme)
+        }
     )
 
     val AllWhite = WidgetTheme(
@@ -39,7 +49,10 @@ object WidgetThemeRegistry {
         name = "Pure White",
         backgroundColor = Color.White,
         quoteTextColor = Color.Black,
-        labelTextColor = Color.DarkGray
+        labelTextColor = Color.DarkGray,
+        contentLayout = { savedQuote, _, theme ->
+            MinimalWidgetLayout(savedQuote, theme)
+        }
     )
 
     val themes = listOf(Default, AllBlack, AllWhite)

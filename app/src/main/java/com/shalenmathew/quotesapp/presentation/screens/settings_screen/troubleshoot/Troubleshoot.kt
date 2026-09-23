@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.troubleshoot.component.TroubleshootItem
-import com.shalenmathew.quotesapp.presentation.screens.settings_screen.troubleshoot.component.troubleshootQuestions
+import com.shalenmathew.quotesapp.presentation.screens.settings_screen.troubleshoot.component.troubleshootCategories
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 
@@ -39,12 +39,27 @@ fun Troubleshoot(paddingValues: PaddingValues) {
             fontWeight = FontWeight.Medium,
             color = Color.White,
             fontSize = 30.sp,
-            modifier = Modifier.padding(vertical = 20.dp)
+            modifier = Modifier.padding(top = 20.dp, bottom = 12.dp)
         )
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(troubleshootQuestions) { item ->
-                ExpandableCard(item)
+        LazyColumn(
+            contentPadding = PaddingValues(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            troubleshootCategories.forEach { category ->
+                item {
+                    Text(
+                        text = category.title,
+                        fontFamily = GIFont,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Gray,
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)
+                    )
+                }
+                items(category.items) { item ->
+                    ExpandableCard(item)
+                }
             }
         }
     }

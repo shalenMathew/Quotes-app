@@ -164,7 +164,7 @@ fun AddCustomQuoteScreen(
                     cursorColor = Color.White
                 ),
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Default
                 ),
                 maxLines = 8
             )
@@ -174,6 +174,7 @@ fun AddCustomQuoteScreen(
                 onValueChange = { authorText = it },
                 label = { Text("Author (Optional)", color = Color.Gray) },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.White,
                     unfocusedBorderColor = Color.Gray,

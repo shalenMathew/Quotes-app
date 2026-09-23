@@ -2,19 +2,43 @@ package com.shalenmathew.quotesapp.presentation.screens.settings_screen.troubles
 
 data class TroubleshootItem(
     val question: String,
-    val answer: String,
-
+    val answer: String
 )
 
-val troubleshootQuestions = listOf(
-    TroubleshootItem("Notifications are not appearing", "Please ensure the app is not 'Battery Optimized' in app system settings and Check if notification permissions are granted."),
-    TroubleshootItem("Why isn't the widget refreshing?", "Android limits widget updates to save battery. Ensure the app is not 'Battery Optimized' in app system settings."),
-    TroubleshootItem("How to add the widget?", "Long press on quotes app and add widget."),
-    TroubleshootItem("My widget acting funny?", "If u ever feel like , ur widget is not refreshing or not pulling quotes from desired source, try to reboot the device, Android OS sometimes makes widget to act weird"),
-    TroubleshootItem("From where do the widget pull quotes from?", "The widget can pull quotes from three sources: online, your favorites, or your own custom entries. You can easily choose your preferred source in the settings."),
-    TroubleshootItem("About Backup & Restore data? ", "You can import & export ur data , but make sure while ur exporting and trying to change name, the name should end with '.json' or the import wont work "),
-    TroubleshootItem("About Notification Scheduling? ", "You can only choose to schedule between 2 options , either the app can notify u every couple of hours or just every day on the scheduled time"),
-    TroubleshootItem("what is 'Custom Quote'? ", "Its a feature that allows you to create and save your own quotes."),
-    TroubleshootItem("why the apps so good? ", "cause i made it \uD83D\uDDE3\uFE0F"),
-    TroubleshootItem("why did u made the app? ", "cause the apps so good \uD83D\uDDE3\uFE0F"),
+data class TroubleshootCategory(
+    val title: String,
+    val items: List<TroubleshootItem>
+)
+
+val troubleshootCategories = listOf(
+    TroubleshootCategory(
+        title = "Widget Setup & Issues",
+        items = listOf(
+            TroubleshootItem("How to add the widget?", "Long press on the Quotes App icon on your home screen and select Widgets."),
+            TroubleshootItem("Why isn't the widget refreshing?", "Android limits background widget updates to save battery. Ensure the app is excluded from 'Battery Optimization' in your device settings."),
+            TroubleshootItem("Where does the widget pull quotes from?", "The widget can pull quotes from three sources: online, your favorites, or your custom entries. You can choose your preferred source in Settings."),
+            TroubleshootItem("My widget is acting funny?", "If your widget stops updating or seems frozen, try rebooting your device. Android OS occasionally pauses background widget tasks.")
+        )
+    ),
+    TroubleshootCategory(
+        title = "Notifications",
+        items = listOf(
+            TroubleshootItem("Notifications are not appearing", "Please ensure notification permissions are granted and the app is not 'Battery Optimized' in system settings."),
+            TroubleshootItem("About Notification Scheduling?", "You can schedule notifications to trigger either every couple of hours or once a day at your chosen time.")
+        )
+    ),
+    TroubleshootCategory(
+        title = "App Features & Data",
+        items = listOf(
+            TroubleshootItem("What is 'Custom Quote'?", "A feature that allows you to create, save, and manage your own custom quotes."),
+            TroubleshootItem("About Backup & Restore data?", "You can export and import your app data. If you change the exported file name, make sure it ends with '.json' so the import works correctly.")
+        )
+    ),
+    TroubleshootCategory(
+        title = "General & About",
+        items = listOf(
+            TroubleshootItem("Why is the app so good?", "Cause I made it 🗣️"),
+            TroubleshootItem("Why did you make the app?", "Cause the app is so good 🗣️")
+        )
+    )
 )

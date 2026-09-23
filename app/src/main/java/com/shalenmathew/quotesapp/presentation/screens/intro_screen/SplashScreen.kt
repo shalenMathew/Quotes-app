@@ -104,7 +104,7 @@ fun SplashScreen(navHost: NavHostController) {
             if (showTagline && isFirstLaunch) {
                 Spacer(modifier = Modifier.height(20.dp))
                 AnimatedTagline(
-                    words = listOf("Feel", "the", "words.", "Live", "the", "Meaning"),
+                    words = listOf("Your", "Personal", "Quotes", "Library"),
                     fontFamily = GIFont
                 )
             }

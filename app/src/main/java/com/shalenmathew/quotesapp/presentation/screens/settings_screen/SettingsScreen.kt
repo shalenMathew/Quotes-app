@@ -152,7 +152,7 @@ fun SettingsScreen(
 
                 item {
                     Text(
-                        text = "Refresh Settings", color = Color.White,
+                        text = "Schedule Settings", color = Color.White,
                         modifier = Modifier.padding(15.dp),
                         fontSize = 20.sp,
                         fontFamily = GIFont, fontWeight = FontWeight.Medium
@@ -249,6 +249,95 @@ fun SettingsScreen(
 
                 item {
                     Text(
+                        text = "Source Settings", color = Color.White,
+                        modifier = Modifier.padding(15.dp),
+                        fontSize = 20.sp,
+                        fontFamily = GIFont, fontWeight = FontWeight.Medium
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 0.6.dp,
+                                color = Color.Black,
+                                shape = RectangleShape
+                            )
+                            .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+                            .background(customGrey2)
+                            .clickable {
+                                navHost.navigate(Screen.WidgetSource.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_widgets),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .size(30.dp)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            text = "Fetch quotes for widget from",
+                            color = Color.White,
+                            fontFamily = GIFont,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 0.6.dp,
+                                color = Color.Black,
+                                shape = RectangleShape
+                            )
+                            .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
+                            .background(customGrey2)
+                            .clickable {
+                                navHost.navigate(Screen.NotificationSource.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_notifications),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .size(30.dp)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            text = "Fetch quotes for notifications from",
+                            color = Color.White,
+                            fontFamily = GIFont,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+                }
+
+                item {
+                    Text(
                         text = "Miscellaneous", color = Color.White,
                         modifier = Modifier.padding(15.dp),
                         fontSize = 20.sp,
@@ -306,84 +395,6 @@ fun SettingsScreen(
                             )
                             .background(customGrey2)
                             .clickable {
-                                navHost.navigate(Screen.WidgetSource.route)
-                            }
-                            .padding(horizontal = 16.dp, vertical = 14.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_widgets),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(end = 12.dp)
-                                .size(30.dp)
-                        )
-                        Text(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp),
-                            text = "Fetch quotes for widget from",
-                            color = Color.White,
-                            fontFamily = GIFont,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 16.sp
-                        )
-                        androidx.compose.material3.Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(
-                                width = 0.6.dp,
-                                color = Color.Black,
-                                shape = RectangleShape
-                            )
-                            .background(customGrey2)
-                            .clickable {
-                                navHost.navigate(Screen.NotificationSource.route)
-                            }
-                            .padding(horizontal = 16.dp, vertical = 14.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_notifications),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(end = 12.dp)
-                                .size(30.dp)
-                        )
-                        Text(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 8.dp),
-                            text = "Fetch quotes for notifications from",
-                            color = Color.White,
-                            fontFamily = GIFont,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 16.sp
-                        )
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(
-                                width = 0.6.dp,
-                                color = Color.Black,
-                                shape = RectangleShape
-                            )
-                            .background(customGrey2)
-                            .clickable {
                                 navHost.navigate(Screen.WidgetTheme.route)
                             }
                             .padding(horizontal = 16.dp, vertical = 14.dp),
@@ -406,7 +417,7 @@ fun SettingsScreen(
                             fontWeight = FontWeight.Medium,
                             fontSize = 16.sp
                         )
-                        androidx.compose.material3.Icon(
+                        Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                             contentDescription = null,
                             tint = Color.White
@@ -447,7 +458,7 @@ fun SettingsScreen(
                             fontWeight = FontWeight.Medium,
                             fontSize = 16.sp
                         )
-                        androidx.compose.material3.Icon(
+                        Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                             contentDescription = null,
                             tint = Color.White

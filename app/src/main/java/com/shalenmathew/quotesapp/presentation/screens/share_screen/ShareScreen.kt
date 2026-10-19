@@ -66,6 +66,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.PurpleDotTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TwitterStyleTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.YoutubeStyleTheme
@@ -131,6 +132,12 @@ fun ShareScreen(
     val pickDragAndDropImage =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             dragAndDropImageUri = uri
+        }
+
+    var purpleDotImageUri by remember { mutableStateOf<Uri?>(null) }
+    val pickPurpleDotImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            purpleDotImageUri = uri
         }
 
 
@@ -232,6 +239,12 @@ fun ShareScreen(
                                 imageUri = dragAndDropImageUri
                             )
                         }
+
+                        QuoteStyle.PurpleDotTheme -> PurpleDotTheme(
+                            quote = quote,
+                            imageUri = purpleDotImageUri,
+                            onPickImage = { pickPurpleDotImage.launch("image/*") }
+                        )
                     }
                 }
 
@@ -388,6 +401,21 @@ fun ShareScreen(
                             .clickable {
                                 // Launch image picker
                                 pickDragAndDropImage.launch("image/*")
+                            }
+                    )
+                }
+
+                // icons visible on Purple Dot theme
+                AnimatedVisibility(quoteStyleState == QuoteStyle.PurpleDotTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Pick background image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                pickPurpleDotImage.launch("image/*")
                             }
                     )
                 }
@@ -730,6 +758,21 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.DragAndDropTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Purple Dot",
+                    drawableRes = R.drawable.sample_purple_dot,
+                    quoteStyle = QuoteStyle.PurpleDotTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.PurpleDotTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.PurpleDotTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.PurpleDotTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

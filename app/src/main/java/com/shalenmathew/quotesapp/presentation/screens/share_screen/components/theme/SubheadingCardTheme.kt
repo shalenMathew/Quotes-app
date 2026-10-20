@@ -1,9 +1,6 @@
 package com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme
 
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,23 +17,18 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 
@@ -51,36 +43,6 @@ fun PurpleDotTheme(
     imageUri: Uri? = null,
     onPickImage: () -> Unit = {}
 ) {
-    val context = LocalContext.current
-    val fallbackImage = painterResource(R.drawable.sample_purple_dot_2)
-
-    val painter: Painter = remember(imageUri, context) {
-        if (imageUri != null) {
-            val bitmap = try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    context.contentResolver.loadThumbnail(
-                        imageUri,
-                        android.util.Size(512, 512),
-                        null
-                    )
-                } else {
-                    @Suppress("DEPRECATION")
-                    MediaStore.Images.Media.getBitmap(
-                        context.contentResolver,
-                        imageUri
-                    )
-                }
-            } catch (_: Exception) {
-                null
-            }
-
-            bitmap?.let { BitmapPainter(it.asImageBitmap()) }
-                ?: fallbackImage
-        } else {
-            fallbackImage
-        }
-    }
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -106,11 +68,7 @@ fun PurpleDotTheme(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    val headingText = if (quote.author.isNotBlank()) {
-                        quote.author
-                    } else {
-                        "Unknown"
-                    }
+                    val headingText = quote.author.ifBlank { "Add a subheading" }
 
                     Text(
                         text = headingText,
@@ -160,8 +118,8 @@ fun PurpleDotTheme(
                         .clip(RoundedCornerShape(14.dp))
                         .clickable { onPickImage() }
                 ) {
-                    Image(
-                        painter = painter,
+                    AsyncImage(
+                        model = imageUri ?: R.drawable.sample_purple_dot_2,
                         contentDescription = "quote image",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()

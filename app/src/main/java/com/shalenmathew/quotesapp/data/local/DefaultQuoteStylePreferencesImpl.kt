@@ -30,6 +30,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             is QuoteStyle.TwitterTheme -> Constants.TWITTER_CARD_THEME
             is QuoteStyle.DragAndDropTheme -> Constants.DRAG_AND_DROP_THEME
             is QuoteStyle.PurpleDotTheme -> Constants.PURPLE_DOT_THEME
+            is QuoteStyle.GoodMemoriesTheme -> Constants.GOOD_MEMORIES_THEME
         }
 
         sharedPreferences.edit {
@@ -55,6 +56,7 @@ class DefaultQuoteStylePreferencesImpl @Inject constructor(
             Constants.TWITTER_CARD_THEME -> QuoteStyle.TwitterTheme
             Constants.DRAG_AND_DROP_THEME -> QuoteStyle.DragAndDropTheme
             Constants.PURPLE_DOT_THEME -> QuoteStyle.PurpleDotTheme
+            Constants.GOOD_MEMORIES_THEME -> QuoteStyle.GoodMemoriesTheme
             else -> QuoteStyle.DefaultTheme
         }
     }

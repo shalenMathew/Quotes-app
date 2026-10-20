@@ -161,6 +161,8 @@ sealed class QuoteStyle() {
     object DragAndDropTheme: QuoteStyle()
 
     object PurpleDotTheme : QuoteStyle()
+
+    object GoodMemoriesTheme : QuoteStyle()
 }
 
 @Composable

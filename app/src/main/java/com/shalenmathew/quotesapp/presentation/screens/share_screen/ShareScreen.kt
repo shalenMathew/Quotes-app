@@ -66,6 +66,7 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.GoodMemoriesTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.PurpleDotTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TwitterStyleTheme
@@ -138,6 +139,12 @@ fun ShareScreen(
     val pickPurpleDotImage =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             purpleDotImageUri = uri
+        }
+
+    var goodMemoriesImageUri by remember { mutableStateOf<Uri?>(null) }
+    val pickGoodMemoriesImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            goodMemoriesImageUri = uri
         }
 
 
@@ -244,6 +251,12 @@ fun ShareScreen(
                             quote = quote,
                             imageUri = purpleDotImageUri,
                             onPickImage = { pickPurpleDotImage.launch("image/*") }
+                        )
+
+                        QuoteStyle.GoodMemoriesTheme -> GoodMemoriesTheme(
+                            quote = quote,
+                            imageUri = goodMemoriesImageUri,
+                            onPickImage = { pickGoodMemoriesImage.launch("image/*") }
                         )
                     }
                 }
@@ -416,6 +429,21 @@ fun ShareScreen(
                             .clickable {
                                 // Launch image picker
                                 pickPurpleDotImage.launch("image/*")
+                            }
+                    )
+                }
+
+                // icons visible on Good Memories theme
+                AnimatedVisibility(quoteStyleState == QuoteStyle.GoodMemoriesTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Pick background image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                pickGoodMemoriesImage.launch("image/*")
                             }
                     )
                 }
@@ -773,6 +801,21 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.PurpleDotTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Good Memories",
+                    drawableRes = R.drawable.sample_good_memories,
+                    quoteStyle = QuoteStyle.GoodMemoriesTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.GoodMemoriesTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.GoodMemoriesTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.GoodMemoriesTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

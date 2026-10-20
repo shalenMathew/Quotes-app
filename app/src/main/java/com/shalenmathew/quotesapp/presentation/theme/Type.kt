@@ -67,3 +67,7 @@ val sugarPie = FontFamily(
     Font(R.font.suagr_pie, FontWeight.Medium),
 )
 
+val cormorantItalic = FontFamily(
+    Font(R.font.cormorant_itallic, FontWeight.Normal),
+)
+

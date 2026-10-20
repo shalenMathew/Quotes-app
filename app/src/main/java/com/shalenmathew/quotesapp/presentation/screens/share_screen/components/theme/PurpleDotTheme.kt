@@ -48,20 +48,20 @@ fun PurpleDotTheme(
             .fillMaxWidth()
             .fillMaxHeight()
             .background(Color.Black)
-            .padding(horizontal = 5.dp, vertical = 24.dp),
+            .padding(horizontal = 20.dp, vertical = 24.dp),
         contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .clip(RoundedCornerShape(24.dp))
+                .clip(RoundedCornerShape(22.dp))
                 .background(Color(0xFFD8A0E7))
-                .padding(horizontal = 12.dp, vertical = 15.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
@@ -74,8 +74,8 @@ fun PurpleDotTheme(
                         text = headingText,
                         color = Color(0xFF171717),
                         style = TextStyle(
-                            fontSize = 16.sp,
-                            lineHeight = 22.sp,
+                            fontSize = 15.sp,
+                            lineHeight = 20.sp,
                             fontWeight = FontWeight.Bold
                         ),
                         maxLines = 3,
@@ -91,8 +91,8 @@ fun PurpleDotTheme(
                         text = subtextText,
                         color = Color(0xFF171717),
                         style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 18.sp,
+                            fontSize = 13.sp,
+                            lineHeight = 17.sp,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal
                         ),
@@ -100,22 +100,22 @@ fun PurpleDotTheme(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 10.dp)
+                            .padding(top = 8.dp)
                     )
                 }
 
                 Box(
                     modifier = Modifier
-                        .size(120.dp)
-                        .clip(RoundedCornerShape(20.dp))
+                        .size(105.dp)
+                        .clip(RoundedCornerShape(18.dp))
                         .background(Color(0xFF3A323D))
                         .border(
                             width = 3.dp,
                             color = Color(0xFF3A323D),
-                            shape = RoundedCornerShape(20.dp)
+                            shape = RoundedCornerShape(18.dp)
                         )
-                        .padding(4.dp)
-                        .clip(RoundedCornerShape(14.dp))
+                        .padding(3.dp)
+                        .clip(RoundedCornerShape(13.dp))
                         .clickable { onPickImage() }
                 ) {
                     AsyncImage(

@@ -150,7 +150,7 @@
 
 ## Star History
 
-<a href="https://star-history.dera.page/#shalenMathew/Quotes-app&type=timeline">
+<a href="https://star-history.dera.page/shalenMathew/Quotes-app?type=timeline">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=shalenMathew/Quotes-app&type=timeline&theme=dark" />
    <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=shalenMathew/Quotes-app&type=timeline" />

@@ -60,13 +60,12 @@ import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.t
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DefaultQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DiceDreamsStyleQuoteCard
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.DragAndDropTheme
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.FliplingoesTheme
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.IgorScreen
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.GoodMemoriesTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.LiquidGlassScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBlackTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.MinimalBrownTheme
+import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.PurpleDotTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.ReminderStyle
-import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TravelCardTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.TwitterStyleTheme
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.components.theme.YoutubeStyleTheme
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
@@ -102,12 +101,6 @@ fun ShareScreen(
         artisanImageUri = uri
     }
 
-    var travelImageUri by remember { mutableStateOf<Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
-    val pickTravelImage =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-            travelImageUri = uri
-        }
-
     var diceDreamsImageUri by remember { mutableStateOf<Uri?>("https://images.unsplash.com/photo-1708784092854-bMIlyKZHKMY?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80".toUri()) }
     val pickDiceImage =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
@@ -131,6 +124,18 @@ fun ShareScreen(
     val pickDragAndDropImage =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             dragAndDropImageUri = uri
+        }
+
+    var purpleDotImageUri by remember { mutableStateOf<Uri?>(null) }
+    val pickPurpleDotImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            purpleDotImageUri = uri
+        }
+
+    var goodMemoriesImageUri by remember { mutableStateOf<Uri?>(null) }
+    val pickGoodMemoriesImage =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            goodMemoriesImageUri = uri
         }
 
 
@@ -186,7 +191,6 @@ fun ShareScreen(
                         )
 
                         QuoteStyle.BratTheme -> BratScreen(Modifier, quote)
-                        QuoteStyle.IgorTheme -> IgorScreen(Modifier, quote)
                         QuoteStyle.LiquidGlassTheme -> LiquidGlassScreen(
                             modifier = Modifier,
                             quote = quote,
@@ -194,16 +198,7 @@ fun ShareScreen(
                             color2 = liquidEndColor     // from ShareScreen state
                         )
 
-                        QuoteStyle.FlippingGoesTheme -> FliplingoesTheme(quote = quote)
-
                         QuoteStyle.ReminderTheme -> ReminderStyle(Modifier, quote)
-
-                        QuoteStyle.TravelCardTheme -> TravelCardTheme(
-                            modifier = Modifier,
-                            quote = quote,
-                            imageUri = travelImageUri,
-                            onPickImage = { pickTravelImage.launch("image/*") }
-                        )
 
                         QuoteStyle.MinimalBlackTheme -> MinimalBlackTheme(quote = quote)
                         QuoteStyle.MinimalBrownTheme -> MinimalBrownTheme(quote = quote)
@@ -232,6 +227,18 @@ fun ShareScreen(
                                 imageUri = dragAndDropImageUri
                             )
                         }
+
+                        QuoteStyle.PurpleDotTheme -> PurpleDotTheme(
+                            quote = quote,
+                            imageUri = purpleDotImageUri,
+                            onPickImage = { pickPurpleDotImage.launch("image/*") }
+                        )
+
+                        QuoteStyle.GoodMemoriesTheme -> GoodMemoriesTheme(
+                            quote = quote,
+                            imageUri = goodMemoriesImageUri,
+                            onPickImage = { pickGoodMemoriesImage.launch("image/*") }
+                        )
                     }
                 }
 
@@ -318,20 +325,6 @@ fun ShareScreen(
                     }
                 }
 
-                // icons visible on Travel card theme
-                AnimatedVisibility(visible = quoteStyleState == QuoteStyle.TravelCardTheme) {
-                    Image(
-                        painter = painterResource(R.drawable.upload),
-                        contentDescription = "Upload image",
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clickable {
-                                pickTravelImage.launch("image/*")
-                            }
-                    )
-                }
-
                 // icons visible on Youtube theme
                 AnimatedVisibility(visible = quoteStyleState == QuoteStyle.YoutubeTheme) {
                     Image(
@@ -388,6 +381,36 @@ fun ShareScreen(
                             .clickable {
                                 // Launch image picker
                                 pickDragAndDropImage.launch("image/*")
+                            }
+                    )
+                }
+
+                // icons visible on Purple Dot theme
+                AnimatedVisibility(quoteStyleState == QuoteStyle.PurpleDotTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Pick background image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                pickPurpleDotImage.launch("image/*")
+                            }
+                    )
+                }
+
+                // icons visible on Good Memories theme
+                AnimatedVisibility(quoteStyleState == QuoteStyle.GoodMemoriesTheme) {
+                    Image(
+                        painter = painterResource(R.drawable.upload),
+                        contentDescription = "Pick background image",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable {
+                                // Launch image picker
+                                pickGoodMemoriesImage.launch("image/*")
                             }
                     )
                 }
@@ -530,22 +553,6 @@ fun ShareScreen(
                     }
                 )
 
-                // IGOR Theme
-                ThemeItem(
-                    title = "IGOR Theme",
-                    drawableRes = R.drawable.sample_igor,
-                    quoteStyle = QuoteStyle.IgorTheme,
-                    isSelected = defaultQuoteStyle == QuoteStyle.IgorTheme,
-                    onThemeClick = {
-                        quoteStyleState = QuoteStyle.IgorTheme
-                        showSheet = false
-                    },
-                    onSetDefault = {
-                        defaultQuoteStyle = QuoteStyle.IgorTheme
-                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                    }
-                )
-
                 // Default Theme
                 ThemeItem(
                     title = "Default Theme",
@@ -591,36 +598,6 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.ReminderTheme
-                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                    }
-                )
-
-                ThemeItem(
-                    title = "Travel Card Theme",
-                    drawableRes = R.drawable.sample_travel_card,
-                    quoteStyle = QuoteStyle.TravelCardTheme,
-                    isSelected = defaultQuoteStyle == QuoteStyle.TravelCardTheme,
-                    onThemeClick = {
-                        quoteStyleState = QuoteStyle.TravelCardTheme
-                        showSheet = false
-                    },
-                    onSetDefault = {
-                        defaultQuoteStyle = QuoteStyle.TravelCardTheme
-                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
-                    }
-                )
-
-                ThemeItem(
-                    title = "Fliplingoes Theme",
-                    drawableRes = R.drawable.sample_fliplingoes,
-                    quoteStyle = QuoteStyle.FlippingGoesTheme,
-                    isSelected = defaultQuoteStyle == QuoteStyle.FlippingGoesTheme,
-                    onThemeClick = {
-                        quoteStyleState = QuoteStyle.FlippingGoesTheme
-                        showSheet = false
-                    },
-                    onSetDefault = {
-                        defaultQuoteStyle = QuoteStyle.FlippingGoesTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )
@@ -730,6 +707,36 @@ fun ShareScreen(
                     },
                     onSetDefault = {
                         defaultQuoteStyle = QuoteStyle.DragAndDropTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Purple Dot",
+                    drawableRes = R.drawable.sample_purple_dot,
+                    quoteStyle = QuoteStyle.PurpleDotTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.PurpleDotTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.PurpleDotTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.PurpleDotTheme
+                        viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
+                    }
+                )
+
+                ThemeItem(
+                    title = "Good Memories",
+                    drawableRes = R.drawable.sample_good_memories,
+                    quoteStyle = QuoteStyle.GoodMemoriesTheme,
+                    isSelected = defaultQuoteStyle == QuoteStyle.GoodMemoriesTheme,
+                    onThemeClick = {
+                        quoteStyleState = QuoteStyle.GoodMemoriesTheme
+                        showSheet = false
+                    },
+                    onSetDefault = {
+                        defaultQuoteStyle = QuoteStyle.GoodMemoriesTheme
                         viewModel.changeDefaultQuoteStyle(defaultQuoteStyle)
                     }
                 )

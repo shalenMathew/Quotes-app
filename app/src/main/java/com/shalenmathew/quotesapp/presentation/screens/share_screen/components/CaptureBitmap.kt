@@ -110,10 +110,6 @@ import androidx.core.graphics.createBitmap
 //            BratScreen(modifier = modifier,quoteData)
 //        }
 //
-//        QuoteStyle.IGOR_THEME -> {
-//            IgorScreen(modifier = modifier,quoteData)
-//        }
-//
 //        QuoteStyle.LIQUID_GLASS_THEME -> {
 //            LiquidGlassScreen(modifier = modifier,quoteData)
 //        }
@@ -238,9 +234,6 @@ import androidx.core.graphics.createBitmap
 //            }
 //            QuoteStyle.BRAT_THEME -> {
 //                BratScreen(modifier = Modifier, quoteData)
-//            }
-//            QuoteStyle.IGOR_THEME -> {
-//                IgorScreen(modifier = Modifier, quoteData)
 //            }
 //            QuoteStyle.LIQUID_GLASS_THEME -> {
 //                LiquidGlassScreen(modifier = Modifier, quoteData)

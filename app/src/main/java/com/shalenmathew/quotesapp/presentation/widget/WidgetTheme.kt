@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.widget.layouts.ClassicPrismWidgetLayout
 import com.shalenmathew.quotesapp.presentation.widget.layouts.MinimalWidgetLayout
+import com.shalenmathew.quotesapp.presentation.widget.layouts.PlayfairWidgetLayout
 
 data class WidgetTheme(
     val id: String,
@@ -55,7 +56,18 @@ object WidgetThemeRegistry {
         }
     )
 
-    val themes = listOf(Default, AllBlack, AllWhite)
+    val Playfair = WidgetTheme(
+        id = "playfair",
+        name = "Playfair",
+        backgroundColor = Color(0xFFF1EFE9),
+        quoteTextColor = Color.Black,
+        labelTextColor = Color.Black.copy(alpha = 0.7f),
+        contentLayout = { savedQuote, _, theme ->
+            PlayfairWidgetLayout(savedQuote, theme)
+        }
+    )
+
+    val themes = listOf(Default, AllBlack, AllWhite, Playfair)
 
     fun getTheme(id: String?): WidgetTheme = themes.find { it.id == id } ?: Default
 }

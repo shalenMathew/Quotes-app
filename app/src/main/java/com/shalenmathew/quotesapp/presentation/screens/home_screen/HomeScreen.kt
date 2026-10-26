@@ -132,8 +132,8 @@ fun HomeScreen(
 
         AnimatedVisibility(
             visible = isVisible,
-            enter = fadeIn(animationSpec = tween(durationMillis = 2000)),
-            exit = fadeOut(animationSpec = tween(durationMillis = 1500)),
+            enter = fadeIn(animationSpec = tween(durationMillis = 2700)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 1000)),
             modifier = Modifier
                 .size(200.dp)
                 .align(Alignment.TopEnd),
@@ -154,8 +154,8 @@ fun HomeScreen(
         ) {
             AnimatedVisibility(
                 visible = isVisible,
-                enter = fadeIn(animationSpec = tween(durationMillis = 2000)),
-                exit = fadeOut(animationSpec = tween(durationMillis = 1500)),
+                enter = fadeIn(animationSpec = tween(durationMillis = 500)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 1000)),
                 modifier = Modifier.fillMaxSize()
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {

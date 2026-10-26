@@ -28,13 +28,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.decodeBitmap
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.presentation.theme.Grey
-import com.shalenmathew.quotesapp.presentation.theme.Poppins
+import com.shalenmathew.quotesapp.presentation.theme.RobotoFont
 
 /** Dice Dreams STYLE */
 @Composable
@@ -45,7 +46,7 @@ fun DiceDreamsStyleQuoteCard(
         author = "Unknown",
         liked = true
     ),
-    color: Color = Color(0xFF1800AD),
+    color: Color = Color(0xFFEA3651),
     imageUri: Uri? = null,
     onPickImage: () -> Unit = {}
 ) {
@@ -102,12 +103,15 @@ fun DiceDreamsStyleQuoteCard(
 
             Text(
                 text = quote.quote,
-                fontSize = 18.sp,
-                fontFamily = Poppins,
+                fontSize = 16.sp,
+                fontFamily = RobotoFont,
                 fontWeight = FontWeight.SemiBold,
-                lineHeight = 28.sp,
+                lineHeight = 26.sp,
+                textAlign = TextAlign.Center,
                 color = color,
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 22.dp, vertical = 18.dp)
             )
         }
     }

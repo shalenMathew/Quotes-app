@@ -25,16 +25,15 @@ object Constants {
     const val DICE_DREAMS_THEME = "DiceDreamsTheme"
     const val LIQUID_GLASS_THEME = "LiquidGlassTheme"
     const val BRAT_THEME = "BratTheme"
-    const val IGOR_THEME = "IgorTheme"
     const val REMINDER_THEME = "ReminderTheme"
-    const val FLIPPING_GOES_THEME = "FlippingGoesTheme"
     const val MINIMAL_BLACK_THEME = "MinimalBlackTheme"
     const val MINIMAL_BROWN_THEME = "MinimalBrownTheme"
-    const val TRAVEL_CARD_THEME = "TravelCardTheme"
     const val YOUTUBE_THEME = "YoutubeTheme"
     const val ARTISAN_CARD_THEME = "ArtisanCardTheme"
     const val BOOK_LOOK_THEME = "BookLookTheme"
 
     const val TWITTER_CARD_THEME = "TwitterTheme"
     const val DRAG_AND_DROP_THEME = "DragAndDropTheme"
+    const val PURPLE_DOT_THEME = "PurpleDotTheme"
+    const val GOOD_MEMORIES_THEME = "GoodMemoriesTheme"
 }

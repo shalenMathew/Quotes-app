@@ -138,13 +138,7 @@ sealed class QuoteStyle() {
 
     object BratTheme : QuoteStyle()
 
-    object IgorTheme : QuoteStyle()
-
     object ReminderTheme : QuoteStyle()
-
-    object FlippingGoesTheme : QuoteStyle()
-
-    object TravelCardTheme : QuoteStyle()
 
     object MinimalBlackTheme : QuoteStyle()
 
@@ -159,6 +153,10 @@ sealed class QuoteStyle() {
     object TwitterTheme: QuoteStyle()
 
     object DragAndDropTheme: QuoteStyle()
+
+    object PurpleDotTheme : QuoteStyle()
+
+    object GoodMemoriesTheme : QuoteStyle()
 }
 
 @Composable

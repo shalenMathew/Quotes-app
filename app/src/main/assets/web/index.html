@@ -386,6 +386,7 @@
         <option value="">All Collections</option>
       </select>
       <input type="text" id="searchInput" placeholder="Search quote or author..." oninput="renderTable()" style="width: 240px;" />
+      <button class="danger" id="cleanCorruptedBtn" style="display:none;" onclick="deleteCorruptedQuotes()">Clean Garbled (&#65533;)</button>
       <button class="danger" id="batchDeleteBtn" style="display:none;" onclick="deleteSelected()">Delete Selected</button>
     </div>
   </div>
@@ -405,6 +406,13 @@
         <tr><td colspan="5" class="empty-state">Loading quotes from phone...</td></tr>
       </tbody>
     </table>
+    <div id="paginationBar" style="display:none; padding: 12px 16px; border-top: 1px solid var(--border); align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-muted);">
+      <span id="paginationInfo"></span>
+      <div style="display:flex; gap:8px;">
+        <button id="prevPageBtn" onclick="changePage(-1)">← Prev</button>
+        <button id="nextPageBtn" onclick="changePage(1)">Next →</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -424,13 +432,23 @@
       <select id="batchCollectionSelect">
         <option value="">Optional: Add to Collection</option>
       </select>
+      <select id="batchCsvFormatSelect" onchange="updateBatchPreview()" title="How to format bilingual CSV columns (en, zh, tag)">
+        <option value="bilingual_newline">CSV Format: 中英双语换行 + 场景作作者</option>
+        <option value="bilingual_inline">CSV Format: 中英同行双语 + 场景作作者</option>
+        <option value="en_quote_zh_author">CSV Format: 英文作句子 + 中文作作者</option>
+      </select>
       <button onclick="document.getElementById('batchTextFileInput').click()">Load .txt / .csv / .json File</button>
       <input type="file" id="batchTextFileInput" accept=".txt,.csv,.json" style="display:none" onchange="handleBatchFileSelect(event)" />
     </div>
-    <textarea id="batchTextarea" placeholder="Example:&#10;The only way to do great work is to love what you do. | Steve Jobs&#10;Simplicity is the ultimate sophistication. | Leonardo da Vinci&#10;Action is the foundational key to all success."></textarea>
+    <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted); margin-bottom:10px; cursor:pointer;">
+      <input type="checkbox" id="batchCleanCorruptedCheck" checked />
+      自动清理之前导入乱码的条目（含 <code>&#65533;</code> 替换符或 CSV 表头的损坏数据）
+    </label>
+    <textarea id="batchTextarea" oninput="updateBatchPreview()" placeholder="Example:&#10;The only way to do great work is to love what you do. | Steve Jobs&#10;Simplicity is the ultimate sophistication. | Leonardo da Vinci&#10;Action is the foundational key to all success."></textarea>
+    <div id="batchPreviewBox" style="display:none; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-bottom:12px; font-size:12px; color:var(--text-muted);"></div>
     <div class="modal-footer">
       <button onclick="closeBatchModal()">Cancel</button>
-      <button class="primary" onclick="submitBatchUpload()">Upload & Sync to Phone</button>
+      <button class="primary" id="batchUploadSubmitBtn" onclick="submitBatchUpload()">Upload & Sync to Phone</button>
     </div>
   </div>
 </div>
@@ -473,10 +491,14 @@
     customQuotes: [],
     likedQuotes: [],
     collections: [],
-    crossRefs: []
+    crossRefs: [],
+    collectionById: new Map(),
+    quoteCollectionsMap: new Map()
   };
   let currentTab = 'custom';
   let selectedIds = new Set();
+  let currentPage = 1;
+  const PAGE_SIZE = 150;
 
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -486,12 +508,28 @@
   }
 
   async function apiCall(path, method = 'GET', bodyObj = null) {
-    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    const opts = { method, headers: { 'Content-Type': 'application/json; charset=UTF-8' } };
     if (bodyObj !== null) opts.body = JSON.stringify(bodyObj);
     const res = await fetch(path, opts);
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Request failed');
     return data;
+  }
+
+  function rebuildCollectionIndex() {
+    appState.collectionById = new Map(appState.collections.map(c => [c.id, c]));
+    appState.quoteCollectionsMap = new Map();
+    appState.crossRefs.forEach(r => {
+      const col = appState.collectionById.get(r.collectionId);
+      if (!col) return;
+      const key = `${Boolean(r.isCustom) ? '1' : '0'}_${r.quoteId}`;
+      let arr = appState.quoteCollectionsMap.get(key);
+      if (!arr) {
+        arr = [];
+        appState.quoteCollectionsMap.set(key, arr);
+      }
+      arr.push(col);
+    });
   }
 
   async function loadState() {
@@ -501,6 +539,7 @@
       appState.likedQuotes = data.likedQuotes || [];
       appState.collections = data.collections || [];
       appState.crossRefs = data.crossRefs || [];
+      rebuildCollectionIndex();
 
       document.getElementById('statCustomCount').textContent = appState.customQuotes.length;
       document.getElementById('statFavCount').textContent = appState.likedQuotes.length;
@@ -534,6 +573,7 @@
 
   function switchTab(tab) {
     currentTab = tab;
+    currentPage = 1;
     selectedIds.clear();
     document.getElementById('selectAllCheckbox').checked = false;
     document.getElementById('tab-custom').classList.toggle('active', tab === 'custom');
@@ -542,12 +582,18 @@
   }
 
   function getCollectionsForQuote(quoteId, isCustom) {
-    const refs = appState.crossRefs.filter(r => r.quoteId === quoteId && Boolean(r.isCustom) === Boolean(isCustom));
-    return refs.map(r => appState.collections.find(c => c.id === r.collectionId)).filter(Boolean);
+    const key = `${Boolean(isCustom) ? '1' : '0'}_${quoteId}`;
+    return appState.quoteCollectionsMap.get(key) || [];
+  }
+
+  function changePage(delta) {
+    currentPage = Math.max(1, currentPage + delta);
+    renderTable();
   }
 
   function renderTable() {
     const tbody = document.getElementById('quotesTableBody');
+    const paginationBar = document.getElementById('paginationBar');
     const query = (document.getElementById('searchInput').value || '').trim().toLowerCase();
     const filterColId = parseInt(document.getElementById('filterCollectionSelect').value || '0', 10);
     const isCustom = currentTab === 'custom';
@@ -567,12 +613,30 @@
     updateBatchDeleteButton();
 
     if (filtered.length === 0) {
+      if (paginationBar) paginationBar.style.display = 'none';
       tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No quotes found. Try adding or batch uploading quotes!</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = '';
-    filtered.forEach(item => {
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const startIdx = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = filtered.slice(startIdx, startIdx + PAGE_SIZE);
+
+    if (paginationBar) {
+      if (filtered.length > PAGE_SIZE) {
+        paginationBar.style.display = 'flex';
+        document.getElementById('paginationInfo').textContent =
+          `Showing ${startIdx + 1}–${startIdx + pageItems.length} of ${filtered.length} quotes (Page ${currentPage}/${totalPages})`;
+        document.getElementById('prevPageBtn').disabled = currentPage <= 1;
+        document.getElementById('nextPageBtn').disabled = currentPage >= totalPages;
+      } else {
+        paginationBar.style.display = 'none';
+      }
+    }
+
+    const fragment = document.createDocumentFragment();
+    pageItems.forEach(item => {
       const tr = document.createElement('tr');
       const cols = getCollectionsForQuote(item.id, isCustom);
       const checked = selectedIds.has(item.id) ? 'checked' : '';
@@ -591,8 +655,10 @@
           </div>
         </td>
       `;
-      tbody.appendChild(tr);
+      fragment.appendChild(tr);
     });
+    tbody.innerHTML = '';
+    tbody.appendChild(fragment);
   }
 
   function escapeHtml(str) {
@@ -617,6 +683,14 @@
     renderTable();
   }
 
+  function isCorruptedQuote(item) {
+    const q = String(item.quote || '');
+    const a = String(item.author || '');
+    return q.includes('\uFFFD') || a.includes('\uFFFD') ||
+      q.toLowerCase().startsWith('chapter,section,topic') ||
+      (/^chapter\s+\d+/i.test(q) && /,\s*section\s+\d+/i.test(q));
+  }
+
   function updateBatchDeleteButton() {
     const btn = document.getElementById('batchDeleteBtn');
     if (selectedIds.size > 0) {
@@ -624,6 +698,39 @@
       btn.textContent = `Delete Selected (${selectedIds.size})`;
     } else {
       btn.style.display = 'none';
+    }
+
+    const cleanBtn = document.getElementById('cleanCorruptedBtn');
+    if (cleanBtn) {
+      const isCustom = currentTab === 'custom';
+      const rawList = isCustom ? appState.customQuotes : appState.likedQuotes;
+      const corruptedCount = rawList.filter(isCorruptedQuote).length;
+      if (corruptedCount > 0) {
+        cleanBtn.style.display = 'inline-flex';
+        cleanBtn.textContent = `清理乱码数据 (${corruptedCount})`;
+      } else {
+        cleanBtn.style.display = 'none';
+      }
+    }
+  }
+
+  async function deleteCorruptedQuotes() {
+    const isCustom = currentTab === 'custom';
+    const rawList = isCustom ? appState.customQuotes : appState.likedQuotes;
+    const corruptedCount = rawList.filter(isCorruptedQuote).length;
+    if (corruptedCount === 0) return;
+    if (!confirm(`确定删除当前列表中 ${corruptedCount} 条含乱码（\uFFFD）或原始CSV行的数据吗？`)) return;
+    try {
+      const res = await apiCall('/api/quotes/delete', 'POST', {
+        isCustom,
+        deleteCorrupted: true
+      });
+      selectedIds.clear();
+      document.getElementById('selectAllCheckbox').checked = false;
+      showToast(`已清理 ${res.deletedCount} 条乱码数据`);
+      await loadState();
+    } catch (err) {
+      showToast('Clean failed: ' + err.message);
     }
   }
 
@@ -692,33 +799,163 @@
   }
 
   /* Batch Upload */
-  function openBatchModal() { document.getElementById('batchModal').classList.add('open'); }
+  function openBatchModal() {
+    document.getElementById('batchModal').classList.add('open');
+    updateBatchPreview();
+  }
   function closeBatchModal() { document.getElementById('batchModal').classList.remove('open'); }
 
+  function parseCsvRows(text) {
+    const rows = [];
+    let row = [];
+    let field = '';
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (i + 1 < text.length && text[i + 1] === '"') {
+            field += '"';
+            i++;
+          } else {
+            inQuotes = false;
+          }
+        } else {
+          field += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          row.push(field.trim());
+          field = '';
+        } else if (ch === '\r' || ch === '\n') {
+          if (ch === '\r' && i + 1 < text.length && text[i + 1] === '\n') i++;
+          row.push(field.trim());
+          if (row.some(cell => cell.length > 0)) rows.push(row);
+          row = [];
+          field = '';
+        } else {
+          field += ch;
+        }
+      }
+    }
+    row.push(field.trim());
+    if (row.some(cell => cell.length > 0)) rows.push(row);
+    return rows;
+  }
+
+  function cleanHeadingZhJs(heading) {
+    if (!heading) return '';
+    let s = String(heading).replace(/^(?:Chapter|Section)\s*\d+\s*/i, '').trim();
+    s = s.replace(/^\d+\s*/, '').trim();
+    s = s.replace(/\s*[A-Za-z][A-Za-z0-9\s\-',.?!？]*$/, '').trim();
+    return s || String(heading).trim();
+  }
+
   function parseBatchText(rawText) {
-    const trimmed = rawText.trim();
+    const trimmed = String(rawText || '').replace(/^\uFEFF/, '').trim();
     if (!trimmed) return [];
-    // Try JSON array first
+    const csvModeEl = document.getElementById('batchCsvFormatSelect');
+    const csvMode = csvModeEl ? csvModeEl.value : 'bilingual_newline';
+
+    // 1. Try JSON array or object first
     if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
       try {
         const parsed = JSON.parse(trimmed);
         const arr = Array.isArray(parsed) ? parsed : (parsed.customQuotes || parsed.quotes || parsed.likedQuotes || []);
         if (Array.isArray(arr) && arr.length > 0) {
-          return arr.map(item => ({
-            quote: String(item.quote || item.text || '').trim(),
-            author: String(item.author || 'Unknown').trim() || 'Unknown'
-          })).filter(x => x.quote.length > 0);
+          return arr.map(item => {
+            if (item.en && item.zh) {
+              const tag = String(item.tag || item.author || item.topic || item.chapter || 'Unknown').trim() || 'Unknown';
+              if (csvMode === 'en_quote_zh_author') return { quote: String(item.en).trim(), author: String(item.zh).trim() };
+              if (csvMode === 'bilingual_inline') return { quote: `${String(item.en).trim()} ${String(item.zh).trim()}`, author: tag };
+              return { quote: `${String(item.en).trim()}\n${String(item.zh).trim()}`, author: tag };
+            }
+            return {
+              quote: String(item.quote || item.text || '').trim(),
+              author: String(item.author || 'Unknown').trim() || 'Unknown'
+            };
+          }).filter(x => x.quote.length > 0);
         }
       } catch (_) {}
     }
 
-    // Parse line by line: supports "Quote | Author", "Quote — Author", "Quote - Author", or CSV
+    // 2. Detect structured CSV with headers (e.g. chapter,section,topic,en,zh,tag or quote,author)
+    const firstLine = trimmed.split(/\r?\n/, 1)[0].trim();
+    const firstRowCells = parseCsvRows(firstLine)[0] || [];
+    const lowerHeaders = firstRowCells.map(h => h.toLowerCase().replace(/^["']|["']$/g, '').trim());
+    const knownCsvHeaders = ['chapter', 'section', 'topic', 'en', 'zh', 'tag', 'quote', 'text', 'sentence', 'english', 'chinese', 'author'];
+    const isHeaderCsv = lowerHeaders.length >= 2 && lowerHeaders.some(h => knownCsvHeaders.includes(h));
+
+    if (isHeaderCsv) {
+      const allRows = parseCsvRows(trimmed);
+      if (allRows.length > 1) {
+        const idx = nameList => lowerHeaders.findIndex(h => nameList.includes(h));
+        const enIdx = idx(['en', 'english']);
+        const zhIdx = idx(['zh', 'chinese', 'translation', 'cn']);
+        const quoteIdx = idx(['quote', 'text', 'sentence', 'content']);
+        const authorIdx = idx(['author', 'source', 'writer']);
+        const tagIdx = idx(['tag', 'scene', 'category']);
+        const chapterIdx = idx(['chapter']);
+        const sectionIdx = idx(['section']);
+        const topicIdx = idx(['topic']);
+
+        return allRows.slice(1).map(cols => {
+          const get = i => (i >= 0 && i < cols.length ? cols[i].trim() : '');
+          const en = get(enIdx);
+          const zh = get(zhIdx);
+          const explicitQuote = get(quoteIdx);
+          const explicitAuthor = get(authorIdx);
+          let tag = get(tagIdx);
+          if (!tag && (chapterIdx >= 0 || topicIdx >= 0)) {
+            const chZh = cleanHeadingZhJs(get(chapterIdx));
+            const tpZh = cleanHeadingZhJs(get(topicIdx) || get(sectionIdx));
+            tag = [chZh, tpZh].filter(Boolean).join(' · ');
+          }
+
+          if (en && zh) {
+            const sceneAuthor = tag || explicitAuthor || 'Unknown';
+            if (csvMode === 'en_quote_zh_author') {
+              return { quote: en, author: zh };
+            }
+            if (csvMode === 'bilingual_inline') {
+              return { quote: `${en} ${zh}`, author: sceneAuthor };
+            }
+            return { quote: `${en}\n${zh}`, author: sceneAuthor };
+          }
+          if (explicitQuote) {
+            return { quote: explicitQuote, author: explicitAuthor || tag || zh || 'Unknown' };
+          }
+          if (en) {
+            return { quote: en, author: tag || explicitAuthor || 'Unknown' };
+          }
+          return { quote: cols[0] || '', author: cols[1] || 'Unknown' };
+        }).filter(x => x.quote.length > 0);
+      }
+    }
+
+    // 3. Parse line by line: supports "Quote | Author", "Quote — Author", "Quote - Author", or 6-column headerless CSV
     return trimmed.split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(line => {
       if (line.includes('|')) {
         const parts = line.split('|');
         const author = parts.pop().trim() || 'Unknown';
         const quote = parts.join('|').trim();
         return { quote, author };
+      }
+      // Also support headerless rows from 4_完整结构化数据_含章节场景.csv pasted directly
+      if (/^Chapter\s+\d+/i.test(line) && line.includes(',')) {
+        const cols = parseCsvRows(line)[0] || [];
+        if (cols.length >= 5) {
+          const en = cols[3] || '';
+          const zh = cols[4] || '';
+          const tag = cols[5] || [cleanHeadingZhJs(cols[0]), cleanHeadingZhJs(cols[2])].filter(Boolean).join(' · ') || 'Unknown';
+          if (en && zh) {
+            if (csvMode === 'en_quote_zh_author') return { quote: en, author: zh };
+            if (csvMode === 'bilingual_inline') return { quote: `${en} ${zh}`, author: tag };
+            return { quote: `${en}\n${zh}`, author: tag };
+          }
+        }
       }
       const dashMatch = line.match(/^(.*?)\s+(?:—|--|-)\s+([^—\-]{2,50})$/);
       if (dashMatch) {
@@ -728,14 +965,32 @@
     }).filter(x => x.quote.length > 0);
   }
 
+  function updateBatchPreview() {
+    const box = document.getElementById('batchPreviewBox');
+    const raw = document.getElementById('batchTextarea').value;
+    if (!box) return;
+    const parsed = parseBatchText(raw);
+    if (parsed.length === 0) {
+      box.style.display = 'none';
+      return;
+    }
+    const sample = parsed[0];
+    box.style.display = 'block';
+    box.innerHTML = `<strong>解析预览（共 ${parsed.length} 条）：</strong><br/>` +
+      `<span style="color:var(--text);">Quote:</span> <span style="white-space:pre-wrap;color:#d8b4fe;">${escapeHtml(sample.quote)}</span><br/>` +
+      `<span style="color:var(--text);">Author:</span> <span style="color:#86efac;">${escapeHtml(sample.author)}</span>`;
+  }
+
   function handleBatchFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = e => {
       document.getElementById('batchTextarea').value = e.target.result || '';
+      updateBatchPreview();
     };
-    reader.readAsText(file);
+    reader.readAsText(file, 'UTF-8');
+    event.target.value = '';
   }
 
   async function submitBatchUpload() {
@@ -748,15 +1003,49 @@
     const target = document.getElementById('batchTargetSelect').value;
     const colVal = document.getElementById('batchCollectionSelect').value;
     const collectionId = colVal ? parseInt(colVal, 10) : null;
+    const autoClean = document.getElementById('batchCleanCorruptedCheck')?.checked;
+    const submitBtn = document.getElementById('batchUploadSubmitBtn');
+    const origText = submitBtn ? submitBtn.textContent : 'Upload & Sync to Phone';
 
     try {
-      const res = await apiCall('/api/quotes/batch', 'POST', { quotes, target, collectionId });
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Cleaning & preparing...';
+      }
+      if (autoClean) {
+        await apiCall('/api/quotes/delete', 'POST', {
+          isCustom: target === 'custom',
+          deleteCorrupted: true
+        });
+      }
+
+      const CHUNK_SIZE = 1000;
+      let totalImported = 0;
+      for (let i = 0; i < quotes.length; i += CHUNK_SIZE) {
+        const chunk = quotes.slice(i, i + CHUNK_SIZE);
+        if (submitBtn) {
+          submitBtn.textContent = `Uploading ${Math.min(i + chunk.length, quotes.length)} / ${quotes.length}...`;
+        }
+        const res = await apiCall('/api/quotes/batch', 'POST', {
+          quotes: chunk,
+          target,
+          collectionId
+        });
+        totalImported += (res.importedCount || chunk.length);
+      }
+
       document.getElementById('batchTextarea').value = '';
+      updateBatchPreview();
       closeBatchModal();
-      showToast(`Successfully synced ${res.importedCount} quotes to phone!`);
+      showToast(`Successfully synced ${totalImported} quotes to phone!`);
       await loadState();
     } catch (err) {
       showToast('Batch upload failed: ' + err.message);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = origText;
+      }
     }
   }
 

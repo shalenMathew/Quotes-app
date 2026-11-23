@@ -1,0 +1,56 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="28dp"
+    android:height="28dp"
+    android:viewportWidth="28"
+    android:viewportHeight="28">
+
+    <!-- Subtle translucent circular glass badge -->
+    <path
+        android:fillAlpha="0.14"
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M14,1A13,13 0,1 1,14 27A13,13 0,1 1,14 1Z" />
+
+    <!-- Delicate outer ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M14,1.5A12.5,12.5 0,1 1,14 26.5A12.5,12.5 0,1 1,14 1.5Z"
+        android:strokeAlpha="0.24"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1" />
+
+    <!-- Modern rounded dual-arc refresh icon (upper arc & arrowhead) -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M8,14a6,6 0,0 1,6 -6a6.5,6.5 0,0 1,4.5 1.83L20,11.33"
+        android:strokeAlpha="0.92"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.85" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M20,7.93v3.4h-3.4"
+        android:strokeAlpha="0.92"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.85" />
+
+    <!-- Modern rounded dual-arc refresh icon (lower arc & arrowhead) -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M20,14a6,6 0,0 1,-6 6a6.5,6.5 0,0 1,-4.5 -1.83L8,16.67"
+        android:strokeAlpha="0.92"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.85" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M11.4,16.67H8v3.4"
+        android:strokeAlpha="0.92"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.85" />
+</vector>

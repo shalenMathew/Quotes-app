@@ -11,10 +11,10 @@ import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseC
 import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetUseCase
 import com.shalenmathew.quotesapp.util.Constants
-import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
 import com.shalenmathew.quotesapp.util.Resource
-import com.shalenmathew.quotesapp.util.getMillisFromNow
-import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.getMillisFromNowMinutes
+import com.shalenmathew.quotesapp.util.getWidgetRefreshIntervalMinutes
 import com.shalenmathew.quotesapp.util.getWidgetSources
 import com.shalenmathew.quotesapp.util.setLastAlarmTriggerMillis
 import dagger.assisted.Assisted
@@ -70,9 +70,10 @@ class WidgetWorkManager @AssistedInject constructor(
 
             /** LIKED FIRST APPROACH TO UPDATE WIDGET */
 
-            val refreshInterval = context.getWidgetRefreshInterval().first() ?: DEFAULT_REFRESH_INTERVAL
+            val refreshIntervalMinutes =
+                context.getWidgetRefreshIntervalMinutes().first() ?: DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
 
-            val success = refreshAndUpdateWidget(refreshInterval)
+            val success = refreshAndUpdateWidget(refreshIntervalMinutes)
 
             if (success) {
                 context.setLastAlarmTriggerMillis(System.currentTimeMillis())
@@ -93,8 +94,8 @@ class WidgetWorkManager @AssistedInject constructor(
 
     }
 
-    private suspend fun refreshAndUpdateWidget(refreshInterval: Int): Boolean {
-        scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(getMillisFromNow(refreshInterval))
+    private suspend fun refreshAndUpdateWidget(refreshIntervalMinutes: Int): Boolean {
+        scheduleWidgetRefresh.scheduleWidgetRefreshWorkAlarm(getMillisFromNowMinutes(refreshIntervalMinutes))
         val sources = context.getWidgetSources().first()
         Log.d(TAG, "refreshAndUpdateWidget: Current sources are $sources")
         val quote = fetchQuoteFromSources(allowNetwork = true)

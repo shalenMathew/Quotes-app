@@ -75,18 +75,20 @@ import com.shalenmathew.quotesapp.presentation.theme.customGrey4
 import com.shalenmathew.quotesapp.presentation.viewmodel.SettingsViewModel
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetReceiver
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
 import com.shalenmathew.quotesapp.util.convertHrsToDays
-import com.shalenmathew.quotesapp.util.getMillisFromNow
+import com.shalenmathew.quotesapp.util.formatWidgetRefreshMinutesToOption
+import com.shalenmathew.quotesapp.util.getMillisFromNowMinutes
 import com.shalenmathew.quotesapp.util.getNotificationInterval
-import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
-import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.getWidgetRefreshIntervalMinutes
+import com.shalenmathew.quotesapp.util.parseWidgetRefreshOptionToMinutes
+import com.shalenmathew.quotesapp.util.setWidgetRefreshIntervalMinutes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-// Only Hr is allowed
-val widgetRefreshTimeOptions = listOf("1 hr", "6 hr", "12 hr", "24 hr")
+val widgetRefreshTimeOptions = listOf("5 min", "10 min", "15 min", "30 min", "1 hr", "6 hr", "12 hr", "24 hr")
 
 val notificationRefreshTimeOptions = listOf("1 hr", "6 hr", "12 hr", "24 hr", "2 days", "7 days")
 
@@ -189,15 +191,15 @@ fun SettingsScreen(
                             fontSize = 16.sp
                         )
                         TimeDropdownMenu(
-                            modifier = Modifier.widthIn(max = 120.dp),
-                            onTimeSelected = {
-                                val interval = it.removeSuffix("hr").trim().toInt()
+                            modifier = Modifier.widthIn(max = 130.dp),
+                            onTimeSelected = { option ->
+                                val intervalMinutes = parseWidgetRefreshOptionToMinutes(option)
                                 coroutineScope.launch {
-                                    context.setWidgetRefreshInterval(interval = interval)
+                                    context.setWidgetRefreshIntervalMinutes(minutes = intervalMinutes)
                                 }
                                 settingsViewModel.scheduleWidgetRefreshWorkAlarm(
-                                    getMillisFromNow(
-                                        interval
+                                    getMillisFromNowMinutes(
+                                        intervalMinutes
                                     )
                                 )
                             },
@@ -533,7 +535,7 @@ fun TimeDropdownMenu(
     val context = LocalContext.current
     var widgetSelectedOption by remember { mutableStateOf("-") }
     LaunchedEffect(Unit) {
-        widgetSelectedOption = "${getSelectedWidgetRefreshInterval(context)} hr"
+        widgetSelectedOption = getSelectedWidgetRefreshOption(context)
     }
 
     var notificationSelectedOption by remember { mutableStateOf("-") }
@@ -616,12 +618,15 @@ fun TimeDropdownMenu(
     }
 }
 
-private suspend fun getSelectedWidgetRefreshInterval(context: Context): Int {
-    var selectedInterval = context.getWidgetRefreshInterval().first() ?: DEFAULT_REFRESH_INTERVAL
-    if (!widgetRefreshTimeOptions.contains("$selectedInterval hr")) {
-        selectedInterval = DEFAULT_REFRESH_INTERVAL
+private suspend fun getSelectedWidgetRefreshOption(context: Context): String {
+    val selectedMinutes =
+        context.getWidgetRefreshIntervalMinutes().first() ?: DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
+    val formatted = formatWidgetRefreshMinutesToOption(selectedMinutes)
+    return if (widgetRefreshTimeOptions.contains(formatted)) {
+        formatted
+    } else {
+        formatWidgetRefreshMinutesToOption(DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES)
     }
-    return selectedInterval
 }
 
 private suspend fun getSelectedNotificationInterval(

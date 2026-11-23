@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
-import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
 import com.shalenmathew.quotesapp.util.getLastAlarmTriggerMillis
-import com.shalenmathew.quotesapp.util.getMillisFromNow
-import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.getMillisFromNowMinutes
+import com.shalenmathew.quotesapp.util.getWidgetRefreshIntervalMinutes
 import com.shalenmathew.quotesapp.util.setLastAlarmTriggerMillis
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -34,17 +34,17 @@ class WidgetRefreshReceiver() : BroadcastReceiver() {
 
                 if (intent?.action == Intent.ACTION_BOOT_COMPLETED) {
                     val lastAlarmSetTimeMillis =
-                        context?.getLastAlarmTriggerMillis()?.first() ?: getMillisFromNow(
-                            DEFAULT_REFRESH_INTERVAL
+                        context?.getLastAlarmTriggerMillis()?.first() ?: getMillisFromNowMinutes(
+                            DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
                         )
-                    val widgetRefreshInterval = context?.getWidgetRefreshInterval()?.first()
-                        ?: DEFAULT_REFRESH_INTERVAL
+                    val widgetRefreshIntervalMinutes = context?.getWidgetRefreshIntervalMinutes()?.first()
+                        ?: DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
                     var timeToTrigger =
-                        lastAlarmSetTimeMillis + TimeUnit.HOURS.toMillis(widgetRefreshInterval.toLong())
+                        lastAlarmSetTimeMillis + TimeUnit.MINUTES.toMillis(widgetRefreshIntervalMinutes.toLong())
 
                     if (timeToTrigger <= System.currentTimeMillis()) {
-                        timeToTrigger = System.currentTimeMillis() + TimeUnit.HOURS.toMillis(
-                            widgetRefreshInterval.toLong()
+                        timeToTrigger = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(
+                            widgetRefreshIntervalMinutes.toLong()
                         )
                     }
 

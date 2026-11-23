@@ -43,6 +43,33 @@ fun getMillisFromNow(hour: Int): Long {
     return System.currentTimeMillis() + TimeUnit.HOURS.toMillis(hour.toLong())
 }
 
+fun getMillisFromNowMinutes(minutes: Int): Long {
+    return System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(minutes.toLong())
+}
+
+fun parseWidgetRefreshOptionToMinutes(option: String): Int {
+    val trimmed = option.trim().lowercase()
+    return when {
+        trimmed.endsWith("min") -> {
+            trimmed.removeSuffix("min").trim().toIntOrNull()
+                ?: Constants.DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
+        }
+        trimmed.endsWith("hr") -> {
+            val hours = trimmed.removeSuffix("hr").trim().toIntOrNull() ?: Constants.DEFAULT_REFRESH_INTERVAL
+            hours * 60
+        }
+        else -> Constants.DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
+    }
+}
+
+fun formatWidgetRefreshMinutesToOption(minutes: Int): String {
+    return if (minutes >= 60 && minutes % 60 == 0) {
+        "${minutes / 60} hr"
+    } else {
+        "$minutes min"
+    }
+}
+
 fun convertDaysToHrs(days: Int): Int {
     return TimeUnit.DAYS.toHours(days.toLong()).toInt()
 }

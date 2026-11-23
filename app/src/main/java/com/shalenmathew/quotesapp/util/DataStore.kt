@@ -28,6 +28,7 @@ val LAST_ALARM_SET_MILLIS_KEY = longPreferencesKey("last_alarm_set_millis")
 val LAST_ALARM_SET_FOR_NOTIFICATION_MILLIS_KEY =
     longPreferencesKey("last_alarm_set_for_notification_millis")
 val USER_PREF_WIDGET_REFRESH_INTERVAL_KEY = intPreferencesKey("user_pref_widget_refresh_interval")
+val USER_PREF_WIDGET_REFRESH_INTERVAL_MINUTES_KEY = intPreferencesKey("user_pref_widget_refresh_interval_minutes")
 val USER_PREF_NOTIFICATION_INTERVAL_KEY = intPreferencesKey("user_pref_notification_interval")
 val WIDGET_SOURCE_KEY = stringPreferencesKey("widget_source")
 val WIDGET_SOURCES_KEY = stringSetPreferencesKey("widget_sources")
@@ -86,6 +87,22 @@ fun Context.getWidgetRefreshInterval(): Flow<Int?> {
 suspend fun Context.setWidgetRefreshInterval(interval: Int) {
     dataStore.edit { preferences ->
         preferences[USER_PREF_WIDGET_REFRESH_INTERVAL_KEY] = interval
+    }
+}
+
+fun Context.getWidgetRefreshIntervalMinutes(): Flow<Int?> {
+    return dataStore.data.map { preferences ->
+        preferences[USER_PREF_WIDGET_REFRESH_INTERVAL_MINUTES_KEY]
+            ?: preferences[USER_PREF_WIDGET_REFRESH_INTERVAL_KEY]?.let { it * 60 }
+    }
+}
+
+suspend fun Context.setWidgetRefreshIntervalMinutes(minutes: Int) {
+    dataStore.edit { preferences ->
+        preferences[USER_PREF_WIDGET_REFRESH_INTERVAL_MINUTES_KEY] = minutes
+        if (minutes >= 60 && minutes % 60 == 0) {
+            preferences[USER_PREF_WIDGET_REFRESH_INTERVAL_KEY] = minutes / 60
+        }
     }
 }
 

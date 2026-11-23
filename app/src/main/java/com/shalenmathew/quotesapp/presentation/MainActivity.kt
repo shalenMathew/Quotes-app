@@ -31,16 +31,18 @@ import com.shalenmathew.quotesapp.presentation.workmanager.notification.Schedule
 import com.shalenmathew.quotesapp.presentation.workmanager.widget.ScheduleWidgetRefresh
 import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
+import com.shalenmathew.quotesapp.util.Constants.DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
 import com.shalenmathew.quotesapp.util.NotificationMode
 import com.shalenmathew.quotesapp.util.checkWorkManagerStatus
 import com.shalenmathew.quotesapp.util.getMillisFromNow
+import com.shalenmathew.quotesapp.util.getMillisFromNowMinutes
 import com.shalenmathew.quotesapp.util.getNotificationInterval
-import com.shalenmathew.quotesapp.util.getWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.getWidgetRefreshIntervalMinutes
 import com.shalenmathew.quotesapp.util.getZenAudioCustomPath
 import com.shalenmathew.quotesapp.util.isZenAudioEnabled
 import com.shalenmathew.quotesapp.util.setNotificationInterval
 import com.shalenmathew.quotesapp.util.setNotificationMode
-import com.shalenmathew.quotesapp.util.setWidgetRefreshInterval
+import com.shalenmathew.quotesapp.util.setWidgetRefreshIntervalMinutes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -80,13 +82,13 @@ class MainActivity : ComponentActivity() {
                 val currentDestination = currentBackStackEntry?.destination?.route
 
                 LaunchedEffect(Unit) {
-                    val widgetRefreshInterval = context.getWidgetRefreshInterval().first()
-                    if (widgetRefreshInterval == null) {
-                        context.setWidgetRefreshInterval(DEFAULT_REFRESH_INTERVAL)
+                    val widgetRefreshIntervalMinutes = context.getWidgetRefreshIntervalMinutes().first()
+                    if (widgetRefreshIntervalMinutes == null) {
+                        context.setWidgetRefreshIntervalMinutes(DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES)
                         Handler(Looper.getMainLooper()).postDelayed({
                             scheduleWidget.scheduleWidgetRefreshWorkAlarm(
-                                getMillisFromNow(
-                                    DEFAULT_REFRESH_INTERVAL
+                                getMillisFromNowMinutes(
+                                    DEFAULT_WIDGET_REFRESH_INTERVAL_MINUTES
                                 )
                             )
                         }, 5000)

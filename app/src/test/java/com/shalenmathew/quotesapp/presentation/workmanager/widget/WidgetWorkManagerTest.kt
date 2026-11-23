@@ -9,6 +9,8 @@ import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.GetCusto
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.GetLikedQuotes
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.SaveLikedQuote
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
+import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
+import com.shalenmathew.quotesapp.domain.usecases.library.SearchQuotesInCollection
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetUseCase
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -44,6 +46,9 @@ class WidgetWorkManagerTest {
     private lateinit var getCustomQuotes: GetCustomQuotes
 
     @Mock
+    private lateinit var searchQuotesInCollection: SearchQuotesInCollection
+
+    @Mock
     private lateinit var scheduleWidgetRefresh: ScheduleWidgetRefresh
 
     @Mock
@@ -51,6 +56,7 @@ class WidgetWorkManagerTest {
 
     private lateinit var quoteUseCase: QuoteUseCase
     private lateinit var customQuoteUseCases: CustomQuoteUseCases
+    private lateinit var collectionUseCases: CollectionUseCases
     private lateinit var worker: WidgetWorkManager
 
     @Before
@@ -74,11 +80,27 @@ class WidgetWorkManagerTest {
             updateCustomQuote = mock()
         )
 
+        collectionUseCases = CollectionUseCases(
+            getAllCollections = mock(),
+            addCollection = mock(),
+            updateCollection = mock(),
+            deleteCollection = mock(),
+            getCollectionById = mock(),
+            getCollectionByName = mock(),
+            addQuoteToCollection = mock(),
+            removeQuoteFromCollection = mock(),
+            isQuoteInCollection = mock(),
+            getCollectionIdsForQuote = mock(),
+            searchQuotesInCollection = searchQuotesInCollection,
+            getAllCrossRefs = mock()
+        )
+
         worker = WidgetWorkManager(
             context,
             workerParams,
             quoteUseCase,
             customQuoteUseCases,
+            collectionUseCases,
             scheduleWidgetRefresh,
             updateWidgetUseCase
         )
@@ -118,10 +140,11 @@ class WidgetWorkManagerTest {
 
         assertNotNull(result)
         result?.let {
-            assertEquals(100001, it.id)
+            assertEquals(1, it.id)
             assertEquals("CQ1", it.quote)
             assertEquals("CA1", it.author)
             assertEquals(false, it.liked)
+            assertEquals(true, it.isCustom)
         }
     }
 
@@ -130,6 +153,29 @@ class WidgetWorkManagerTest {
         whenever(getCustomQuotes.invoke(any())).thenReturn(flowOf(emptyList()))
 
         val result = worker.getRandomCustomQuote()
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `getRandomCollectionQuote returns a quote when collection has quotes`() = runTest {
+        val collectionQuotes = listOf(
+            Quote(id = 10, quote = "Collection Q1", author = "Author 1", liked = false),
+            Quote(id = 11, quote = "Collection Q2", author = "Author 2", liked = false)
+        )
+        whenever(searchQuotesInCollection.invoke(5, "")).thenReturn(flowOf(collectionQuotes))
+
+        val result = worker.getRandomCollectionQuote(5)
+
+        assertNotNull(result)
+        assertTrue(collectionQuotes.contains(result))
+    }
+
+    @Test
+    fun `getRandomCollectionQuote returns null when collection is empty`() = runTest {
+        whenever(searchQuotesInCollection.invoke(5, "")).thenReturn(flowOf(emptyList()))
+
+        val result = worker.getRandomCollectionQuote(5)
 
         assertNull(result)
     }

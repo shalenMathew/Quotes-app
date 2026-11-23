@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.viewmodel.SettingsViewModel
+import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.getWidgetSources
 import kotlinx.coroutines.flow.first
 
@@ -38,22 +42,35 @@ fun WidgetSourceScreen(
 ) {
     val context = LocalContext.current
     var selectedSources by remember { mutableStateOf(setOf("favorites")) }
+    val collections by settingsViewModel.collections.collectAsState(initial = emptyList())
 
     LaunchedEffect(Unit) {
         selectedSources = context.getWidgetSources().first()
     }
 
-    val options = listOf(
-        WidgetSourceOption("Fav Quotes", "favorites", "Fetched from your favorites"),
-        WidgetSourceOption("Custom Quotes", "custom", "Fetched from your own creations"),
-        WidgetSourceOption("Network", "network", "Fetched fresh from the internet")
-    )
+    val options = remember(collections) {
+        buildList {
+            add(WidgetSourceOption("Fav Quotes", "favorites", "Fetched from your favorites"))
+            add(WidgetSourceOption("Custom Quotes", "custom", "Fetched from your own creations"))
+            collections.forEach { collection ->
+                add(
+                    WidgetSourceOption(
+                        label = collection.name,
+                        value = Constants.collectionSourceKey(collection.id),
+                        description = "Fetched from your ${collection.name} collection"
+                    )
+                )
+            }
+            add(WidgetSourceOption("Network", "network", "Fetched fresh from the internet"))
+        }
+    }
 
     Column(
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()
             .background(Color.Black)
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         Text(
@@ -72,18 +89,22 @@ fun WidgetSourceScreen(
         )
 
         Column {
+            val validOptionValues = options.map { it.value }.toSet()
             options.forEach { option ->
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .clickable {
-                            val newSources = selectedSources.toMutableSet()
+                            val newSources = selectedSources.intersect(validOptionValues).toMutableSet()
                             if (newSources.contains(option.value)) {
                                 if (newSources.size > 1) {
                                     newSources.remove(option.value)
                                 }
                             } else {
                                 newSources.add(option.value)
+                            }
+                            if (newSources.isEmpty()) {
+                                newSources.add("favorites")
                             }
                             selectedSources = newSources
                             settingsViewModel.saveWidgetSources(newSources)

@@ -13,6 +13,8 @@ import com.shalenmathew.quotesapp.util.setWidgetSources
 import com.shalenmathew.quotesapp.util.setWidgetThemeId
 import com.shalenmathew.quotesapp.util.setZenAudioCustomPath
 import com.shalenmathew.quotesapp.util.setZenAudioEnabled
+import com.shalenmathew.quotesapp.domain.model.Collection
+import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetThemeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,11 +28,13 @@ class SettingsViewModel @Inject constructor(
     private val scheduleWidgetRefresh: ScheduleWidgetRefresh,
     private val scheduleNotificationRefresh: ScheduleNotification,
     private val updateWidgetThemeUseCase: UpdateWidgetThemeUseCase,
+    collectionUseCases: CollectionUseCases,
 ) : ViewModel() {
 
     val isZenAudioEnabled: Flow<Boolean> = context.isZenAudioEnabled()
     val zenAudioCustomPath: Flow<String?> = context.getZenAudioCustomPath()
     val widgetThemeId: Flow<String> = context.getWidgetThemeId()
+    val collections: Flow<List<Collection>> = collectionUseCases.getAllCollections()
 
     fun toggleZenAudio(enabled: Boolean) {
         viewModelScope.launch {

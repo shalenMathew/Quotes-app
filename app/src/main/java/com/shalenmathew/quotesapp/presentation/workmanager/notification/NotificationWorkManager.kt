@@ -7,6 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
+import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.Resource
@@ -31,6 +32,7 @@ class NotificationWorkManager @AssistedInject constructor(
     @Assisted private val params: WorkerParameters,
     private val quoteUseCase: QuoteUseCase,
     private val customQuoteUseCases: CustomQuoteUseCases,
+    private val collectionUseCases: CollectionUseCases,
     private val scheduleNotification: ScheduleNotification
 ) : CoroutineWorker(context, params) {
 
@@ -95,25 +97,32 @@ class NotificationWorkManager @AssistedInject constructor(
                 return false
             }
 
-            val selectedSource = enabledSources.random()
-            Log.d(
-                Constants.WORK_MANAGER_STATUS_NOTIFY,
-                "Selected notification source for this refresh: $selectedSource (enabled: $enabledSources)"
-            )
-
-            val finalQuote = quoteFromNotificationSource(selectedSource)
+            var finalQuote: Quote? = null
+            var chosenSource = ""
+            for (selectedSource in enabledSources.shuffled()) {
+                Log.d(
+                    Constants.WORK_MANAGER_STATUS_NOTIFY,
+                    "Trying notification source for this refresh: $selectedSource (enabled: $enabledSources)"
+                )
+                val candidate = quoteFromNotificationSource(selectedSource)
+                if (candidate != null) {
+                    finalQuote = candidate
+                    chosenSource = selectedSource
+                    break
+                }
+            }
 
             if (finalQuote != null) {
                 Log.d(
                     Constants.WORK_MANAGER_STATUS_NOTIFY,
-                    "Fetched quote from notification source $selectedSource: $finalQuote"
+                    "Fetched quote from notification source $chosenSource: $finalQuote"
                 )
                 context.saveNotificationQuote(finalQuote)
                 true
             } else {
                 Log.d(
                     Constants.WORK_MANAGER_STATUS_NOTIFY,
-                    "Notification source $selectedSource returned no quote; will retry"
+                    "Notification sources $enabledSources returned no quote; will retry"
                 )
                 false
             }
@@ -126,11 +135,22 @@ class NotificationWorkManager @AssistedInject constructor(
     }
 
     private suspend fun quoteFromNotificationSource(source: String): Quote? {
-        return when (source) {
-            "network" -> fetchQuoteFromNetwork()
-            "favourite" -> getRandomLikedQuote()
-            "custom" -> getRandomCustomQuote()
+        val collectionId = Constants.parseCollectionIdFromSource(source)
+        return when {
+            source == "network" -> fetchQuoteFromNetwork()
+            source == "favourite" -> getRandomLikedQuote()
+            source == "custom" -> getRandomCustomQuote()
+            collectionId != null -> getRandomCollectionQuote(collectionId)
             else -> null
+        }
+    }
+
+    private suspend fun getRandomCollectionQuote(collectionId: Int): Quote? {
+        return try {
+            val quotes = collectionUseCases.searchQuotesInCollection(collectionId, "").first()
+            quotes.shuffled().firstOrNull()
+        } catch (e: Exception) {
+            null
         }
     }
 

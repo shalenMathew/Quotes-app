@@ -36,4 +36,15 @@ object Constants {
     const val DRAG_AND_DROP_THEME = "DragAndDropTheme"
     const val PURPLE_DOT_THEME = "PurpleDotTheme"
     const val GOOD_MEMORIES_THEME = "GoodMemoriesTheme"
+
+    const val COLLECTION_SOURCE_PREFIX = "collection_"
+
+    fun collectionSourceKey(collectionId: Int): String = "$COLLECTION_SOURCE_PREFIX$collectionId"
+
+    fun parseCollectionIdFromSource(source: String): Int? =
+        if (source.startsWith(COLLECTION_SOURCE_PREFIX)) {
+            source.removePrefix(COLLECTION_SOURCE_PREFIX).toIntOrNull()
+        } else {
+            null
+        }
 }

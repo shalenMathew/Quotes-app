@@ -8,7 +8,9 @@ import androidx.work.WorkerParameters
 import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.usecases.custom_quote_usecases.CustomQuoteUseCases
 import com.shalenmathew.quotesapp.domain.usecases.home_screen_usecases.QuoteUseCase
+import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetUseCase
+import com.shalenmathew.quotesapp.util.Constants
 import com.shalenmathew.quotesapp.util.Constants.DEFAULT_REFRESH_INTERVAL
 import com.shalenmathew.quotesapp.util.Resource
 import com.shalenmathew.quotesapp.util.getMillisFromNow
@@ -27,6 +29,7 @@ class WidgetWorkManager @AssistedInject constructor(
     @Assisted private val params: WorkerParameters,
     private val quoteUseCase: QuoteUseCase,
     private val customQuoteUseCases: CustomQuoteUseCases,
+    private val collectionUseCases: CollectionUseCases,
     private val scheduleWidgetRefresh: ScheduleWidgetRefresh,
     private val updateWidgetUseCase: UpdateWidgetUseCase
 ) : CoroutineWorker(context, params) {
@@ -119,24 +122,38 @@ class WidgetWorkManager @AssistedInject constructor(
             return null
         }
 
-        val selectedSource = enabledSources.random()
-        Log.d(TAG, "Selected widget source for this refresh: $selectedSource (enabled: $enabledSources)")
-
-        val quote = quoteFromWidgetSource(selectedSource, allowNetwork)
-        if (quote != null) {
-            Log.d(TAG, "Quote loaded from widget source: $selectedSource")
-        } else {
-            Log.d(TAG, "Widget source $selectedSource returned no quote; will retry")
+        for (selectedSource in enabledSources.shuffled()) {
+            Log.d(TAG, "Trying widget source for this refresh: $selectedSource (enabled: $enabledSources)")
+            val quote = quoteFromWidgetSource(selectedSource, allowNetwork)
+            if (quote != null) {
+                Log.d(TAG, "Quote loaded from widget source: $selectedSource")
+                return quote
+            } else {
+                Log.d(TAG, "Widget source $selectedSource returned no quote; trying next if available")
+            }
         }
-        return quote
+        return null
     }
 
     private suspend fun quoteFromWidgetSource(source: String, allowNetwork: Boolean): Quote? {
-        return when (source) {
-            "favorites" -> getRandomLikedQuote()
-            "custom" -> getRandomCustomQuote()
-            "network" -> if (allowNetwork) fetchQuoteFromNetwork() else null
+        val collectionId = Constants.parseCollectionIdFromSource(source)
+        return when {
+            source == "favorites" -> getRandomLikedQuote()
+            source == "custom" -> getRandomCustomQuote()
+            source == "network" -> if (allowNetwork) fetchQuoteFromNetwork() else null
+            collectionId != null -> getRandomCollectionQuote(collectionId)
             else -> null
+        }
+    }
+
+    internal suspend fun getRandomCollectionQuote(collectionId: Int): Quote? {
+        return try {
+            val quotes = collectionUseCases.searchQuotesInCollection(collectionId, "").first()
+            Log.d(TAG, "getRandomCollectionQuote($collectionId): Found ${quotes.size} quotes")
+            quotes.shuffled().firstOrNull()
+        } catch (e: Exception) {
+            Log.d(TAG, "Exception in get Random Collection Quote", e)
+            null
         }
     }
 

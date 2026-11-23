@@ -159,4 +159,53 @@ class LocalQuoteWebServerTest {
         assertTrue(json.contains("\"importedCount\":2"))
         verify(saveCustomQuote, times(2)).invoke(any())
     }
+
+    @Test
+    fun `handleApiRequest POST deleteCorrupted removes only quotes with replacement char or csv header`() = runTest {
+        val corrupted1 = CustomQuote(id = 1, quote = "Chapter 8 \uFFFD\uFFFD Business Service,Section 3 Banking", author = "Unknown")
+        val corrupted2 = CustomQuote(id = 2, quote = "chapter,section,topic,en,zh,tag", author = "Unknown")
+        val clean = CustomQuote(id = 3, quote = "The bank loaned me some money.\n银行贷给我一笔款。", author = "行业服务 · 银行贷款种类")
+        whenever(getCustomQuotes.invoke("")).thenReturn(flowOf(listOf(corrupted1, corrupted2, clean)))
+
+        val payload = """{"isCustom": true, "deleteCorrupted": true}"""
+        val (status, json) = localServer.handleApiRequest("POST", "/api/quotes/delete", payload)
+
+        assertEquals(NanoHTTPD.Response.Status.OK, status)
+        assertTrue(json.contains("\"deletedCount\":2"))
+        verify(deleteCustomQuote, times(1)).deleteBatch(listOf(corrupted1, corrupted2))
+    }
+
+    @Test
+    fun `live HTTP server decodes UTF-8 Chinese POST body without socket error or corruption`() = runTest {
+        val status = localServer.startServer(18989)
+        try {
+            assertTrue(status.isRunning)
+            val url = java.net.URL("http://127.0.0.1:${status.port}/api/quotes/batch")
+            val payload = """
+                {
+                  "target": "custom",
+                  "quotes": [
+                    {"quote": "The bank loaned me some money.\n银行贷给我一笔款。", "author": "行业服务 · 银行贷款种类"}
+                  ]
+                }
+            """.trimIndent()
+            val conn = (url.openConnection() as java.net.HttpURLConnection).apply {
+                requestMethod = "POST"
+                doOutput = true
+                setRequestProperty("Content-Type", "application/json")
+            }
+            conn.outputStream.use { it.write(payload.toByteArray(Charsets.UTF_8)) }
+            val code = conn.responseCode
+            val responseText = conn.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+
+            assertEquals(200, code)
+            assertTrue(responseText.contains("\"importedCount\":1"))
+            verify(saveCustomQuote, times(1)).invoke(org.mockito.kotlin.check { saved ->
+                assertEquals("The bank loaned me some money.\n银行贷给我一笔款。", saved.quote)
+                assertEquals("行业服务 · 银行贷款种类", saved.author)
+            })
+        } finally {
+            localServer.stopServer()
+        }
+    }
 }

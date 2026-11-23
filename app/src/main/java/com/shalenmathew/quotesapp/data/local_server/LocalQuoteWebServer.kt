@@ -265,59 +265,79 @@ class LocalQuoteWebServer @Inject constructor(
                     val type = object : TypeToken<Map<String, Any>>() {}.type
                     val map: Map<String, Any> = gson.fromJson(body ?: "{}", type)
                     val isCustom = map["isCustom"] as? Boolean ?: true
+                    val deleteAll = map["deleteAll"] as? Boolean ?: false
+                    val deleteCorrupted = map["deleteCorrupted"] as? Boolean ?: false
                     val idsRaw = map["ids"] as? List<*> ?: emptyList<Any>()
                     val ids = idsRaw.mapNotNull { (it as? Number)?.toInt() }.toSet()
+                    var deletedCount = 0
 
                     if (isCustom) {
                         val allCustom = customQuoteUseCases.getCustomQuotes("").first()
-                        allCustom.filter { it.id in ids }.forEach { cq ->
-                            customQuoteUseCases.deleteCustomQuote(cq)
+                        val toDelete = when {
+                            deleteAll -> allCustom
+                            deleteCorrupted -> allCustom.filter { cq -> isCorruptedEntry(cq.quote, cq.author) }
+                            else -> allCustom.filter { it.id in ids }
                         }
+                        if (toDelete.size == 1) {
+                            customQuoteUseCases.deleteCustomQuote(toDelete[0])
+                        } else if (toDelete.isNotEmpty()) {
+                            customQuoteUseCases.deleteCustomQuote.deleteBatch(toDelete)
+                        }
+                        deletedCount = toDelete.size
                     } else {
                         val allLiked = quoteUseCase.getLikedQuotes().first()
-                        allLiked.filter { it.id != null && it.id in ids }.forEach { q ->
+                        val toDelete = when {
+                            deleteAll -> allLiked
+                            deleteCorrupted -> allLiked.filter { q -> isCorruptedEntry(q.quote, q.author) }
+                            else -> allLiked.filter { it.id != null && it.id in ids }
+                        }
+                        toDelete.forEach { q ->
                             // Unliking removes it from favorites list
                             favQuoteUseCase.favLikedQuote.saveLikedQuote(q)
+                            deletedCount++
                         }
                     }
                     scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
                     NanoHTTPD.Response.Status.OK to gson.toJson(
-                        mapOf("status" to "ok", "deletedCount" to ids.size)
+                        mapOf("status" to "ok", "deletedCount" to deletedCount)
                     )
                 }
 
                 method == "POST" && uri == "/api/quotes/batch" -> {
                     val batch = gson.fromJson(body ?: "{}", BatchImportPayload::class.java)
                     val validQuotes = batch.quotes.filter { it.quote.trim().isNotEmpty() }
-                    var importedCount = 0
+                    val importedCount = validQuotes.size
 
                     if (batch.target == "favorites") {
-                        validQuotes.forEach { item ->
-                            val newQuote = Quote(
+                        val now = System.currentTimeMillis()
+                        val newQuotes = validQuotes.map { item ->
+                            Quote(
                                 quote = item.quote.trim(),
                                 author = item.author.trim().ifEmpty { "Unknown" },
                                 liked = true,
                                 displayed = true,
-                                updatedAt = System.currentTimeMillis(),
+                                updatedAt = now,
                                 isCustom = false
                             )
-                            quoteUseCase.saveLikedQuote(newQuote)
-                            importedCount++
+                        }
+                        if (newQuotes.size <= 2) {
+                            newQuotes.forEach { quoteUseCase.saveLikedQuote(it) }
+                        } else {
+                            quoteUseCase.saveLikedQuote.saveBatch(newQuotes)
                         }
                     } else {
-                        validQuotes.forEach { item ->
-                            val cq = CustomQuote(
+                        val now = System.currentTimeMillis()
+                        val customList = validQuotes.map { item ->
+                            CustomQuote(
                                 quote = item.quote.trim(),
-                                author = item.author.trim().ifEmpty { "Unknown" }
+                                author = item.author.trim().ifEmpty { "Unknown" },
+                                createdAt = now
                             )
-                            customQuoteUseCases.saveCustomQuote(cq)
-                            importedCount++
                         }
-                        if (batch.collectionId != null && batch.collectionId > 0) {
-                            val latestCustom = customQuoteUseCases.getCustomQuotes("").first().take(importedCount)
-                            latestCustom.forEach { cq ->
-                                collectionUseCases.addQuoteToCollection(batch.collectionId, cq.id, true)
-                            }
+                        if (customList.size <= 2 && (batch.collectionId == null || batch.collectionId <= 0)) {
+                            customList.forEach { customQuoteUseCases.saveCustomQuote(it) }
+                        } else {
+                            customQuoteUseCases.saveCustomQuote.saveBatch(customList, batch.collectionId)
                         }
                     }
 
@@ -453,6 +473,14 @@ class LocalQuoteWebServer @Inject constructor(
         }
     }
 
+    private fun isCorruptedEntry(quote: String, author: String): Boolean {
+        if (quote.contains('\uFFFD') || author.contains('\uFFFD')) return true
+        if (quote.startsWith("chapter,section,topic", ignoreCase = true)) return true
+        // Raw unparsed CSV row from 4_完整结构化数据_含章节场景.csv
+        if (quote.startsWith("Chapter ", ignoreCase = true) && quote.contains(",Section ", ignoreCase = true)) return true
+        return false
+    }
+
     private inner class QuoteHttpServer(port: Int) : NanoHTTPD(port) {
         override fun serve(session: IHTTPSession): Response {
             val uri = session.uri ?: "/"
@@ -467,34 +495,53 @@ class LocalQuoteWebServer @Inject constructor(
 
             if (uri == "/" || uri == "/index.html") {
                 return try {
-                    val html = context.assets.open("web/index.html").bufferedReader().use { it.readText() }
+                    val html = context.assets.open("web/index.html").bufferedReader(Charsets.UTF_8).use { it.readText() }
                     newFixedLengthResponse(Response.Status.OK, "text/html; charset=utf-8", html)
                 } catch (e: Exception) {
                     newFixedLengthResponse(
                         Response.Status.INTERNAL_ERROR,
-                        "text/plain",
+                        "text/plain; charset=utf-8",
                         "Failed to load Web UI: ${e.message}"
                     )
                 }
             }
 
             if (uri.startsWith("/api/")) {
-                val bodyMap = HashMap<String, String>()
-                if (method == "POST" || method == "PUT") {
-                    try {
-                        session.parseBody(bodyMap)
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Failed to parse request body", e)
-                    }
+                val postData = if (method == "POST" || method == "PUT") {
+                    readUtf8RequestBody(session)
+                } else {
+                    null
                 }
-                val postData = bodyMap["postData"]
                 val (status, jsonResponse) = handleApiRequest(method, uri, postData)
                 return newFixedLengthResponse(status, "application/json; charset=utf-8", jsonResponse).apply {
                     addCorsHeaders()
                 }
             }
 
-            return newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "Not Found")
+            return newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain; charset=utf-8", "Not Found")
+        }
+
+        private fun readUtf8RequestBody(session: IHTTPSession): String? {
+            return try {
+                // Force Content-Type header to include charset=UTF-8 so NanoHTTPD.parseBody()
+                // decodes request bytes as UTF-8 instead of falling back to US-ASCII, while still
+                // properly updating NanoHTTPD's internal rlen/splitbyte stream state.
+                val ct = session.headers["content-type"]
+                if (ct != null && !ct.contains("charset", ignoreCase = true)) {
+                    session.headers["content-type"] = "$ct; charset=UTF-8"
+                } else if (ct == null) {
+                    session.headers["content-type"] = "application/json; charset=UTF-8"
+                }
+
+                val bodyMap = HashMap<String, String>()
+                session.parseBody(bodyMap)
+                bodyMap["postData"] ?: bodyMap["content"]?.let { tmpPath ->
+                    java.io.File(tmpPath).takeIf { it.exists() }?.readText(Charsets.UTF_8)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to parse request body", e)
+                null
+            }
         }
 
         private fun Response.addCorsHeaders() {

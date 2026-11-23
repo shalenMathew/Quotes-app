@@ -8,6 +8,7 @@ import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
 import com.shalenmathew.quotesapp.presentation.receivers.WidgetRefreshReceiver
 import com.shalenmathew.quotesapp.util.Constants.QUOTES_WIDGET_UPDATE_NAME
@@ -25,6 +26,7 @@ class ScheduleWidgetRefresh @Inject constructor(
 
     suspend fun scheduleWidgetRefreshWorkManager() {
         val workRequest = OneTimeWorkRequestBuilder<WidgetWorkManager>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.NOT_REQUIRED)

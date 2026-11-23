@@ -77,30 +77,48 @@ class RefreshWidgetActionCallback : ActionCallback {
 
         if ("favorites" in enabledSources) {
             runCatching {
-                quoteUseCase.getLikedQuotes().first()
-            }.getOrNull()?.let { candidatePool.addAll(it) }
+                val liked = quoteUseCase.getLikedQuotes().first()
+                liked.filter { it.id != currentQuoteId }.randomOrNull() ?: liked.randomOrNull()
+            }.getOrNull()?.let { candidatePool.add(it) }
         }
 
         if ("custom" in enabledSources) {
             runCatching {
-                customQuoteUseCases.getCustomQuotes("").first().map { customQuote ->
+                val fastCustom = customQuoteUseCases.getCustomQuotes.getRandom(currentQuoteId)
+                if (fastCustom != null) {
                     Quote(
-                        id = customQuote.id,
-                        quote = customQuote.quote,
-                        author = customQuote.author,
+                        id = fastCustom.id,
+                        quote = fastCustom.quote,
+                        author = fastCustom.author,
                         liked = false,
                         isCustom = true
                     )
+                } else {
+                    val allCustom = customQuoteUseCases.getCustomQuotes("").first()
+                    val picked = allCustom.filter { it.id != currentQuoteId }.randomOrNull()
+                        ?: allCustom.randomOrNull()
+                    picked?.let {
+                        Quote(
+                            id = it.id,
+                            quote = it.quote,
+                            author = it.author,
+                            liked = false,
+                            isCustom = true
+                        )
+                    }
                 }
-            }.getOrNull()?.let { candidatePool.addAll(it) }
+            }.getOrNull()?.let { candidatePool.add(it) }
         }
 
         enabledSources.forEach { source ->
             val collectionId = Constants.parseCollectionIdFromSource(source)
             if (collectionId != null) {
                 runCatching {
-                    collectionUseCases.searchQuotesInCollection(collectionId, "").first()
-                }.getOrNull()?.let { candidatePool.addAll(it) }
+                    collectionUseCases.searchQuotesInCollection.getRandomQuote(collectionId, currentQuoteId)
+                        ?: collectionUseCases.searchQuotesInCollection(collectionId, "").first().let { list ->
+                            list.filter { it.id != currentQuoteId }.randomOrNull() ?: list.randomOrNull()
+                        }
+                }.getOrNull()?.let { candidatePool.add(it) }
             }
         }
 
@@ -126,7 +144,30 @@ class RefreshWidgetActionCallback : ActionCallback {
             return nonCurrentLocal.random()
         }
 
-        return uniquePool.firstOrNull() ?: quoteUseCase.getLatestQuote()
+        if (uniquePool.isNotEmpty()) {
+            return uniquePool.random()
+        }
+
+        // Fallback if configured collection was deleted or empty
+        return runCatching {
+            collectionUseCases.searchQuotesInCollection.getRandomQuoteInAnyCollection(currentQuoteId)
+        }.getOrNull()
+            ?: runCatching {
+                customQuoteUseCases.getCustomQuotes.getRandom(currentQuoteId)?.let {
+                    Quote(
+                        id = it.id,
+                        quote = it.quote,
+                        author = it.author,
+                        liked = false,
+                        isCustom = true
+                    )
+                }
+            }.getOrNull()
+            ?: runCatching {
+                val liked = quoteUseCase.getLikedQuotes().first()
+                liked.filter { it.id != currentQuoteId }.randomOrNull() ?: liked.randomOrNull()
+            }.getOrNull()
+            ?: quoteUseCase.getLatestQuote()
     }
 
     companion object {

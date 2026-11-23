@@ -18,8 +18,10 @@ import com.shalenmathew.quotesapp.domain.usecases.library.CollectionUseCases
 import com.shalenmathew.quotesapp.domain.usecases.widget.UpdateWidgetThemeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,8 +76,10 @@ class SettingsViewModel @Inject constructor(
 
     fun saveWidgetSources(sources: Set<String>) {
         viewModelScope.launch {
-            context.setWidgetSources(sources)
-            scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+            withContext(NonCancellable) {
+                context.setWidgetSources(sources)
+                scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+            }
         }
     }
 

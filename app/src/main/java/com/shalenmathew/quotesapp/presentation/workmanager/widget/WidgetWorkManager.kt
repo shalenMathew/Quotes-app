@@ -133,7 +133,12 @@ class WidgetWorkManager @AssistedInject constructor(
                 Log.d(TAG, "Widget source $selectedSource returned no quote; trying next if available")
             }
         }
-        return null
+        return runCatching {
+            collectionUseCases.searchQuotesInCollection.getRandomQuoteInAnyCollection()
+        }.getOrNull()
+            ?: getRandomCustomQuote()
+            ?: getRandomLikedQuote()
+            ?: runCatching { quoteUseCase.getLatestQuote() }.getOrNull()
     }
 
     private suspend fun quoteFromWidgetSource(source: String, allowNetwork: Boolean): Quote? {
@@ -149,6 +154,10 @@ class WidgetWorkManager @AssistedInject constructor(
 
     internal suspend fun getRandomCollectionQuote(collectionId: Int): Quote? {
         return try {
+            val fastQuote = collectionUseCases.searchQuotesInCollection.getRandomQuote(collectionId)
+            if (fastQuote != null) {
+                return fastQuote
+            }
             val quotes = collectionUseCases.searchQuotesInCollection(collectionId, "").first()
             Log.d(TAG, "getRandomCollectionQuote($collectionId): Found ${quotes.size} quotes")
             quotes.shuffled().firstOrNull()
@@ -172,6 +181,16 @@ class WidgetWorkManager @AssistedInject constructor(
 
     internal suspend fun getRandomCustomQuote(): Quote? {
         return try {
+            val fastCustom = customQuoteUseCases.getCustomQuotes.getRandom()
+            if (fastCustom != null) {
+                return Quote(
+                    id = fastCustom.id,
+                    quote = fastCustom.quote,
+                    author = fastCustom.author,
+                    liked = false,
+                    isCustom = true
+                )
+            }
             val quotes = customQuoteUseCases.getCustomQuotes("").first()
             Log.d(TAG, "getRandomCustomQuote: Found ${quotes.size} custom quotes")
             quotes.shuffled().firstOrNull()?.let { customQuote ->

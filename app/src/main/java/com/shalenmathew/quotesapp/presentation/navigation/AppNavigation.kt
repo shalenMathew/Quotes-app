@@ -23,6 +23,7 @@ import com.shalenmathew.quotesapp.presentation.screens.settings_screen.widget_th
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.about_me.AboutMeScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.donation.DonationScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.backup.BackupScreen
+import com.shalenmathew.quotesapp.presentation.screens.settings_screen.local_server.LocalServerScreen
 import com.shalenmathew.quotesapp.presentation.screens.settings_screen.zen_audio.ZenAudioSettingsScreen
 import com.shalenmathew.quotesapp.presentation.screens.share_screen.ShareScreen
 
@@ -104,7 +105,17 @@ fun AppNavigation(
         }
 
         composable(Screen.Backup.route) {
-            BackupScreen(paddingValues = paddingValues)
+            BackupScreen(
+                paddingValues = paddingValues,
+                navHost = navHost
+            )
+        }
+
+        composable(Screen.LocalServer.route) {
+            LocalServerScreen(
+                paddingValues = paddingValues,
+                navHost = navHost
+            )
         }
 
         composable(Screen.AboutMe.route) {

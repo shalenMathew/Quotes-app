@@ -177,5 +177,7 @@ dependencies {
     // AboutLibraries
     implementation(libs.aboutlibraries.compose.m3)
 
+    // Embedded lightweight HTTP Server for LAN Web Quote Management
+    implementation("org.nanohttpd:nanohttpd:2.3.1")
 
 }

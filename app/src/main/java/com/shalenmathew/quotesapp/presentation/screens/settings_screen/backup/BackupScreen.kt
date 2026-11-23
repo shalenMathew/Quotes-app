@@ -32,7 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.shalenmathew.quotesapp.R
+import com.shalenmathew.quotesapp.presentation.screens.bottom_nav.Screen
 import com.shalenmathew.quotesapp.presentation.theme.GIFont
 import com.shalenmathew.quotesapp.presentation.theme.customGrey2
 import com.shalenmathew.quotesapp.presentation.viewmodel.BackupDataViewModel
@@ -43,7 +45,8 @@ import java.util.Locale
 
 @Composable
 fun BackupScreen(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    navHost: NavHostController? = null
 ) {
 
     val context = LocalContext.current
@@ -131,6 +134,19 @@ fun BackupScreen(
             enabled = !viewModel.isLoading,
             onClick = { importLauncher.launch(arrayOf("application/json", "application/octet-stream")) }
         )
+
+        if (navHost != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            BackupActionCard(
+                title = "Local Web Manager (PC Sync)",
+                description = "Batch upload and manage quotes from your PC browser on the same Wi-Fi",
+                icon = R.drawable.ic_local_server,
+                isLoading = false,
+                enabled = true,
+                onClick = { navHost.navigate(Screen.LocalServer.route) }
+            )
+        }
     }
 }
 

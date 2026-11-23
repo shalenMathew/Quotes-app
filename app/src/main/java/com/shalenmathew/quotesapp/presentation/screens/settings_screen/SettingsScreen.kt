@@ -434,6 +434,46 @@ fun SettingsScreen(
                                 color = Color.Black,
                                 shape = RectangleShape
                             )
+                            .background(customGrey2)
+                            .clickable {
+                                navHost.navigate(Screen.LocalServer.route)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_local_server),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(Color.White),
+                            modifier = Modifier
+                                .padding(end = 12.dp)
+                                .size(30.dp)
+                        )
+                        Text(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 8.dp),
+                            text = "Local Web Manager (PC Sync)",
+                            color = Color.White,
+                            fontFamily = GIFont,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 16.sp
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 0.6.dp,
+                                color = Color.Black,
+                                shape = RectangleShape
+                            )
                             .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
                             .background(customGrey2)
                             .clickable {

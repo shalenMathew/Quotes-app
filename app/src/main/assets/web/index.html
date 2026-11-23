@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quotes App — LAN Web Manager</title>
+  <style>
+    :root {
+      --bg: #0a0a0c;
+      --surface: #16161a;
+      --surface-2: #202026;
+      --surface-hover: #282830;
+      --border: #2e2e38;
+      --text: #f4f4f6;
+      --text-muted: #9494a0;
+      --accent: #a855f7;
+      --accent-hover: #9333ea;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+    header {
+      background: rgba(22, 22, 26, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 16px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+    }
+    .brand h1 {
+      font-size: 19px;
+      font-weight: 700;
+    }
+    .brand span {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
+    }
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    button, .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover { background: var(--surface-hover); }
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    button.primary:hover { background: var(--accent-hover); }
+    button.danger {
+      background: rgba(239, 68, 68, 0.14);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+    button.danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+    .container {
+      max-width: 1160px;
+      margin: 24px auto;
+      padding: 0 20px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tab {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+    }
+    .tab.active {
+      background: var(--surface-2);
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 240px;
+      justify-content: flex-end;
+    }
+    input[type="text"], textarea, select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    input[type="text"]:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+    }
+    .quick-add-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .quick-add-card h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .quick-form {
+      display: grid;
+      grid-template-columns: 1fr 200px 180px auto;
+      gap: 10px;
+      align-items: center;
+    }
+    @media (max-width: 820px) {
+      .quick-form { grid-template-columns: 1fr; }
+    }
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 13px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      vertical-align: top;
+    }
+    th {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    .quote-text {
+      font-weight: 500;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .author-badge {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(168, 85, 247, 0.16);
+      color: #d8b4fe;
+      margin-right: 4px;
+      margin-top: 4px;
+    }
+    .row-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .row-actions button {
+      padding: 5px 9px;
+      font-size: 12px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+    }
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      max-width: 680px;
+      width: 100%;
+      padding: 24px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .modal p.hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .modal textarea {
+      width: 100%;
+      min-height: 200px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      margin-bottom: 14px;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface-2);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      display: none;
+      z-index: 100;
+    }
+    .toast.show { display: block; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-badge">Q</div>
+    <div>
+      <h1>Quotes LAN Web Manager</h1>
+      <span id="connectionStatus">Connected to Phone DB • Real-time Sync</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="primary" onclick="openBatchModal()">+ Batch Upload Quotes</button>
+    <button onclick="openCollectionModal()">+ New Collection</button>
+    <button onclick="exportBackupJson()">Export Backup JSON</button>
+    <button onclick="document.getElementById('backupFileInput').click()">Restore Backup JSON</button>
+    <input type="file" id="backupFileInput" accept=".json,application/json" style="display:none" onchange="importBackupFile(event)" />
+    <button onclick="loadState()">↻ Sync</button>
+  </div>
+</header>
+
+<div class="container">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="label">Custom Quotes</div>
+      <div class="value" id="statCustomCount">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Favorite Quotes</div>
+      <div class="value" id="statFavCount">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Collections</div>
+      <div class="value" id="statCollectionCount">0</div>
+    </div>
+  </div>
+
+  <!-- Quick single quote creation -->
+  <div class="quick-add-card">
+    <h3>Quick Add Custom Quote</h3>
+    <div class="quick-form">
+      <input type="text" id="quickQuoteInput" placeholder="Enter quote text..." />
+      <input type="text" id="quickAuthorInput" placeholder="Author (default: Unknown)" />
+      <select id="quickCollectionSelect">
+        <option value="">No Collection</option>
+      </select>
+      <button class="primary" onclick="saveQuickQuote()">Add to Phone</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="tab active" id="tab-custom" onclick="switchTab('custom')">Custom Quotes</button>
+      <button class="tab" id="tab-favorites" onclick="switchTab('favorites')">Favorites</button>
+    </div>
+
+    <div class="search-box">
+      <select id="filterCollectionSelect" onchange="renderTable()">
+        <option value="">All Collections</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Search quote or author..." oninput="renderTable()" style="width: 240px;" />
+      <button class="danger" id="batchDeleteBtn" style="display:none;" onclick="deleteSelected()">Delete Selected</button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 40px;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this.checked)" /></th>
+          <th>Quote</th>
+          <th style="width: 180px;">Author</th>
+          <th style="width: 180px;">Collections</th>
+          <th style="width: 220px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="quotesTableBody">
+        <tr><td colspan="5" class="empty-state">Loading quotes from phone...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Batch Upload Modal -->
+<div class="modal-backdrop" id="batchModal">
+  <div class="modal">
+    <h2>Batch Upload Quotes to Phone</h2>
+    <p class="hint">
+      Paste multiple quotes below (one quote per line, or separated by <code>|</code> or <code>-</code> or <code>—</code> for author, e.g.:<br/>
+      <code>Stay hungry, stay foolish. | Steve Jobs</code>), or upload a CSV / JSON / TXT file.
+    </p>
+    <div style="display:flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+      <select id="batchTargetSelect">
+        <option value="custom">Save to Custom Quotes</option>
+        <option value="favorites">Save to Favorites (Liked Quotes)</option>
+      </select>
+      <select id="batchCollectionSelect">
+        <option value="">Optional: Add to Collection</option>
+      </select>
+      <button onclick="document.getElementById('batchTextFileInput').click()">Load .txt / .csv / .json File</button>
+      <input type="file" id="batchTextFileInput" accept=".txt,.csv,.json" style="display:none" onchange="handleBatchFileSelect(event)" />
+    </div>
+    <textarea id="batchTextarea" placeholder="Example:&#10;The only way to do great work is to love what you do. | Steve Jobs&#10;Simplicity is the ultimate sophistication. | Leonardo da Vinci&#10;Action is the foundational key to all success."></textarea>
+    <div class="modal-footer">
+      <button onclick="closeBatchModal()">Cancel</button>
+      <button class="primary" onclick="submitBatchUpload()">Upload & Sync to Phone</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Quote Modal -->
+<div class="modal-backdrop" id="editModal">
+  <div class="modal">
+    <h2>Edit Custom Quote</h2>
+    <input type="hidden" id="editQuoteId" />
+    <div style="margin-top: 12px;">
+      <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">Quote Text</label>
+      <textarea id="editQuoteText" style="min-height: 110px;"></textarea>
+      <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">Author</label>
+      <input type="text" id="editQuoteAuthor" style="width:100%;" />
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeEditModal()">Cancel</button>
+      <button class="primary" onclick="submitEditQuote()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Collection Modal -->
+<div class="modal-backdrop" id="collectionModal">
+  <div class="modal" style="max-width: 440px;">
+    <h2>Create Collection</h2>
+    <p class="hint">Create a collection on your phone to organize quotes.</p>
+    <input type="text" id="newCollectionName" placeholder="Collection name (e.g. Morning Mindset)" style="width:100%;" />
+    <div class="modal-footer">
+      <button onclick="closeCollectionModal()">Cancel</button>
+      <button class="primary" onclick="submitNewCollection()">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let appState = {
+    customQuotes: [],
+    likedQuotes: [],
+    collections: [],
+    crossRefs: []
+  };
+  let currentTab = 'custom';
+  let selectedIds = new Set();
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  async function apiCall(path, method = 'GET', bodyObj = null) {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (bodyObj !== null) opts.body = JSON.stringify(bodyObj);
+    const res = await fetch(path, opts);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Request failed');
+    return data;
+  }
+
+  async function loadState() {
+    try {
+      const data = await apiCall('/api/state');
+      appState.customQuotes = data.customQuotes || [];
+      appState.likedQuotes = data.likedQuotes || [];
+      appState.collections = data.collections || [];
+      appState.crossRefs = data.crossRefs || [];
+
+      document.getElementById('statCustomCount').textContent = appState.customQuotes.length;
+      document.getElementById('statFavCount').textContent = appState.likedQuotes.length;
+      document.getElementById('statCollectionCount').textContent = appState.collections.length;
+
+      populateCollectionDropdowns();
+      renderTable();
+    } catch (err) {
+      showToast('Sync error: ' + err.message);
+    }
+  }
+
+  function populateCollectionDropdowns() {
+    const selects = [
+      { el: document.getElementById('quickCollectionSelect'), defaultText: 'No Collection' },
+      { el: document.getElementById('filterCollectionSelect'), defaultText: 'All Collections' },
+      { el: document.getElementById('batchCollectionSelect'), defaultText: 'Optional: Add to Collection' }
+    ];
+    selects.forEach(({ el, defaultText }) => {
+      const prev = el.value;
+      el.innerHTML = `<option value="">${defaultText}</option>`;
+      appState.collections.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        el.appendChild(opt);
+      });
+      el.value = prev;
+    });
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    selectedIds.clear();
+    document.getElementById('selectAllCheckbox').checked = false;
+    document.getElementById('tab-custom').classList.toggle('active', tab === 'custom');
+    document.getElementById('tab-favorites').classList.toggle('active', tab === 'favorites');
+    renderTable();
+  }
+
+  function getCollectionsForQuote(quoteId, isCustom) {
+    const refs = appState.crossRefs.filter(r => r.quoteId === quoteId && Boolean(r.isCustom) === Boolean(isCustom));
+    return refs.map(r => appState.collections.find(c => c.id === r.collectionId)).filter(Boolean);
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('quotesTableBody');
+    const query = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+    const filterColId = parseInt(document.getElementById('filterCollectionSelect').value || '0', 10);
+    const isCustom = currentTab === 'custom';
+    const rawList = isCustom ? appState.customQuotes : appState.likedQuotes;
+
+    const filtered = rawList.filter(item => {
+      const qText = (item.quote || '').toLowerCase();
+      const aText = (item.author || '').toLowerCase();
+      if (query && !qText.includes(query) && !aText.includes(query)) return false;
+      if (filterColId > 0) {
+        const cols = getCollectionsForQuote(item.id, isCustom);
+        if (!cols.some(c => c.id === filterColId)) return false;
+      }
+      return true;
+    });
+
+    updateBatchDeleteButton();
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No quotes found. Try adding or batch uploading quotes!</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = '';
+    filtered.forEach(item => {
+      const tr = document.createElement('tr');
+      const cols = getCollectionsForQuote(item.id, isCustom);
+      const checked = selectedIds.has(item.id) ? 'checked' : '';
+      const tagsHtml = cols.map(c => `<span class="tag">${escapeHtml(c.name)}</span>`).join('');
+
+      tr.innerHTML = `
+        <td><input type="checkbox" ${checked} onchange="toggleSelectOne(${item.id}, this.checked)" /></td>
+        <td><div class="quote-text">${escapeHtml(item.quote)}</div></td>
+        <td><span class="author-badge">${escapeHtml(item.author || 'Unknown')}</span></td>
+        <td>${tagsHtml || '<span style="color:var(--text-muted);font-size:12px;">—</span>'}</td>
+        <td>
+          <div class="row-actions">
+            <button onclick='pushToWidget(${JSON.stringify(item.id)}, ${JSON.stringify(item.quote)}, ${JSON.stringify(item.author || "Unknown")}, ${isCustom})' title="Display on phone widget immediately">Widget</button>
+            ${isCustom ? `<button onclick='openEditModal(${JSON.stringify(item.id)}, ${JSON.stringify(item.quote)}, ${JSON.stringify(item.author || "Unknown")})'>Edit</button>` : ''}
+            <button class="danger" onclick="deleteSingle(${item.id})">${isCustom ? 'Delete' : 'Unlike'}</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function toggleSelectOne(id, checked) {
+    if (checked) selectedIds.add(id);
+    else selectedIds.delete(id);
+    updateBatchDeleteButton();
+  }
+
+  function toggleSelectAll(checked) {
+    const isCustom = currentTab === 'custom';
+    const list = isCustom ? appState.customQuotes : appState.likedQuotes;
+    selectedIds.clear();
+    if (checked) list.forEach(item => selectedIds.add(item.id));
+    renderTable();
+  }
+
+  function updateBatchDeleteButton() {
+    const btn = document.getElementById('batchDeleteBtn');
+    if (selectedIds.size > 0) {
+      btn.style.display = 'inline-flex';
+      btn.textContent = `Delete Selected (${selectedIds.size})`;
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  async function saveQuickQuote() {
+    const quoteInput = document.getElementById('quickQuoteInput');
+    const authorInput = document.getElementById('quickAuthorInput');
+    const colSelect = document.getElementById('quickCollectionSelect');
+    const quote = quoteInput.value.trim();
+    if (!quote) {
+      showToast('Please enter quote text');
+      return;
+    }
+    try {
+      await apiCall('/api/quotes/custom', 'POST', {
+        quote,
+        author: authorInput.value.trim() || 'Unknown',
+        collectionId: colSelect.value ? parseInt(colSelect.value, 10) : null
+      });
+      quoteInput.value = '';
+      authorInput.value = '';
+      showToast('Added quote to phone!');
+      await loadState();
+    } catch (err) {
+      showToast('Error: ' + err.message);
+    }
+  }
+
+  async function deleteSingle(id) {
+    try {
+      await apiCall('/api/quotes/delete', 'POST', {
+        isCustom: currentTab === 'custom',
+        ids: [id]
+      });
+      selectedIds.delete(id);
+      showToast('Removed from phone');
+      await loadState();
+    } catch (err) {
+      showToast('Delete failed: ' + err.message);
+    }
+  }
+
+  async function deleteSelected() {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Delete ${selectedIds.size} selected quote(s) from phone?`)) return;
+    try {
+      await apiCall('/api/quotes/delete', 'POST', {
+        isCustom: currentTab === 'custom',
+        ids: Array.from(selectedIds)
+      });
+      selectedIds.clear();
+      document.getElementById('selectAllCheckbox').checked = false;
+      showToast('Batch delete complete');
+      await loadState();
+    } catch (err) {
+      showToast('Batch delete failed: ' + err.message);
+    }
+  }
+
+  async function pushToWidget(id, quote, author, isCustom) {
+    try {
+      await apiCall('/api/widget/push', 'POST', { id, quote, author, isCustom });
+      showToast('Pushed quote to phone widget!');
+    } catch (err) {
+      showToast('Widget update failed: ' + err.message);
+    }
+  }
+
+  /* Batch Upload */
+  function openBatchModal() { document.getElementById('batchModal').classList.add('open'); }
+  function closeBatchModal() { document.getElementById('batchModal').classList.remove('open'); }
+
+  function parseBatchText(rawText) {
+    const trimmed = rawText.trim();
+    if (!trimmed) return [];
+    // Try JSON array first
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        const arr = Array.isArray(parsed) ? parsed : (parsed.customQuotes || parsed.quotes || parsed.likedQuotes || []);
+        if (Array.isArray(arr) && arr.length > 0) {
+          return arr.map(item => ({
+            quote: String(item.quote || item.text || '').trim(),
+            author: String(item.author || 'Unknown').trim() || 'Unknown'
+          })).filter(x => x.quote.length > 0);
+        }
+      } catch (_) {}
+    }
+
+    // Parse line by line: supports "Quote | Author", "Quote — Author", "Quote - Author", or CSV
+    return trimmed.split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(line => {
+      if (line.includes('|')) {
+        const parts = line.split('|');
+        const author = parts.pop().trim() || 'Unknown';
+        const quote = parts.join('|').trim();
+        return { quote, author };
+      }
+      const dashMatch = line.match(/^(.*?)\s+(?:—|--|-)\s+([^—\-]{2,50})$/);
+      if (dashMatch) {
+        return { quote: dashMatch[1].trim().replace(/^["']|["']$/g, ''), author: dashMatch[2].trim() };
+      }
+      return { quote: line.replace(/^["']|["']$/g, ''), author: 'Unknown' };
+    }).filter(x => x.quote.length > 0);
+  }
+
+  function handleBatchFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('batchTextarea').value = e.target.result || '';
+    };
+    reader.readAsText(file);
+  }
+
+  async function submitBatchUpload() {
+    const raw = document.getElementById('batchTextarea').value;
+    const quotes = parseBatchText(raw);
+    if (quotes.length === 0) {
+      showToast('No valid quotes found to upload');
+      return;
+    }
+    const target = document.getElementById('batchTargetSelect').value;
+    const colVal = document.getElementById('batchCollectionSelect').value;
+    const collectionId = colVal ? parseInt(colVal, 10) : null;
+
+    try {
+      const res = await apiCall('/api/quotes/batch', 'POST', { quotes, target, collectionId });
+      document.getElementById('batchTextarea').value = '';
+      closeBatchModal();
+      showToast(`Successfully synced ${res.importedCount} quotes to phone!`);
+      await loadState();
+    } catch (err) {
+      showToast('Batch upload failed: ' + err.message);
+    }
+  }
+
+  /* Edit Modal */
+  function openEditModal(id, quote, author) {
+    document.getElementById('editQuoteId').value = id;
+    document.getElementById('editQuoteText').value = quote;
+    document.getElementById('editQuoteAuthor').value = author;
+    document.getElementById('editModal').classList.add('open');
+  }
+  function closeEditModal() { document.getElementById('editModal').classList.remove('open'); }
+
+  async function submitEditQuote() {
+    const id = parseInt(document.getElementById('editQuoteId').value, 10);
+    const quote = document.getElementById('editQuoteText').value.trim();
+    const author = document.getElementById('editQuoteAuthor').value.trim() || 'Unknown';
+    if (!quote) {
+      showToast('Quote text cannot be empty');
+      return;
+    }
+    try {
+      await apiCall('/api/quotes/custom', 'PUT', { id, quote, author });
+      closeEditModal();
+      showToast('Quote updated!');
+      await loadState();
+    } catch (err) {
+      showToast('Update failed: ' + err.message);
+    }
+  }
+
+  /* Collection Modal */
+  function openCollectionModal() { document.getElementById('collectionModal').classList.add('open'); }
+  function closeCollectionModal() { document.getElementById('collectionModal').classList.remove('open'); }
+
+  async function submitNewCollection() {
+    const nameInput = document.getElementById('newCollectionName');
+    const name = nameInput.value.trim();
+    if (!name) return;
+    try {
+      await apiCall('/api/collections', 'POST', { name });
+      nameInput.value = '';
+      closeCollectionModal();
+      showToast('Collection created!');
+      await loadState();
+    } catch (err) {
+      showToast('Error: ' + err.message);
+    }
+  }
+
+  /* Full Backup Export / Import */
+  async function exportBackupJson() {
+    try {
+      const data = await apiCall('/api/backup/export');
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `QuotesApp_Backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Backup JSON downloaded');
+    } catch (err) {
+      showToast('Export failed: ' + err.message);
+    }
+  }
+
+  function importBackupFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        const res = await apiCall('/api/backup/import', 'POST', parsed);
+        showToast(`Restored ${res.importedCount} quotes from backup!`);
+        await loadState();
+      } catch (err) {
+        showToast('Invalid backup JSON: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  loadState();
+</script>
+</body>
+</html>

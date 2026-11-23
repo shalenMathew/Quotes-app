@@ -6,6 +6,7 @@ import com.shalenmathew.quotesapp.domain.model.Quote
 import com.shalenmathew.quotesapp.domain.repository.GlanceWidgetManager
 import com.shalenmathew.quotesapp.domain.repository.WidgetRepository
 import com.shalenmathew.quotesapp.presentation.widget.QuotesWidgetObj
+import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_AUTHOR_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_IS_CUSTOM_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
@@ -63,6 +64,7 @@ class WidgetRepositoryImpl @Inject constructor(
 
     private fun MutablePreferences.setQuoteData(quote: Quote, quoteId: Int) {
         this[WIDGET_QUOTE_KEY] = quote.quote
+        this[WIDGET_QUOTE_AUTHOR_KEY] = quote.author
         this[WIDGET_QUOTE_ID_KEY] = quoteId
         this[WIDGET_QUOTE_LIKED_KEY] = quote.liked
         this[WIDGET_QUOTE_IS_CUSTOM_KEY] = quote.isCustom

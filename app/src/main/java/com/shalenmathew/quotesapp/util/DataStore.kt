@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.map
 val Context.dataStore by preferencesDataStore("quote_prefs")
 
 val WIDGET_QUOTE_KEY = stringPreferencesKey("widgetQuote")
+val WIDGET_QUOTE_AUTHOR_KEY = stringPreferencesKey("widgetQuoteAuthor")
 val WIDGET_QUOTE_ID_KEY = intPreferencesKey("widgetQuoteId")
 val WIDGET_QUOTE_LIKED_KEY = booleanPreferencesKey("widgetQuoteLiked")
 val WIDGET_QUOTE_IS_CUSTOM_KEY = booleanPreferencesKey("widgetQuoteIsCustom")

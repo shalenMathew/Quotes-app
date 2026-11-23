@@ -25,6 +25,7 @@ import androidx.glance.layout.size
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import com.shalenmathew.quotesapp.R
 import com.shalenmathew.quotesapp.presentation.MainActivity
+import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_AUTHOR_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_ID_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_QUOTE_KEY
 import com.shalenmathew.quotesapp.util.WIDGET_THEME_ID_KEY
@@ -39,16 +40,20 @@ object QuotesWidgetObj : GlanceAppWidget() {
         context: Context,
         id: GlanceId
     ) {
-        val deprecatedQuote =
-            context.dataStore.data.first()[WIDGET_QUOTE_KEY]
+        val dsPrefs = context.dataStore.data.first()
+        val deprecatedQuote = dsPrefs[WIDGET_QUOTE_KEY]
+        val deprecatedAuthor = dsPrefs[WIDGET_QUOTE_AUTHOR_KEY]
 
         val defaultMessage =
             "Widget is refreshing, will be updated in some time. Or try rebooting the device"
         provideContent {
             val prefs = currentState<Preferences>()
-            val savedQuote = prefs[WIDGET_QUOTE_KEY] ?: deprecatedQuote ?: defaultMessage
+            val rawQuote = prefs[WIDGET_QUOTE_KEY] ?: deprecatedQuote ?: defaultMessage
+            val rawAuthor = prefs[WIDGET_QUOTE_AUTHOR_KEY] ?: deprecatedAuthor ?: ""
             val quoteId = prefs[WIDGET_QUOTE_ID_KEY] ?: -1
             val themeId = prefs[WIDGET_THEME_ID_KEY] ?: "default"
+
+            val savedQuote = formatWidgetDisplayQuote(rawQuote, rawAuthor)
 
             QuoteWidget(
                 savedQuote = savedQuote,
@@ -56,6 +61,25 @@ object QuotesWidgetObj : GlanceAppWidget() {
                 themeId = themeId
             )
         }
+    }
+}
+
+internal fun formatWidgetDisplayQuote(quote: String, author: String): String {
+    val cleanQuote = quote.trim()
+    val cleanAuthor = author.trim()
+    if (cleanAuthor.isEmpty() ||
+        cleanAuthor.equals("Unknown", ignoreCase = true) ||
+        cleanQuote.contains(cleanAuthor)
+    ) {
+        return cleanQuote
+    }
+    val hasCjk = cleanAuthor.any {
+        Character.UnicodeScript.of(it.code) == Character.UnicodeScript.HAN
+    }
+    return if (hasCjk && !cleanQuote.contains('\n')) {
+        "$cleanQuote\n$cleanAuthor"
+    } else {
+        "$cleanQuote\n— $cleanAuthor"
     }
 }
 
@@ -73,7 +97,13 @@ fun QuoteWidget(savedQuote: String, quoteId: Int, themeId: String) {
 
         Box(
             modifier = GlanceModifier
-                .padding(end = 12.dp, bottom = 10.dp),
+                .padding(end = 6.dp, bottom = 4.dp)
+                .size(44.dp)
+                .clickable(
+                    actionRunCallback<RefreshWidgetActionCallback>(
+                        actionParametersOf(WidgetKeys.quoteIdKey to quoteId)
+                    )
+                ),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -82,13 +112,7 @@ fun QuoteWidget(savedQuote: String, quoteId: Int, themeId: String) {
                 colorFilter = ColorFilter.tint(
                     ColorProvider(theme.quoteTextColor, theme.quoteTextColor)
                 ),
-                modifier = GlanceModifier
-                    .size(28.dp)
-                    .clickable(
-                        actionRunCallback<RefreshWidgetActionCallback>(
-                            actionParametersOf(WidgetKeys.quoteIdKey to quoteId)
-                        )
-                    )
+                modifier = GlanceModifier.size(28.dp)
             )
         }
     }

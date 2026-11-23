@@ -15,8 +15,17 @@ interface CustomQuoteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCustomQuote(quote: CustomQuote)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCustomQuotes(quotes: List<CustomQuote>): List<Long>
+
     @Delete
     suspend fun deleteCustomQuote(quote: CustomQuote)
+
+    @Delete
+    suspend fun deleteCustomQuotes(quotes: List<CustomQuote>)
+
+    @Query("SELECT COUNT(*) FROM custom_quotes")
+    fun getCustomQuotesCount(): Flow<Int>
 
     @Query("SELECT * FROM custom_quotes ORDER BY createdAt DESC, id DESC")
     fun getAllCustomQuotes(): Flow<List<CustomQuote>>

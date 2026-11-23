@@ -33,6 +33,9 @@ interface QuoteDao {
     @Query(" SELECT * FROM Quote WHERE liked==1 ORDER BY updatedAt DESC, id DESC ")
     fun getAllLikedQuotes(): Flow<List<Quote>>
 
+    @Query("SELECT COUNT(*) FROM Quote WHERE liked == 1")
+    fun getLikedQuotesCount(): Flow<Int>
+
 
     @Query(" SELECT * FROM Quote ORDER BY id DESC ")
     suspend fun getAllQuotes(): List<Quote>

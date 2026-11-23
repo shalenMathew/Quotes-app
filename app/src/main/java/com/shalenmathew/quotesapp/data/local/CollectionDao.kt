@@ -30,6 +30,9 @@ interface CollectionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuoteToCollection(crossRef: CollectionQuoteCrossRef)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertQuotesToCollection(crossRefs: List<CollectionQuoteCrossRef>)
+
     @Delete
     suspend fun deleteQuoteFromCollection(crossRef: CollectionQuoteCrossRef)
 

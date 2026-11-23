@@ -10,4 +10,8 @@ class DeleteCustomQuote @Inject constructor(
     suspend operator fun invoke(quote: CustomQuote) {
         repository.deleteCustomQuote(quote)
     }
+
+    suspend fun deleteBatch(quotes: List<CustomQuote>) {
+        repository.deleteCustomQuotesBatch(quotes)
+    }
 }

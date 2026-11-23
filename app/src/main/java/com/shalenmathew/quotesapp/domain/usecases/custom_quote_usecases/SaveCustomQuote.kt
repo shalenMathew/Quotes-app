@@ -10,4 +10,8 @@ class SaveCustomQuote @Inject constructor(
     suspend operator fun invoke(quote: CustomQuote) {
         repository.saveCustomQuote(quote)
     }
+
+    suspend fun saveBatch(quotes: List<CustomQuote>, collectionId: Int? = null) {
+        repository.saveCustomQuotesBatch(quotes, collectionId)
+    }
 }

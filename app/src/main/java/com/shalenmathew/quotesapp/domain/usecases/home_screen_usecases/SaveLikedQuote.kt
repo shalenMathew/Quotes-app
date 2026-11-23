@@ -10,4 +10,8 @@ class SaveLikedQuote @Inject constructor(
     suspend operator fun invoke(quote: Quote) {
         repository.saveLikedQuote(quote)
     }
+
+    suspend fun saveBatch(quotes: List<Quote>) {
+        repository.saveLikedQuotesBatch(quotes)
+    }
 }

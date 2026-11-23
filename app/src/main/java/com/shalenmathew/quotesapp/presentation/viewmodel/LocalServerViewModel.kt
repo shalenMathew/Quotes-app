@@ -24,8 +24,8 @@ class LocalServerViewModel @Inject constructor(
 
     val serverStatus: StateFlow<LocalServerStatus> = localQuoteWebServer.status
 
-    val customQuotesCount: Flow<Int> = customQuoteUseCases.getCustomQuotes("").map { it.size }
-    val likedQuotesCount: Flow<Int> = quoteUseCase.getLikedQuotes().map { it.size }
+    val customQuotesCount: Flow<Int> = customQuoteUseCases.getCustomQuotes.getCount()
+    val likedQuotesCount: Flow<Int> = quoteUseCase.getLikedQuotes.getCount()
 
     fun toggleServer(enable: Boolean) {
         if (enable) {

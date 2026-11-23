@@ -11,4 +11,8 @@ class GetCustomQuotes @Inject constructor(
     operator fun invoke(query: String): Flow<List<CustomQuote>> {
         return repository.getAllCustomQuotes(query)
     }
+
+    fun getCount(): Flow<Int> {
+        return repository.getCustomQuotesCount()
+    }
 }

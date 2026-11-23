@@ -9,4 +9,8 @@ class GetLikedQuotes @Inject constructor(private val quoteRepository: QuoteRepos
     operator fun invoke(): Flow<List<Quote>> {
         return quoteRepository.getAllLikedQuotes()
     }
+
+    fun getCount(): Flow<Int> {
+        return quoteRepository.getLikedQuotesCount()
+    }
 }

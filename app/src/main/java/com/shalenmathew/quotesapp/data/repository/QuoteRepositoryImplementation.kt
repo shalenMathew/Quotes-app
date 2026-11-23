@@ -112,8 +112,17 @@ class QuoteRepositoryImplementation(private val api: QuoteApi, private val db: Q
         db.getQuoteDao().insertLikedQuote(quote)
     }
 
+    override suspend fun saveLikedQuotesBatch(quotes: List<Quote>) {
+        if (quotes.isEmpty()) return
+        db.getQuoteDao().insertQuoteList(quotes)
+    }
+
     override fun getAllLikedQuotes(): Flow<List<Quote>> {
         return db.getQuoteDao().getAllLikedQuotes()
+    }
+
+    override fun getLikedQuotesCount(): Flow<Int> {
+        return db.getQuoteDao().getLikedQuotesCount()
     }
 
     override suspend fun getQuoteById(id: Int): Quote? =

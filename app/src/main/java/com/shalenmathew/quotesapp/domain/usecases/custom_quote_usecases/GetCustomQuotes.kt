@@ -15,4 +15,8 @@ class GetCustomQuotes @Inject constructor(
     fun getCount(): Flow<Int> {
         return repository.getCustomQuotesCount()
     }
+
+    suspend fun getRandom(excludeId: Int = -1): CustomQuote? {
+        return repository.getRandomCustomQuote(excludeId)
+    }
 }

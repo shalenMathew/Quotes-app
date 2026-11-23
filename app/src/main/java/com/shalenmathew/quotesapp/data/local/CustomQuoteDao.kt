@@ -27,6 +27,9 @@ interface CustomQuoteDao {
     @Query("SELECT COUNT(*) FROM custom_quotes")
     fun getCustomQuotesCount(): Flow<Int>
 
+    @Query("SELECT * FROM custom_quotes WHERE id != :excludeId ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomCustomQuote(excludeId: Int = -1): CustomQuote?
+
     @Query("SELECT * FROM custom_quotes ORDER BY createdAt DESC, id DESC")
     fun getAllCustomQuotes(): Flow<List<CustomQuote>>
 

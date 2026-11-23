@@ -43,7 +43,7 @@ interface CollectionDao {
         SELECT q.* FROM Quote q
         INNER JOIN collection_quote_cross_ref ref ON q.id = ref.quoteId
         WHERE ref.collectionId = :collectionId AND ref.isCustom = 0
-        AND (LOWER(q.quote) LIKE '%' || LOWER(:query) || '%' OR LOWER(q.author) LIKE '%' || LOWER(:query) || '%')
+        AND (:query = '' OR LOWER(q.quote) LIKE '%' || LOWER(:query) || '%' OR LOWER(q.author) LIKE '%' || LOWER(:query) || '%')
         ORDER BY q.updatedAt DESC, q.id DESC
     """)
     fun searchQuotesInCollection(collectionId: Int, query: String): Flow<List<Quote>>
@@ -52,10 +52,36 @@ interface CollectionDao {
         SELECT cq.* FROM custom_quotes cq
         INNER JOIN collection_quote_cross_ref ref ON cq.id = ref.quoteId
         WHERE ref.collectionId = :collectionId AND ref.isCustom = 1
-        AND (LOWER(cq.quote) LIKE '%' || LOWER(:query) || '%' OR LOWER(cq.author) LIKE '%' || LOWER(:query) || '%')
+        AND (:query = '' OR LOWER(cq.quote) LIKE '%' || LOWER(:query) || '%' OR LOWER(cq.author) LIKE '%' || LOWER(:query) || '%')
         ORDER BY cq.createdAt DESC, cq.id DESC
     """)
     fun searchCustomQuotesInCollection(collectionId: Int, query: String): Flow<List<CustomQuote>>
+
+    @Query("""
+        SELECT cq.* FROM custom_quotes cq
+        INNER JOIN collection_quote_cross_ref ref ON cq.id = ref.quoteId
+        WHERE ref.collectionId = :collectionId AND ref.isCustom = 1
+        AND cq.id != :excludeId
+        ORDER BY RANDOM() LIMIT 1
+    """)
+    suspend fun getRandomCustomQuoteInCollection(collectionId: Int, excludeId: Int = -1): CustomQuote?
+
+    @Query("""
+        SELECT q.* FROM Quote q
+        INNER JOIN collection_quote_cross_ref ref ON q.id = ref.quoteId
+        WHERE ref.collectionId = :collectionId AND ref.isCustom = 0
+        AND q.id != :excludeId
+        ORDER BY RANDOM() LIMIT 1
+    """)
+    suspend fun getRandomStandardQuoteInCollection(collectionId: Int, excludeId: Int = -1): Quote?
+
+    @Query("""
+        SELECT cq.* FROM custom_quotes cq
+        INNER JOIN collection_quote_cross_ref ref ON cq.id = ref.quoteId
+        WHERE ref.isCustom = 1 AND cq.id != :excludeId
+        ORDER BY RANDOM() LIMIT 1
+    """)
+    suspend fun getRandomCustomQuoteInAnyCollection(excludeId: Int = -1): CustomQuote?
 
     @Query("SELECT * FROM collections WHERE id = :id")
     suspend fun getCollectionById(id: Int): Collection?

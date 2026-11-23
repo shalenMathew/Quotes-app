@@ -21,6 +21,12 @@ class CustomQuoteRepositoryImpl(private val db: QuoteDatabase) : CustomQuoteRepo
         return db.getCustomQuoteDao().getCustomQuotesCount()
     }
 
+    override suspend fun getRandomCustomQuote(excludeId: Int): CustomQuote? {
+        val dao = db.getCustomQuoteDao()
+        return dao.getRandomCustomQuote(excludeId)
+            ?: if (excludeId != -1) dao.getRandomCustomQuote(-1) else null
+    }
+
     override suspend fun saveCustomQuote(quote: CustomQuote) {
         db.getCustomQuoteDao().insertCustomQuote(quote)
     }

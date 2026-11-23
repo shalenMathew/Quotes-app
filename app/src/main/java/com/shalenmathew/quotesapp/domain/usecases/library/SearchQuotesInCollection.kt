@@ -31,4 +31,16 @@ class SearchQuotesInCollection(
             }
         }
     }
+
+    suspend fun getRandomQuote(collectionId: Int, excludeId: Int = -1): Quote? {
+        return when (CollectionType.fromId(collectionId)) {
+            CollectionType.Favorites -> null
+            CollectionType.Custom -> customQuoteRepository.getRandomCustomQuote(excludeId)?.toQuote()
+            is CollectionType.UserDefined -> repository.getRandomQuoteInCollection(collectionId, excludeId)
+        }
+    }
+
+    suspend fun getRandomQuoteInAnyCollection(excludeId: Int = -1): Quote? {
+        return repository.getRandomQuoteInAnyCollection(excludeId)
+    }
 }

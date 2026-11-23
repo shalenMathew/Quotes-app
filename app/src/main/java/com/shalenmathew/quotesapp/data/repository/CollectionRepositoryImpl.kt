@@ -5,6 +5,7 @@ import com.shalenmathew.quotesapp.domain.model.Collection
 import com.shalenmathew.quotesapp.domain.model.CollectionQuoteCrossRef
 import com.shalenmathew.quotesapp.domain.model.CustomQuote
 import com.shalenmathew.quotesapp.domain.model.Quote
+import com.shalenmathew.quotesapp.domain.model.toQuote
 import com.shalenmathew.quotesapp.domain.repository.CollectionRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -49,6 +50,23 @@ class CollectionRepositoryImpl @Inject constructor(
 
     override fun searchCustomQuotesInCollection(collectionId: Int, query: String): Flow<List<CustomQuote>> {
         return dao.searchCustomQuotesInCollection(collectionId, query)
+    }
+
+    override suspend fun getRandomQuoteInCollection(collectionId: Int, excludeId: Int): Quote? {
+        val custom = dao.getRandomCustomQuoteInCollection(collectionId, excludeId)?.toQuote()
+        val standard = dao.getRandomStandardQuoteInCollection(collectionId, excludeId)
+        val candidates = listOfNotNull(custom, standard)
+        if (candidates.isNotEmpty()) return candidates.random()
+        if (excludeId != -1) {
+            return dao.getRandomCustomQuoteInCollection(collectionId, -1)?.toQuote()
+                ?: dao.getRandomStandardQuoteInCollection(collectionId, -1)
+        }
+        return null
+    }
+
+    override suspend fun getRandomQuoteInAnyCollection(excludeId: Int): Quote? {
+        return dao.getRandomCustomQuoteInAnyCollection(excludeId)?.toQuote()
+            ?: if (excludeId != -1) dao.getRandomCustomQuoteInAnyCollection(-1)?.toQuote() else null
     }
 
     override suspend fun getAllCrossRefs(): List<CollectionQuoteCrossRef> {

@@ -21,5 +21,7 @@ interface CollectionRepository {
     
     fun searchQuotesInCollection(collectionId: Int, query: String): Flow<List<Quote>>
     fun searchCustomQuotesInCollection(collectionId: Int, query: String): Flow<List<CustomQuote>>
+    suspend fun getRandomQuoteInCollection(collectionId: Int, excludeId: Int = -1): Quote? = null
+    suspend fun getRandomQuoteInAnyCollection(excludeId: Int = -1): Quote? = null
     suspend fun getAllCrossRefs(): List<CollectionQuoteCrossRef>
 }

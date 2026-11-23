@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.map
 interface CustomQuoteRepository {
     fun getAllCustomQuotes(query: String): Flow<List<CustomQuote>>
     fun getCustomQuotesCount(): Flow<Int> = getAllCustomQuotes("").map { it.size }
+    suspend fun getRandomCustomQuote(excludeId: Int = -1): CustomQuote? = null
     suspend fun saveCustomQuote(quote: CustomQuote)
     suspend fun saveCustomQuotesBatch(quotes: List<CustomQuote>, collectionId: Int? = null) {
         quotes.forEach { saveCustomQuote(it) }

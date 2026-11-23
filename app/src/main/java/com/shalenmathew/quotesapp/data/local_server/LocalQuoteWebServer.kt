@@ -46,7 +46,8 @@ data class QuoteItemPayload(
 data class BatchImportPayload(
     val quotes: List<QuoteItemPayload> = emptyList(),
     val target: String = "custom", // "custom" or "favorites"
-    val collectionId: Int? = null
+    val collectionId: Int? = null,
+    val skipWidgetRefresh: Boolean = false
 )
 
 data class CollectionPayload(
@@ -267,6 +268,7 @@ class LocalQuoteWebServer @Inject constructor(
                     val isCustom = map["isCustom"] as? Boolean ?: true
                     val deleteAll = map["deleteAll"] as? Boolean ?: false
                     val deleteCorrupted = map["deleteCorrupted"] as? Boolean ?: false
+                    val skipWidgetRefresh = map["skipWidgetRefresh"] as? Boolean ?: false
                     val idsRaw = map["ids"] as? List<*> ?: emptyList<Any>()
                     val ids = idsRaw.mapNotNull { (it as? Number)?.toInt() }.toSet()
                     var deletedCount = 0
@@ -297,7 +299,9 @@ class LocalQuoteWebServer @Inject constructor(
                             deletedCount++
                         }
                     }
-                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+                    if (!skipWidgetRefresh) {
+                        scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+                    }
                     NanoHTTPD.Response.Status.OK to gson.toJson(
                         mapOf("status" to "ok", "deletedCount" to deletedCount)
                     )
@@ -341,7 +345,9 @@ class LocalQuoteWebServer @Inject constructor(
                         }
                     }
 
-                    scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+                    if (!batch.skipWidgetRefresh) {
+                        scheduleWidgetRefresh.scheduleWidgetRefreshWorkManager()
+                    }
                     NanoHTTPD.Response.Status.OK to gson.toJson(
                         mapOf("status" to "ok", "importedCount" to importedCount)
                     )

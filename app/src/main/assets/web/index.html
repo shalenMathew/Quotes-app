@@ -800,6 +800,15 @@
 
   /* Batch Upload */
   function openBatchModal() {
+    const batchColEl = document.getElementById('batchCollectionSelect');
+    const filterColEl = document.getElementById('filterCollectionSelect');
+    if (batchColEl && !batchColEl.value) {
+      if (filterColEl && filterColEl.value) {
+        batchColEl.value = filterColEl.value;
+      } else if (appState.collections && appState.collections.length > 0) {
+        batchColEl.value = String(appState.collections[0].id);
+      }
+    }
     document.getElementById('batchModal').classList.add('open');
     updateBatchPreview();
   }
@@ -1015,7 +1024,8 @@
       if (autoClean) {
         await apiCall('/api/quotes/delete', 'POST', {
           isCustom: target === 'custom',
-          deleteCorrupted: true
+          deleteCorrupted: true,
+          skipWidgetRefresh: true
         });
       }
 
@@ -1023,13 +1033,15 @@
       let totalImported = 0;
       for (let i = 0; i < quotes.length; i += CHUNK_SIZE) {
         const chunk = quotes.slice(i, i + CHUNK_SIZE);
+        const isLastChunk = (i + CHUNK_SIZE) >= quotes.length;
         if (submitBtn) {
           submitBtn.textContent = `Uploading ${Math.min(i + chunk.length, quotes.length)} / ${quotes.length}...`;
         }
         const res = await apiCall('/api/quotes/batch', 'POST', {
           quotes: chunk,
           target,
-          collectionId
+          collectionId,
+          skipWidgetRefresh: !isLastChunk
         });
         totalImported += (res.importedCount || chunk.length);
       }
